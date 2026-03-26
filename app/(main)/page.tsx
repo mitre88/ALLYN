@@ -4,7 +4,7 @@ import { ContentCarousel } from "@/components/content/content-carousel"
 import type { Content, Category } from "@/types/database"
 
 async function getFeaturedContent(): Promise<Content | null> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from("content")
     .select("*, category:categories(*), creator:creators(*)")
@@ -18,7 +18,7 @@ async function getFeaturedContent(): Promise<Content | null> {
 }
 
 async function getCategories(): Promise<Category[]> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from("categories")
     .select("*")
@@ -28,7 +28,7 @@ async function getCategories(): Promise<Category[]> {
 }
 
 async function getContentByCategory(categoryId: string): Promise<Content[]> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from("content")
     .select("*, category:categories(*), creator:creators(*)")
@@ -41,7 +41,7 @@ async function getContentByCategory(categoryId: string): Promise<Content[]> {
 }
 
 async function getLatestContent(): Promise<Content[]> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from("content")
     .select("*, category:categories(*), creator:creators(*)")

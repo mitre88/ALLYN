@@ -12,7 +12,7 @@ interface ContentPageProps {
 }
 
 async function getContent(id: string): Promise<Content | null> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from("content")
     .select("*, category:categories(*), creator:creators(*)")
@@ -24,7 +24,7 @@ async function getContent(id: string): Promise<Content | null> {
 }
 
 async function getRelatedContent(categoryId: string, excludeId: string): Promise<Content[]> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from("content")
     .select("*, category:categories(*), creator:creators(*)")

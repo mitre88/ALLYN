@@ -8,7 +8,7 @@ interface CategoryPageProps {
 }
 
 async function getCategory(slug: string): Promise<Category | null> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from("categories")
     .select("*")
@@ -19,7 +19,7 @@ async function getCategory(slug: string): Promise<Category | null> {
 }
 
 async function getContentByCategory(categoryId: string): Promise<Content[]> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from("content")
     .select("*, category:categories(*), creator:creators(*)")

@@ -6,7 +6,7 @@ interface ShineBorderProps {
   borderRadius?: number
   borderWidth?: number
   duration?: number
-  shineColor?: string
+  shineColor?: string | string[]
   className?: string
   children: React.ReactNode
 }
@@ -19,6 +19,8 @@ export function ShineBorder({
   className,
   children,
 }: ShineBorderProps) {
+  const colorString = Array.isArray(shineColor) ? shineColor.join(",") : shineColor
+  
   return (
     <div
       style={
@@ -27,7 +29,7 @@ export function ShineBorder({
           "--border-width": `${borderWidth}px`,
           "--duration": `${duration}s`,
           "--mask-linear-gradient": `linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)`,
-          "--background-radial-gradient": `radial-gradient(transparent,transparent, ${shineColor instanceof Array ? shineColor.join(",") : shineColor},transparent,transparent)`,
+          "--background-radial-gradient": `radial-gradient(transparent,transparent, ${colorString},transparent,transparent)`,
         } as React.CSSProperties
       }
       className={cn(
