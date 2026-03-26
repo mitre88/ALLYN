@@ -4,6 +4,7 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { Play, Plus, ThumbsUp, ChevronDown } from "lucide-react"
 import Link from "next/link"
+import { BorderBeam } from "@/components/magicui/border-beam"
 import type { Content } from "@/types/database"
 import { formatDuration } from "@/lib/utils"
 
@@ -23,6 +24,16 @@ export function ContentCard({ content }: ContentCardProps) {
       transition={{ duration: 0.3 }}
     >
       <div className="relative aspect-video rounded-md overflow-hidden bg-muted">
+        {/* Border Beam Effect on Hover */}
+        {isHovered && (
+          <BorderBeam
+            size={100}
+            duration={4}
+            colorFrom={content.category?.color || "#6B21A8"}
+            colorTo="#ffffff"
+          />
+        )}
+        
         {/* Thumbnail */}
         <img
           src={content.thumbnail_url || "/placeholder.svg"}
