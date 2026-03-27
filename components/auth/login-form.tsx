@@ -26,11 +26,24 @@ export function LoginForm() {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
 
+      const ensureProfileResponse = await fetch("/api/auth/ensure-profile", {
+        method: "POST",
+      })
+
+      if (!ensureProfileResponse.ok) {
+        const payload = await ensureProfileResponse.json().catch(() => null)
+        throw new Error(payload?.details || "No se pudo crear el perfil del usuario")
+      }
+
       router.push("/")
       router.refresh()
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Error desconocido"
-      showError("Error al iniciar sesión", message)
+      const title = /email not confirmed/i.test(message)
+        ? "Confirma tu correo primero"
+        : "Error al iniciar sesión"
+
+      showError(title, message)
     } finally {
       setLoading(false)
     }
@@ -60,7 +73,7 @@ export function LoginForm() {
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="h-10 bg-muted/30 border-border/50 focus:border-violet-500/50 focus:bg-background transition-colors"
+            className="h-10 bg-muted/30 border-border/50 focus:border-primary/40 focus:bg-background transition-colors"
           />
         </div>
 
@@ -71,7 +84,7 @@ export function LoginForm() {
             </label>
             <Link
               href="/forgot-password"
-              className="text-xs text-violet-400 hover:text-violet-300 underline-offset-2 hover:underline"
+              className="text-xs text-primary hover:text-primary/80 underline-offset-2 hover:underline"
             >
               ¿Olvidaste tu contraseña?
             </Link>
@@ -85,7 +98,7 @@ export function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="h-10 bg-muted/30 border-border/50 focus:border-violet-500/50 focus:bg-background transition-colors pr-10"
+              className="h-10 bg-muted/30 border-border/50 focus:border-primary/40 focus:bg-background transition-colors pr-10"
             />
             <button
               type="button"
@@ -100,7 +113,7 @@ export function LoginForm() {
 
         <Button
           type="submit"
-          className="w-full h-11 bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white font-medium gap-2 shadow-lg shadow-violet-500/20"
+          className="w-full h-11 bg-gradient-to-r bg-primary  text-white font-medium gap-2 shadow-lg shadow-primary/20"
           disabled={loading}
         >
           {loading ? (
@@ -119,7 +132,7 @@ export function LoginForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         ¿No tienes cuenta?{" "}
-        <Link href="/register" className="text-violet-400 hover:text-violet-300 font-medium underline-offset-2 hover:underline">
+        <Link href="/register" className="text-primary hover:text-primary/80 font-medium underline-offset-2 hover:underline">
           Regístrate gratis
         </Link>
       </p>

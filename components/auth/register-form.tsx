@@ -37,6 +37,7 @@ function RegisterFormInner() {
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/api/auth/callback`,
           data: {
             full_name: fullName,
             username,
@@ -54,6 +55,15 @@ function RegisterFormInner() {
       }
 
       // Email confirmation disabled — user is logged in immediately
+      const ensureProfileResponse = await fetch("/api/auth/ensure-profile", {
+        method: "POST",
+      })
+
+      if (!ensureProfileResponse.ok) {
+        const payload = await ensureProfileResponse.json().catch(() => null)
+        throw new Error(payload?.details || "No se pudo crear el perfil del usuario")
+      }
+
       router.push("/")
       router.refresh()
     } catch (error: unknown) {
@@ -68,8 +78,8 @@ function RegisterFormInner() {
   if (emailSent) {
     return (
       <div className="text-center space-y-6">
-        <div className="w-16 h-16 rounded-2xl bg-violet-500/15 border border-violet-500/20 flex items-center justify-center mx-auto">
-          <Mail className="w-7 h-7 text-violet-400" />
+        <div className="w-16 h-16 rounded-2xl bg-primary/15 border border-primary/20 flex items-center justify-center mx-auto">
+          <Mail className="w-7 h-7 text-primary" />
         </div>
         <div className="space-y-2">
           <h2 className="text-xl font-semibold text-foreground">Revisa tu correo</h2>
@@ -81,12 +91,12 @@ function RegisterFormInner() {
           </p>
         </div>
         <div className="flex items-start gap-3 bg-muted/50 rounded-xl p-4 text-left">
-          <CheckCircle2 className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
+          <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
           <p className="text-xs text-muted-foreground">
             ¿No lo ves? Revisa tu carpeta de spam o{" "}
             <button
               onClick={() => setEmailSent(false)}
-              className="text-violet-400 hover:text-violet-300 underline underline-offset-2"
+              className="text-primary hover:text-primary/80 underline underline-offset-2"
             >
               vuelve a intentarlo
             </button>
@@ -110,9 +120,9 @@ function RegisterFormInner() {
 
       {/* Referral badge */}
       {refCode && (
-        <div className="flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-xl px-4 py-3">
-          <Gift className="w-4 h-4 text-violet-400 shrink-0" />
-          <p className="text-sm text-violet-300 font-medium">
+        <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-xl px-4 py-3">
+          <Gift className="w-4 h-4 text-primary shrink-0" />
+          <p className="text-sm text-primary/80 font-medium">
             ¡Fuiste invitado! Tienes acceso especial 🎉
           </p>
         </div>
@@ -133,7 +143,7 @@ function RegisterFormInner() {
               onChange={(e) => setUsername(e.target.value)}
               required
               autoComplete="username"
-              className="h-10 bg-muted/30 border-border/50 focus:border-violet-500/50 focus:bg-background transition-colors"
+              className="h-10 bg-muted/30 border-border/50 focus:border-primary/40 focus:bg-background transition-colors"
             />
           </div>
           <div className="space-y-1.5">
@@ -148,7 +158,7 @@ function RegisterFormInner() {
               onChange={(e) => setFullName(e.target.value)}
               required
               autoComplete="name"
-              className="h-10 bg-muted/30 border-border/50 focus:border-violet-500/50 focus:bg-background transition-colors"
+              className="h-10 bg-muted/30 border-border/50 focus:border-primary/40 focus:bg-background transition-colors"
             />
           </div>
         </div>
@@ -165,7 +175,7 @@ function RegisterFormInner() {
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="h-10 bg-muted/30 border-border/50 focus:border-violet-500/50 focus:bg-background transition-colors"
+            className="h-10 bg-muted/30 border-border/50 focus:border-primary/40 focus:bg-background transition-colors"
           />
         </div>
 
@@ -183,7 +193,7 @@ function RegisterFormInner() {
               required
               minLength={6}
               autoComplete="new-password"
-              className="h-10 bg-muted/30 border-border/50 focus:border-violet-500/50 focus:bg-background transition-colors pr-10"
+              className="h-10 bg-muted/30 border-border/50 focus:border-primary/40 focus:bg-background transition-colors pr-10"
             />
             <button
               type="button"
@@ -198,7 +208,7 @@ function RegisterFormInner() {
 
         <Button
           type="submit"
-          className="w-full h-11 bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white font-medium gap-2 shadow-lg shadow-violet-500/20"
+          className="w-full h-11 bg-gradient-to-r bg-primary  text-white font-medium gap-2 shadow-lg shadow-primary/20"
           disabled={loading}
         >
           {loading ? (
@@ -217,18 +227,18 @@ function RegisterFormInner() {
 
       <p className="text-center text-xs text-muted-foreground">
         Al registrarte aceptas nuestros{" "}
-        <Link href="/terms" className="text-violet-400 hover:text-violet-300 underline-offset-2 hover:underline">
+        <Link href="/terms" className="text-primary hover:text-primary/80 underline-offset-2 hover:underline">
           Términos
         </Link>{" "}
         y{" "}
-        <Link href="/privacy" className="text-violet-400 hover:text-violet-300 underline-offset-2 hover:underline">
+        <Link href="/privacy" className="text-primary hover:text-primary/80 underline-offset-2 hover:underline">
           Privacidad
         </Link>
       </p>
 
       <p className="text-center text-sm text-muted-foreground">
         ¿Ya tienes cuenta?{" "}
-        <Link href="/login" className="text-violet-400 hover:text-violet-300 font-medium underline-offset-2 hover:underline">
+        <Link href="/login" className="text-primary hover:text-primary/80 font-medium underline-offset-2 hover:underline">
           Inicia sesión
         </Link>
       </p>

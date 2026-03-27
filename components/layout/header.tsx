@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, Search, Bell, User, Crown, LogOut, UserCircle, ChevronDown } from "lucide-react"
+import { Menu, X, Search, Crown, LogOut, UserCircle, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { createClient } from "@/lib/supabase/client"
@@ -26,17 +26,12 @@ export function Header() {
   const { isSubscribed, profile } = useSubscription()
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50)
+    const handleScroll = () => setIsScrolled(window.scrollY > 40)
     window.addEventListener("scroll", handleScroll)
-
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user)
-    })
-
+    supabase.auth.getUser().then(({ data }) => setUser(data.user))
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -57,30 +52,33 @@ export function Header() {
   return (
     <>
       <motion.header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? "bg-background/95 backdrop-blur-md shadow-lg"
-            : "bg-gradient-to-b from-black/80 to-transparent"
+            ? "bg-background/96 backdrop-blur-md border-b border-border/50"
+            : "bg-gradient-to-b from-background/90 to-transparent"
         }`}
-        initial={{ y: -100 }}
+        initial={{ y: -80 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
+        {/* Top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          {/* Wordmark */}
+          <Link href="/" className="flex items-center">
+            <span className="font-display text-2xl font-bold tracking-tight text-foreground">
               ALLYN
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-8">
             {categories.map((category) => (
               <Link
                 key={category.name}
                 href={category.href}
-                className="text-sm font-medium text-white/80 hover:text-white transition-colors"
+                className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors duration-200"
               >
                 {category.name}
               </Link>
@@ -88,51 +86,41 @@ export function Header() {
           </nav>
 
           {/* Right Side */}
-          <div className="flex items-center gap-3">
-            <button className="p-2 text-white/80 hover:text-white transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
-
-            <button className="p-2 text-white/80 hover:text-white transition-colors hidden sm:block">
-              <Bell className="w-5 h-5" />
+          <div className="flex items-center gap-2">
+            <button className="w-9 h-9 flex items-center justify-center text-foreground/60 hover:text-foreground transition-colors rounded-md hover:bg-muted">
+              <Search className="w-4 h-4" />
             </button>
 
             {user ? (
-              <div className="flex items-center gap-3">
-                {/* Subscribe CTA — only show if not subscribed */}
+              <div className="flex items-center gap-2">
                 {!isSubscribed && (
-                  <Link href="/subscribe">
+                  <Link href="/subscribe" className="hidden sm:block">
                     <Button
                       size="sm"
-                      className="hidden sm:flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs font-semibold shadow-md shadow-purple-500/20"
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold h-8 px-3 gap-1.5"
                     >
-                      <Crown className="w-3.5 h-3.5" />
-                      Suscribirse $499
+                      <Crown className="w-3 h-3" />
+                      Acceso Completo
                     </Button>
                   </Link>
                 )}
 
-                {/* Avatar + Dropdown */}
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen((prev) => !prev)}
-                    className="flex items-center gap-1.5 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                    className="flex items-center gap-1.5 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 p-0.5"
                   >
                     <Avatar className="w-8 h-8">
                       <AvatarImage src={user.user_metadata?.avatar_url} />
-                      <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-600 text-white text-xs font-bold">
+                      <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold border border-primary/30">
                         {avatarFallback}
                       </AvatarFallback>
                     </Avatar>
-
                     {isSubscribed && (
-                      <span className="hidden sm:inline-flex items-center gap-1 text-xs text-yellow-400 font-medium">
-                        <Crown className="w-3 h-3" />
-                      </span>
+                      <Crown className="w-3 h-3 text-primary hidden sm:block" />
                     )}
-
                     <ChevronDown
-                      className={`w-3.5 h-3.5 text-white/60 transition-transform hidden sm:block ${
+                      className={`w-3 h-3 text-foreground/40 transition-transform hidden sm:block ${
                         dropdownOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -141,51 +129,46 @@ export function Header() {
                   <AnimatePresence>
                     {dropdownOpen && (
                       <motion.div
-                        initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                        initial={{ opacity: 0, y: 6, scale: 0.97 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute right-0 mt-2 w-56 rounded-xl bg-background/95 backdrop-blur-md border border-white/10 shadow-xl shadow-black/40 overflow-hidden"
+                        exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
+                        className="absolute right-0 mt-2 w-52 rounded-xl bg-card border border-border shadow-xl shadow-black/30 overflow-hidden"
                       >
-                        {/* User info */}
-                        <div className="px-4 py-3 border-b border-white/10">
-                          <p className="text-white text-sm font-medium truncate">
+                        <div className="px-4 py-3 border-b border-border">
+                          <p className="text-sm font-medium text-foreground truncate">
                             {profile?.full_name || user.email}
                           </p>
-                          <p className="text-white/40 text-xs truncate">{user.email}</p>
+                          <p className="text-xs text-muted-foreground truncate mt-0.5">{user.email}</p>
                           {isSubscribed && (
-                            <span className="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-300 text-xs">
+                            <span className="inline-flex items-center gap-1 mt-2 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
                               <Crown className="w-2.5 h-2.5" />
                               Miembro Vitalicio
                             </span>
                           )}
                         </div>
-
-                        {/* Menu items */}
                         <div className="py-1">
                           <Link
                             href="/profile"
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground/70 hover:text-foreground hover:bg-muted transition-colors"
                           >
                             <UserCircle className="w-4 h-4" />
                             Mi Perfil
                           </Link>
-
                           {!isSubscribed && (
                             <Link
                               href="/subscribe"
                               onClick={() => setDropdownOpen(false)}
-                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-purple-300 hover:text-purple-200 hover:bg-purple-500/10 transition-colors"
+                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-primary hover:text-primary/80 hover:bg-primary/5 transition-colors"
                             >
                               <Crown className="w-4 h-4" />
                               Obtener acceso vitalicio
                             </Link>
                           )}
-
                           <button
                             onClick={handleSignOut}
-                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground/50 hover:text-foreground hover:bg-muted transition-colors"
                           >
                             <LogOut className="w-4 h-4" />
                             Cerrar sesión
@@ -197,20 +180,26 @@ export function Header() {
                 </div>
               </div>
             ) : (
-              <Link href="/login">
-                <Button variant="default" size="sm" className="bg-primary hover:bg-primary/90">
-                  <User className="w-4 h-4 mr-2" />
-                  Entrar
-                </Button>
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link href="/login">
+                  <Button variant="ghost" size="sm" className="text-sm font-medium h-8">
+                    Entrar
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-semibold h-8">
+                    Registrarse
+                  </Button>
+                </Link>
+              </div>
             )}
 
-            {/* Mobile Menu Button */}
+            {/* Mobile hamburger */}
             <button
-              className="md:hidden p-2 text-white"
+              className="md:hidden w-9 h-9 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -223,69 +212,59 @@ export function Header() {
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-40 bg-background md:hidden"
           >
-            <div className="pt-20 px-6">
-              <nav className="flex flex-col gap-4">
+            <div className="pt-20 px-6 pb-8 flex flex-col h-full">
+              <nav className="flex flex-col gap-1">
                 {categories.map((category, index) => (
                   <motion.div
                     key={category.name}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 16 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    transition={{ delay: index * 0.06, ease: "easeOut" }}
                   >
                     <Link
                       href={category.href}
-                      className="text-xl font-medium text-white hover:text-primary transition-colors"
+                      className="block py-3 text-xl font-medium text-foreground/80 hover:text-foreground transition-colors border-b border-border/30"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {category.name}
                     </Link>
                   </motion.div>
                 ))}
-
-                {user && !isSubscribed && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: categories.length * 0.1 }}
-                  >
-                    <Link
-                      href="/subscribe"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2 text-xl font-medium text-purple-300 hover:text-purple-200 transition-colors"
-                    >
-                      <Crown className="w-5 h-5" />
-                      Suscribirse $499
-                    </Link>
-                  </motion.div>
-                )}
-
-                {user && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (categories.length + 1) * 0.1 }}
-                    className="pt-4 border-t border-white/10 space-y-3"
-                  >
-                    <Link
-                      href="/profile"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block text-lg font-medium text-white/80 hover:text-white"
-                    >
-                      Mi Perfil
-                    </Link>
-                    <button
-                      onClick={handleSignOut}
-                      className="text-lg font-medium text-white/60 hover:text-white transition-colors flex items-center gap-2"
-                    >
-                      <LogOut className="w-5 h-5" />
-                      Cerrar sesión
-                    </button>
-                  </motion.div>
-                )}
               </nav>
+
+              {user && !isSubscribed && (
+                <div className="mt-6">
+                  <Link href="/subscribe" onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold gap-2">
+                      <Crown className="w-4 h-4" />
+                      Acceso Completo $499
+                    </Button>
+                  </Link>
+                </div>
+              )}
+
+              {user && (
+                <div className="mt-auto pt-6 border-t border-border/30 space-y-3">
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 text-base font-medium text-foreground/70 hover:text-foreground"
+                  >
+                    <UserCircle className="w-5 h-5" />
+                    Mi Perfil
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="flex items-center gap-3 text-base font-medium text-foreground/50 hover:text-foreground transition-colors"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    Cerrar sesión
+                  </button>
+                </div>
+              )}
             </div>
           </motion.div>
         )}

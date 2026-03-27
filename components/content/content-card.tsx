@@ -2,9 +2,8 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Play, Plus, ThumbsUp, ChevronDown, Lock, BookOpen, GraduationCap, Video } from "lucide-react"
+import { Play, Plus, Bookmark, ChevronDown, Lock, BookOpen, GraduationCap, Video, Headphones } from "lucide-react"
 import Link from "next/link"
-import { BorderBeam } from "@/components/magicui/border-beam"
 import { ContentArtwork } from "@/components/content/content-artwork"
 import { getPrimaryContentHref } from "@/lib/content"
 import type { Content } from "@/types/database"
@@ -16,136 +15,121 @@ interface ContentCardProps {
 }
 
 const TYPE_CONFIG = {
-  book: {
-    label: "Libro",
-    icon: BookOpen,
-    href: (id: string) => `/read/${id}`,
-  },
-  audiobook: {
-    label: "Audiolibro",
-    icon: BookOpen,
-    href: (id: string) => `/read/${id}`,
-  },
-  video: {
-    label: "Video",
-    icon: Video,
-    href: (id: string) => `/watch/${id}`,
-  },
-  course: {
-    label: "Curso",
-    icon: GraduationCap,
-    href: (id: string) => `/watch/${id}`,
-  },
+  book: { label: "Libro", icon: BookOpen },
+  audiobook: { label: "Audiolibro", icon: Headphones },
+  video: { label: "Video", icon: Video },
+  course: { label: "Curso", icon: GraduationCap },
 }
 
 export function ContentCard({ content, isSubscribed = false }: ContentCardProps) {
   const [isHovered, setIsHovered] = useState(false)
 
-  const typeConfig = TYPE_CONFIG[content.type] ?? TYPE_CONFIG.video
+  const typeConfig = TYPE_CONFIG[content.type as keyof typeof TYPE_CONFIG] ?? TYPE_CONFIG.video
   const isPremiumLocked = !isSubscribed
   const primaryHref = getPrimaryContentHref(content, isSubscribed)
   const TypeIcon = typeConfig.icon
+  const isReadingContent = content.type === "book" || content.type === "audiobook"
 
   return (
     <motion.div
-      className="relative flex-shrink-0 w-[160px] sm:w-[200px] md:w-[240px] lg:w-[280px] cursor-pointer"
+      className="relative flex-shrink-0 w-[160px] sm:w-[200px] md:w-[240px] lg:w-[272px] cursor-pointer group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ scale: 1.05, zIndex: 10 }}
-      transition={{ duration: 0.3 }}
+      whileHover={{ scale: 1.03, zIndex: 10 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
     >
-      <div className="relative aspect-video rounded-md overflow-hidden bg-muted">
-        {/* Border Beam on hover */}
-        {isHovered && (
-          <BorderBeam
-            size={100}
-            duration={4}
-            colorFrom={content.category?.color || "#6B21A8"}
-            colorTo="#ffffff"
-          />
-        )}
-
+      <div className="relative aspect-video rounded-lg overflow-hidden bg-muted ring-1 ring-border/50 group-hover:ring-border transition-all duration-300">
         {/* Thumbnail */}
         <ContentArtwork content={content} showTypeLabel={false} />
 
-        {/* Type badge (top-left) */}
-        <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/70 backdrop-blur-sm rounded-full px-2 py-0.5">
-          <TypeIcon className="w-2.5 h-2.5 text-purple-300" />
-          <span className="text-[9px] font-semibold text-purple-200 uppercase tracking-wide">
+        {/* Type badge */}
+        <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/60 backdrop-blur-sm rounded-md px-2 py-1">
+          <TypeIcon className="w-2.5 h-2.5 text-primary/80" />
+          <span className="text-[9px] font-semibold text-white/80 uppercase tracking-wide">
             {typeConfig.label}
           </span>
         </div>
 
-        {/* Lock badge (top-right) for non-subscribers */}
+        {/* Lock badge */}
         {isPremiumLocked && (
-          <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center">
-            <Lock className="w-3 h-3 text-purple-400" />
+          <div className="absolute top-2 right-2 w-6 h-6 rounded-md bg-black/60 backdrop-blur-sm flex items-center justify-center">
+            <Lock className="w-3 h-3 text-primary/80" />
           </div>
         )}
 
         {/* Hover overlay */}
-        {isHovered && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="absolute inset-0 bg-black/60 flex flex-col justify-end p-3"
-          >
-            <div className="flex items-center gap-2 mb-2">
-              {/* Primary action button */}
-              <Link href={primaryHref}>
-                <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center hover:bg-white/90 transition-colors">
-                  {primaryHref === "/subscribe" ? (
-                    <Lock className="w-3.5 h-3.5 text-black" />
-                  ) : content.type === 'book' || content.type === 'audiobook' ? (
-                    <BookOpen className="w-3.5 h-3.5 text-black" />
-                  ) : (
-                    <Play className="w-4 h-4 text-black fill-black" />
-                  )}
+        <AnimateOverlay visible={isHovered}>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+          {/* Center play button */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Link href={primaryHref}>
+              <motion.button
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={isHovered ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="w-12 h-12 rounded-full bg-white/95 flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+              >
+                {primaryHref === "/subscribe" ? (
+                  <Lock className="w-5 h-5 text-black" />
+                ) : isReadingContent ? (
+                  <BookOpen className="w-5 h-5 text-black" />
+                ) : (
+                  <Play className="w-5 h-5 text-black fill-black" />
+                )}
+              </motion.button>
+            </Link>
+          </div>
+
+          {/* Bottom action bar */}
+          <div className="absolute bottom-0 left-0 right-0 p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <button className="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center hover:border-white hover:bg-white/10 transition-colors">
+                  <Plus className="w-3.5 h-3.5 text-white" />
+                </button>
+                <button className="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center hover:border-white hover:bg-white/10 transition-colors">
+                  <Bookmark className="w-3.5 h-3.5 text-white" />
+                </button>
+              </div>
+              <Link href={`/content/${content.id}`}>
+                <button className="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center hover:border-white hover:bg-white/10 transition-colors">
+                  <ChevronDown className="w-3.5 h-3.5 text-white" />
                 </button>
               </Link>
-              <button className="w-8 h-8 rounded-full border-2 border-white/70 flex items-center justify-center hover:border-white hover:bg-white/10 transition-colors">
-                <Plus className="w-4 h-4 text-white" />
-              </button>
-              <button className="w-8 h-8 rounded-full border-2 border-white/70 flex items-center justify-center hover:border-white hover:bg-white/10 transition-colors">
-                <ThumbsUp className="w-4 h-4 text-white" />
-              </button>
-              <Link href={`/content/${content.id}`} className="ml-auto">
-                <button className="w-8 h-8 rounded-full border-2 border-white/70 flex items-center justify-center hover:border-white hover:bg-white/10 transition-colors">
-                  <ChevronDown className="w-4 h-4 text-white" />
-                </button>
-              </Link>
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-white/80">
-              <span className="text-green-400 font-semibold">98% Match</span>
-              {content.duration > 0 && (
-                <span>{formatDuration(content.duration)}</span>
-              )}
-              <span className="border border-white/30 px-1 rounded text-[10px]">HD</span>
-            </div>
+            {content.duration > 0 && (
+              <p className="text-[10px] text-white/50 mt-2">{formatDuration(content.duration)}</p>
+            )}
+          </div>
+        </AnimateOverlay>
 
-            <div className="flex flex-wrap gap-1 mt-2">
-              <span className="text-[10px] text-white/60">Transformador</span>
-              <span className="text-[10px] text-white/60">•</span>
-              <span className="text-[10px] text-white/60">Inspirador</span>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Duration badge (not hovered) */}
+        {/* Duration badge when not hovered */}
         {content.duration > 0 && !isHovered && (
-          <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-[10px] text-white font-medium">
+          <div className="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm px-1.5 py-0.5 rounded text-[10px] text-white/80 font-medium">
             {formatDuration(content.duration)}
           </div>
         )}
       </div>
 
       {/* Title */}
-      {!isHovered && (
-        <p className="mt-2 text-sm text-white/80 line-clamp-1 transition-colors">
-          {content.title}
-        </p>
-      )}
+      <p className="mt-2.5 text-sm font-medium text-foreground/80 group-hover:text-foreground line-clamp-1 transition-colors px-0.5">
+        {content.title}
+      </p>
+    </motion.div>
+  )
+}
+
+function AnimateOverlay({ visible, children }: { visible: boolean; children: React.ReactNode }) {
+  return (
+    <motion.div
+      className="absolute inset-0"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: visible ? 1 : 0 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+    >
+      {children}
     </motion.div>
   )
 }

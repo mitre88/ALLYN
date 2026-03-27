@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Play, Info, Volume2, VolumeX, BookOpen, Lock } from "lucide-react"
+import { Play, Info, Volume2, VolumeX, BookOpen, Lock, Headphones } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ContentArtwork } from "@/components/content/content-artwork"
 import { getPrimaryContentHref, getPrimaryContentLabel } from "@/lib/content"
@@ -9,6 +9,13 @@ import Link from "next/link"
 import { useState } from "react"
 import type { Content } from "@/types/database"
 import { formatDuration } from "@/lib/utils"
+
+const TYPE_LABELS: Record<string, string> = {
+  book: "Libro",
+  audiobook: "Audiolibro",
+  video: "Video",
+  course: "Curso",
+}
 
 interface HeroProps {
   content: Content
@@ -23,114 +30,134 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
 
   if (!content) return null
 
+  const PrimaryIcon =
+    primaryHref === "/subscribe"
+      ? Lock
+      : content.type === "audiobook"
+      ? Headphones
+      : isReadingContent
+      ? BookOpen
+      : Play
+
   return (
-    <div className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat">
+    <div className="relative w-full h-[72vh] md:h-[88vh] overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0">
         <ContentArtwork content={content} variant="background" />
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/55 to-transparent" />
         <div className="absolute inset-0 hero-gradient" />
+        {/* Subtle vignette */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-background/20" />
       </div>
 
       {/* Content */}
-      <div className="relative h-full container mx-auto px-4 flex items-end pb-20 md:pb-32">
-        <div className="max-w-2xl">
-          {/* Category Badge */}
+      <div className="relative h-full container mx-auto px-4 md:px-8 flex items-end pb-16 md:pb-28">
+        <div className="max-w-xl">
+
+          {/* Category + type pill */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+            className="flex items-center gap-2 mb-5"
           >
-            <span 
-              className="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4"
-              style={{ 
-                backgroundColor: content.category?.color || '#6B21A8',
-                color: '#fff'
-              }}
-            >
-              {content.category?.name}
+            {content.category && (
+              <span
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-white/90 border border-white/10 backdrop-blur-sm"
+                style={{ backgroundColor: `${content.category.color}33` }}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{ backgroundColor: content.category.color || "#C8951A" }}
+                />
+                {content.category.name}
+              </span>
+            )}
+            <span className="px-2.5 py-1 rounded-full text-xs font-medium text-white/60 bg-white/8 border border-white/8 backdrop-blur-sm">
+              {TYPE_LABELS[content.type] ?? content.type}
             </span>
           </motion.div>
 
           {/* Title */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight"
+            transition={{ duration: 0.6, delay: 0.25, ease: "easeOut" }}
+            className="font-display text-4xl md:text-6xl font-bold text-white leading-tight mb-4"
           >
             {content.title}
           </motion.h1>
 
-          {/* Meta */}
+          {/* Meta row */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex items-center gap-4 text-white/80 mb-4 text-sm"
+            transition={{ duration: 0.5, delay: 0.35, ease: "easeOut" }}
+            className="flex items-center gap-3 text-white/50 text-sm mb-5"
           >
-            <span className="text-green-400 font-semibold">98% Match</span>
-            {content.published_at && <span>{new Date(content.published_at).getFullYear()}</span>}
-            <span className="border border-white/30 px-1.5 py-0.5 rounded text-xs">
-              {content.type === 'video' ? 'HD' : content.type}
-            </span>
-            {content.duration && (
-              <span>{formatDuration(content.duration)}</span>
+            {content.published_at && (
+              <span>{new Date(content.published_at).getFullYear()}</span>
+            )}
+            {content.duration > 0 && (
+              <>
+                <span className="w-1 h-1 rounded-full bg-white/25" />
+                <span>{formatDuration(content.duration)}</span>
+              </>
             )}
           </motion.div>
 
           {/* Description */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="text-white/80 text-base md:text-lg mb-8 line-clamp-3"
+            transition={{ duration: 0.5, delay: 0.45, ease: "easeOut" }}
+            className="text-white/70 text-base md:text-lg leading-relaxed mb-8 line-clamp-3"
           >
             {content.description}
           </motion.p>
 
           {/* Actions */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="flex flex-wrap items-center gap-4"
+            transition={{ duration: 0.5, delay: 0.55, ease: "easeOut" }}
+            className="flex flex-wrap items-center gap-3"
           >
             <Link href={primaryHref}>
-              <Button size="lg" className="bg-white text-black hover:bg-white/90 font-semibold text-base px-8">
-                {primaryHref === "/subscribe" ? (
-                  <Lock className="w-5 h-5 mr-2" />
-                ) : isReadingContent ? (
-                  <BookOpen className="w-5 h-5 mr-2" />
-                ) : (
-                  <Play className="w-5 h-5 mr-2 fill-black" />
-                )}
+              <Button
+                size="lg"
+                className="bg-white text-black hover:bg-white/92 font-semibold text-sm px-7 gap-2 h-11"
+              >
+                <PrimaryIcon className={`w-4 h-4 ${content.type === "video" && primaryHref !== "/subscribe" ? "fill-black" : ""}`} />
                 {primaryLabel}
               </Button>
             </Link>
             <Link href={`/content/${content.id}`}>
-              <Button size="lg" variant="secondary" className="bg-white/20 text-white hover:bg-white/30 font-semibold text-base px-8">
-                <Info className="w-5 h-5 mr-2" />
-                Más información
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white/25 text-white bg-white/8 hover:bg-white/15 hover:border-white/40 font-medium text-sm px-7 gap-2 h-11 backdrop-blur-sm"
+              >
+                <Info className="w-4 h-4" />
+                Más info
               </Button>
             </Link>
           </motion.div>
         </div>
-
-        {/* Mute Button (if video) */}
-        {content.file_url && content.type === 'video' && (
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-            onClick={() => setMuted(!muted)}
-            className="absolute bottom-20 right-4 md:bottom-32 md:right-8 p-3 rounded-full border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-all"
-          >
-            {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-          </motion.button>
-        )}
       </div>
+
+      {/* Mute button */}
+      {content.file_url && content.type === "video" && (
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.8 }}
+          onClick={() => setMuted(!muted)}
+          className="absolute bottom-16 right-4 md:bottom-28 md:right-8 w-10 h-10 rounded-full border border-white/25 bg-black/30 backdrop-blur-sm text-white hover:border-white/50 hover:bg-black/50 transition-all flex items-center justify-center"
+        >
+          {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+        </motion.button>
+      )}
     </div>
   )
 }
