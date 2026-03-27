@@ -33,7 +33,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="relative z-10 flex flex-col h-full px-12 xl:px-16 py-12">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <span className="font-display text-2xl font-bold text-foreground tracking-tight">ALLYN</span>
+            <span className="font-sf text-2xl font-bold text-foreground tracking-tight">ALLYN</span>
           </div>
 
           {/* Main copy */}
@@ -41,10 +41,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/15 rounded-full px-4 py-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                <span className="text-xs font-medium text-primary/80 tracking-wide uppercase">Plataforma de transformación</span>
+                <span className="font-sf text-xs font-medium text-primary/80 tracking-wide uppercase">Plataforma de transformación</span>
               </div>
 
-              <h1 className="font-display text-4xl xl:text-5xl font-bold leading-[1.1] text-foreground">
+              <h1 className="font-sf text-4xl xl:text-5xl font-bold leading-[1.1] text-foreground">
                 Transforma tu vida{" "}
                 <span className="text-primary">en las 3 áreas</span>{" "}
                 que importan
@@ -107,7 +107,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="flex-1 flex flex-col items-center justify-center min-h-screen px-6 py-12 sm:px-10">
         {/* Mobile logo */}
         <div className="flex items-center mb-10 lg:hidden">
-          <span className="font-display text-2xl font-bold tracking-tight text-foreground">ALLYN</span>
+          <span className="font-sf text-2xl font-bold tracking-tight text-foreground">ALLYN</span>
         </div>
 
         <div className="w-full max-w-[400px]">

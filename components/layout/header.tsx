@@ -67,7 +67,7 @@ export function Header() {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           {/* Wordmark */}
           <Link href="/" className="flex items-center">
-            <span className="font-display text-2xl font-bold tracking-tight text-foreground">
+            <span className="font-sf text-2xl font-bold tracking-tight text-foreground">
               ALLYN
             </span>
           </Link>
