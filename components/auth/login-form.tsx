@@ -23,11 +23,19 @@ export function LoginForm() {
     setLoading(true)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
+
+      const accessToken =
+        data.session?.access_token ?? (await supabase.auth.getSession()).data.session?.access_token
 
       const ensureProfileResponse = await fetch("/api/auth/ensure-profile", {
         method: "POST",
+        headers: accessToken
+          ? {
+              Authorization: `Bearer ${accessToken}`,
+            }
+          : undefined,
       })
 
       if (!ensureProfileResponse.ok) {

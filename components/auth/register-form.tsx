@@ -55,8 +55,16 @@ function RegisterFormInner() {
       }
 
       // Email confirmation disabled — user is logged in immediately
+      const accessToken =
+        data.session.access_token ?? (await supabase.auth.getSession()).data.session?.access_token
+
       const ensureProfileResponse = await fetch("/api/auth/ensure-profile", {
         method: "POST",
+        headers: accessToken
+          ? {
+              Authorization: `Bearer ${accessToken}`,
+            }
+          : undefined,
       })
 
       if (!ensureProfileResponse.ok) {
