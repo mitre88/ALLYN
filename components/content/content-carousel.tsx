@@ -10,9 +10,10 @@ interface ContentCarouselProps {
   title: string
   content: Content[]
   color?: string
+  isSubscribed?: boolean
 }
 
-export function ContentCarousel({ title, content, color }: ContentCarouselProps) {
+export function ContentCarousel({ title, content, color, isSubscribed = false }: ContentCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
@@ -94,7 +95,7 @@ export function ContentCarousel({ title, content, color }: ContentCarouselProps)
               viewport={{ once: true }}
               transition={{ delay: index * 0.05 }}
             >
-              <ContentCard content={item} />
+              <ContentCard content={item} isSubscribed={isSubscribed} />
             </motion.div>
           ))}
         </div>

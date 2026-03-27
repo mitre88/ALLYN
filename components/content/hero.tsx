@@ -69,7 +69,7 @@ export function Hero({ content }: HeroProps) {
             className="flex items-center gap-4 text-white/80 mb-4 text-sm"
           >
             <span className="text-green-400 font-semibold">98% Match</span>
-            <span>{new Date(content.published_at).getFullYear()}</span>
+            {content.published_at && <span>{new Date(content.published_at).getFullYear()}</span>}
             <span className="border border-white/30 px-1.5 py-0.5 rounded text-xs">
               {content.type === 'video' ? 'HD' : content.type}
             </span>
@@ -111,7 +111,7 @@ export function Hero({ content }: HeroProps) {
         </div>
 
         {/* Mute Button (if video) */}
-        {content.video_url && (
+        {content.file_url && content.type === 'video' && (
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

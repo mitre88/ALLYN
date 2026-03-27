@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,17 +9,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { createClient } from "@/lib/supabase/client"
 import { useToast } from "@/lib/hooks/use-toast"
 import { BlurFade } from "@/components/magicui/blur-fade"
-import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { Eye, EyeOff, Loader2, Gift } from "lucide-react"
 
-export function RegisterForm() {
+function RegisterFormInner() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [fullName, setFullName] = useState("")
+  const [username, setUsername] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [refCode, setRefCode] = useState<string | null>(null)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
   const { showSuccess, showError } = useToast()
+
+  useEffect(() => {
+    const ref = searchParams.get("ref")
+    if (ref) setRefCode(ref)
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,6 +40,8 @@ export function RegisterForm() {
         options: {
           data: {
             full_name: fullName,
+            username,
+            ...(refCode ? { referred_by: refCode } : {}),
           },
         },
       })
@@ -41,8 +51,9 @@ export function RegisterForm() {
       showSuccess("¡Cuenta creada!", "Bienvenido a ALLYN. Tu transformación comienza ahora.")
       router.push("/")
       router.refresh()
-    } catch (error: any) {
-      showError("Error al crear cuenta", error.message)
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Error desconocido"
+      showError("Error al crear cuenta", message)
     } finally {
       setLoading(false)
     }
@@ -60,7 +71,35 @@ export function RegisterForm() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Referral badge */}
+          {refCode && (
+            <div className="mb-4 flex items-center gap-2 bg-purple-900/20 border border-purple-500/30 rounded-lg px-3 py-2.5">
+              <Gift className="w-4 h-4 text-purple-400 shrink-0" />
+              <p className="text-sm text-purple-300 font-medium">
+                ¡Fuiste invitado por un amigo! 🎉
+              </p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Username */}
+            <div className="space-y-2">
+              <label htmlFor="username" className="text-sm font-medium">
+                Nombre de usuario
+              </label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="@tunombre"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className="bg-background"
+                autoComplete="username"
+              />
+            </div>
+
+            {/* Full name */}
             <div className="space-y-2">
               <label htmlFor="fullName" className="text-sm font-medium">
                 Nombre completo
@@ -73,8 +112,11 @@ export function RegisterForm() {
                 onChange={(e) => setFullName(e.target.value)}
                 required
                 className="bg-background"
+                autoComplete="name"
               />
             </div>
+
+            {/* Email */}
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Correo electrónico
@@ -87,8 +129,11 @@ export function RegisterForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="bg-background"
+                autoComplete="email"
               />
             </div>
+
+            {/* Password */}
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-medium">
                 Contraseña
@@ -103,11 +148,13 @@ export function RegisterForm() {
                   required
                   minLength={6}
                   className="bg-background pr-10"
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -136,5 +183,13 @@ export function RegisterForm() {
         </CardContent>
       </Card>
     </BlurFade>
+  )
+}
+
+export function RegisterForm() {
+  return (
+    <Suspense fallback={null}>
+      <RegisterFormInner />
+    </Suspense>
   )
 }
