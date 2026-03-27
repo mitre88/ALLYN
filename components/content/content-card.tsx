@@ -5,6 +5,8 @@ import { motion } from "framer-motion"
 import { Play, Plus, ThumbsUp, ChevronDown, Lock, BookOpen, GraduationCap, Video } from "lucide-react"
 import Link from "next/link"
 import { BorderBeam } from "@/components/magicui/border-beam"
+import { ContentArtwork } from "@/components/content/content-artwork"
+import { getPrimaryContentHref } from "@/lib/content"
 import type { Content } from "@/types/database"
 import { formatDuration } from "@/lib/utils"
 
@@ -41,7 +43,7 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
 
   const typeConfig = TYPE_CONFIG[content.type] ?? TYPE_CONFIG.video
   const isPremiumLocked = !isSubscribed
-  const primaryHref = isPremiumLocked ? '/subscribe' : typeConfig.href(content.id)
+  const primaryHref = getPrimaryContentHref(content, isSubscribed)
   const TypeIcon = typeConfig.icon
 
   return (
@@ -64,12 +66,7 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
         )}
 
         {/* Thumbnail */}
-        <img
-          src={content.thumbnail_url || "/placeholder.svg"}
-          alt={content.title}
-          className="w-full h-full object-cover"
-          draggable={false}
-        />
+        <ContentArtwork content={content} showTypeLabel={false} />
 
         {/* Type badge (top-left) */}
         <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/70 backdrop-blur-sm rounded-full px-2 py-0.5">
@@ -97,7 +94,7 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
               {/* Primary action button */}
               <Link href={primaryHref}>
                 <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center hover:bg-white/90 transition-colors">
-                  {isPremiumLocked ? (
+                  {primaryHref === "/subscribe" ? (
                     <Lock className="w-3.5 h-3.5 text-black" />
                   ) : content.type === 'book' || content.type === 'audiobook' ? (
                     <BookOpen className="w-3.5 h-3.5 text-black" />

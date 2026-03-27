@@ -26,8 +26,8 @@ export async function proxy(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   const { pathname } = request.nextUrl
 
-  // Redirect unauthenticated users away from protected routes
-  const protectedRoutes = ['/read', '/watch', '/profile']
+  // Read/watch pages are intentionally public so non-subscribers can see previews.
+  const protectedRoutes = ['/profile']
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
   if (isProtectedRoute && !user) {

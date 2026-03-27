@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ChevronLeft, Lock, BookOpen } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { AudioPlayer } from '@/components/content/audio-player'
+import { ContentArtwork } from '@/components/content/content-artwork'
 import type { Content } from '@/types/database'
 
 export default function ReadPage() {
@@ -150,10 +151,17 @@ export default function ReadPage() {
             )}
           </div>
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-zinc-900">
-            <div className="text-center text-zinc-500">
-              <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-40" />
-              <p className="text-sm">Vista previa no disponible</p>
+          <div className="relative w-full h-full overflow-hidden bg-zinc-900">
+            <ContentArtwork content={content} className="absolute inset-0" />
+            <div className="absolute inset-0 bg-black/45" />
+            <div className="absolute inset-0 flex items-center justify-center px-6">
+              <div className="text-center text-white/80">
+                <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-70" />
+                <p className="text-sm font-medium">Vista previa no disponible</p>
+                <p className="mt-2 text-xs text-white/55">
+                  Este contenido necesita un archivo de preview para mostrarse aquí.
+                </p>
+              </div>
             </div>
           </div>
         )}

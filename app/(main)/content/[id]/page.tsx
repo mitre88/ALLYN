@@ -3,7 +3,9 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Play, Plus, Share2, Clock, User, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ContentArtwork } from "@/components/content/content-artwork"
 import { ContentCarousel } from "@/components/content/content-carousel"
+import { getPrimaryContentHref, getPrimaryContentLabel } from "@/lib/content"
 import type { Content } from "@/types/database"
 import { formatDuration } from "@/lib/utils"
 
@@ -68,16 +70,15 @@ export default async function ContentPage({ params }: ContentPageProps) {
     : []
 
   const isBook = content.type === 'book' || content.type === 'audiobook'
-  const watchHref = isBook ? `/read/${content.id}` : `/watch/${content.id}`
+  const primaryHref = getPrimaryContentHref(content, isSubscribed)
+  const primaryLabel = getPrimaryContentLabel(content, isSubscribed)
 
   return (
     <div className="min-h-screen pt-16">
       {/* Hero Image */}
       <div className="relative h-[50vh] md:h-[60vh]">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${content.thumbnail_url})` }}
-        >
+        <div className="absolute inset-0">
+          <ContentArtwork content={content} variant="background" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
         </div>
       </div>
@@ -118,17 +119,17 @@ export default async function ContentPage({ params }: ContentPageProps) {
             </div>
 
             <div className="flex flex-wrap gap-4 mb-8">
-              <Link href={watchHref}>
+              <Link href={primaryHref}>
                 <Button size="lg" className="bg-white text-black hover:bg-white/90 font-semibold">
                   {isBook ? (
                     <>
                       <BookOpen className="w-5 h-5 mr-2" />
-                      {isSubscribed ? 'Leer' : 'Vista previa'}
+                      {primaryLabel}
                     </>
                   ) : (
                     <>
                       <Play className="w-5 h-5 mr-2 fill-black" />
-                      {isSubscribed ? 'Reproducir' : 'Vista previa'}
+                      {primaryLabel}
                     </>
                   )}
                 </Button>

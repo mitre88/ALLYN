@@ -1,8 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Play, Info, Volume2, VolumeX } from "lucide-react"
+import { Play, Info, Volume2, VolumeX, BookOpen, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ContentArtwork } from "@/components/content/content-artwork"
+import { getPrimaryContentHref, getPrimaryContentLabel } from "@/lib/content"
 import Link from "next/link"
 import { useState } from "react"
 import type { Content } from "@/types/database"
@@ -10,22 +12,22 @@ import { formatDuration } from "@/lib/utils"
 
 interface HeroProps {
   content: Content
+  isSubscribed?: boolean
 }
 
-export function Hero({ content }: HeroProps) {
+export function Hero({ content, isSubscribed = false }: HeroProps) {
   const [muted, setMuted] = useState(true)
+  const primaryHref = getPrimaryContentHref(content, isSubscribed)
+  const primaryLabel = getPrimaryContentLabel(content, isSubscribed)
+  const isReadingContent = content.type === "book" || content.type === "audiobook"
 
   if (!content) return null
 
   return (
     <div className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${content.thumbnail_url})`,
-        }}
-      >
+      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat">
+        <ContentArtwork content={content} variant="background" />
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
         <div className="absolute inset-0 hero-gradient" />
@@ -95,10 +97,16 @@ export function Hero({ content }: HeroProps) {
             transition={{ duration: 0.5, delay: 0.6 }}
             className="flex flex-wrap items-center gap-4"
           >
-            <Link href={`/watch/${content.id}`}>
+            <Link href={primaryHref}>
               <Button size="lg" className="bg-white text-black hover:bg-white/90 font-semibold text-base px-8">
-                <Play className="w-5 h-5 mr-2 fill-black" />
-                Reproducir
+                {primaryHref === "/subscribe" ? (
+                  <Lock className="w-5 h-5 mr-2" />
+                ) : isReadingContent ? (
+                  <BookOpen className="w-5 h-5 mr-2" />
+                ) : (
+                  <Play className="w-5 h-5 mr-2 fill-black" />
+                )}
+                {primaryLabel}
               </Button>
             </Link>
             <Link href={`/content/${content.id}`}>

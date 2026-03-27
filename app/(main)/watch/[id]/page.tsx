@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft, Lock, Play } from 'lucide-react'
+import { ContentArtwork } from '@/components/content/content-artwork'
 import { createClient } from '@/lib/supabase/client'
 import type { Content } from '@/types/database'
 
@@ -131,15 +132,8 @@ export default function WatchPage() {
           </video>
         ) : (
           /* Thumbnail background when no video or preview ended */
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: content.thumbnail_url
-                ? `url(${content.thumbnail_url})`
-                : undefined,
-              backgroundColor: content.thumbnail_url ? undefined : '#18181b',
-            }}
-          >
+          <div className="absolute inset-0 bg-cover bg-center">
+            <ContentArtwork content={content} variant="background" />
             <div className="absolute inset-0 bg-black/60" />
           </div>
         )}

@@ -6,6 +6,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, Pencil, Trash2, Plus, Eye, EyeOff, BookOpen, Video, GraduationCap } from 'lucide-react'
+import { ContentArtwork } from '@/components/content/content-artwork'
 import Link from 'next/link'
 import { toast } from 'sonner'
 
@@ -42,11 +43,9 @@ function SortableRow({ item, onToggle, onDelete }: {
       <td className="p-3">
         <div className="flex items-center gap-3">
           {item.thumbnail_url ? (
-            <img src={item.thumbnail_url} alt={item.title} className="w-12 h-8 rounded object-cover" />
+            <ContentArtwork content={item} variant="mini" className="w-12 h-8" />
           ) : (
-            <div className="w-12 h-8 rounded bg-slate-700 flex items-center justify-center">
-              <Icon className="w-4 h-4 text-slate-400" />
-            </div>
+            <ContentArtwork content={item} variant="mini" className="w-12 h-8" />
           )}
           <div>
             <p className="text-sm text-white font-medium">{item.title}</p>

@@ -107,7 +107,7 @@ export default async function HomePage() {
   return (
     <div className="bg-background">
       {/* Hero Section */}
-      {featuredContent && <Hero content={featuredContent} />}
+      {featuredContent && <Hero content={featuredContent} isSubscribed={isSubscribed} />}
 
       {/* Content Sections */}
       <div className="relative z-10 -mt-20 space-y-4 pb-12">

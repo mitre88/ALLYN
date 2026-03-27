@@ -5,11 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/client"
 import { useToast } from "@/lib/hooks/use-toast"
-import { BlurFade } from "@/components/magicui/blur-fade"
-import { Eye, EyeOff, Loader2, Gift } from "lucide-react"
+import { Eye, EyeOff, Loader2, Gift, Mail, ArrowRight, CheckCircle2 } from "lucide-react"
 
 function RegisterFormInner() {
   const [email, setEmail] = useState("")
@@ -18,11 +16,12 @@ function RegisterFormInner() {
   const [username, setUsername] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
   const [refCode, setRefCode] = useState<string | null>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClient()
-  const { showSuccess, showError } = useToast()
+  const { showError } = useToast()
 
   useEffect(() => {
     const ref = searchParams.get("ref")
@@ -34,7 +33,7 @@ function RegisterFormInner() {
     setLoading(true)
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -48,7 +47,13 @@ function RegisterFormInner() {
 
       if (error) throw error
 
-      showSuccess("¡Cuenta creada!", "Bienvenido a ALLYN. Tu transformación comienza ahora.")
+      // If session is null, Supabase requires email confirmation
+      if (!data.session) {
+        setEmailSent(true)
+        return
+      }
+
+      // Email confirmation disabled — user is logged in immediately
       router.push("/")
       router.refresh()
     } catch (error: unknown) {
@@ -59,130 +64,175 @@ function RegisterFormInner() {
     }
   }
 
-  return (
-    <BlurFade delay={0.1}>
-      <Card className="w-full max-w-md bg-card/95 backdrop-blur-sm border-border">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            ALLYN
-          </CardTitle>
-          <CardDescription className="text-center">
-            Crea tu cuenta y comienza tu viaje de transformación
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {/* Referral badge */}
-          {refCode && (
-            <div className="mb-4 flex items-center gap-2 bg-purple-900/20 border border-purple-500/30 rounded-lg px-3 py-2.5">
-              <Gift className="w-4 h-4 text-purple-400 shrink-0" />
-              <p className="text-sm text-purple-300 font-medium">
-                ¡Fuiste invitado por un amigo! 🎉
-              </p>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Username */}
-            <div className="space-y-2">
-              <label htmlFor="username" className="text-sm font-medium">
-                Nombre de usuario
-              </label>
-              <Input
-                id="username"
-                type="text"
-                placeholder="@tunombre"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="bg-background"
-                autoComplete="username"
-              />
-            </div>
-
-            {/* Full name */}
-            <div className="space-y-2">
-              <label htmlFor="fullName" className="text-sm font-medium">
-                Nombre completo
-              </label>
-              <Input
-                id="fullName"
-                type="text"
-                placeholder="Tu nombre"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                required
-                className="bg-background"
-                autoComplete="name"
-              />
-            </div>
-
-            {/* Email */}
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Correo electrónico
-              </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="tu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="bg-background"
-                autoComplete="email"
-              />
-            </div>
-
-            {/* Password */}
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Contraseña
-              </label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
-                  className="bg-background pr-10"
-                  autoComplete="new-password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-              <p className="text-xs text-muted-foreground">Mínimo 6 caracteres</p>
-            </div>
-
-            <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={loading}>
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creando cuenta...
-                </>
-              ) : (
-                "Crear cuenta"
-              )}
-            </Button>
-          </form>
-
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            ¿Ya tienes cuenta?{" "}
-            <Link href="/login" className="text-primary hover:underline">
-              Inicia sesión
-            </Link>
+  // ── Email sent confirmation screen ─────────────────────────────────
+  if (emailSent) {
+    return (
+      <div className="text-center space-y-6">
+        <div className="w-16 h-16 rounded-2xl bg-violet-500/15 border border-violet-500/20 flex items-center justify-center mx-auto">
+          <Mail className="w-7 h-7 text-violet-400" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold text-foreground">Revisa tu correo</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Enviamos un enlace de confirmación a{" "}
+            <span className="font-medium text-foreground">{email}</span>.
+            <br />
+            Haz clic en el enlace para activar tu cuenta.
           </p>
-        </CardContent>
-      </Card>
-    </BlurFade>
+        </div>
+        <div className="flex items-start gap-3 bg-muted/50 rounded-xl p-4 text-left">
+          <CheckCircle2 className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
+          <p className="text-xs text-muted-foreground">
+            ¿No lo ves? Revisa tu carpeta de spam o{" "}
+            <button
+              onClick={() => setEmailSent(false)}
+              className="text-violet-400 hover:text-violet-300 underline underline-offset-2"
+            >
+              vuelve a intentarlo
+            </button>
+            .
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Registration form ───────────────────────────────────────────────
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="space-y-1">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">Crea tu cuenta</h2>
+        <p className="text-sm text-muted-foreground">
+          Empieza gratis. Sin tarjeta de crédito.
+        </p>
+      </div>
+
+      {/* Referral badge */}
+      {refCode && (
+        <div className="flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-xl px-4 py-3">
+          <Gift className="w-4 h-4 text-violet-400 shrink-0" />
+          <p className="text-sm text-violet-300 font-medium">
+            ¡Fuiste invitado! Tienes acceso especial 🎉
+          </p>
+        </div>
+      )}
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1.5">
+            <label htmlFor="username" className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Usuario
+            </label>
+            <Input
+              id="username"
+              type="text"
+              placeholder="@tunombre"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              autoComplete="username"
+              className="h-10 bg-muted/30 border-border/50 focus:border-violet-500/50 focus:bg-background transition-colors"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="fullName" className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Nombre
+            </label>
+            <Input
+              id="fullName"
+              type="text"
+              placeholder="Tu nombre"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
+              autoComplete="name"
+              className="h-10 bg-muted/30 border-border/50 focus:border-violet-500/50 focus:bg-background transition-colors"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label htmlFor="email" className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            Correo electrónico
+          </label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="tu@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+            className="h-10 bg-muted/30 border-border/50 focus:border-violet-500/50 focus:bg-background transition-colors"
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label htmlFor="password" className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            Contraseña
+          </label>
+          <div className="relative">
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Mínimo 6 caracteres"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              autoComplete="new-password"
+              className="h-10 bg-muted/30 border-border/50 focus:border-violet-500/50 focus:bg-background transition-colors pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full h-11 bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white font-medium gap-2 shadow-lg shadow-violet-500/20"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Creando cuenta...
+            </>
+          ) : (
+            <>
+              Crear cuenta gratis
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
+        </Button>
+      </form>
+
+      <p className="text-center text-xs text-muted-foreground">
+        Al registrarte aceptas nuestros{" "}
+        <Link href="/terms" className="text-violet-400 hover:text-violet-300 underline-offset-2 hover:underline">
+          Términos
+        </Link>{" "}
+        y{" "}
+        <Link href="/privacy" className="text-violet-400 hover:text-violet-300 underline-offset-2 hover:underline">
+          Privacidad
+        </Link>
+      </p>
+
+      <p className="text-center text-sm text-muted-foreground">
+        ¿Ya tienes cuenta?{" "}
+        <Link href="/login" className="text-violet-400 hover:text-violet-300 font-medium underline-offset-2 hover:underline">
+          Inicia sesión
+        </Link>
+      </p>
+    </div>
   )
 }
 
