@@ -1,15 +1,16 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { BookOpen, GraduationCap, Sparkles, Video } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { getContentAccentColor, getContentTypeLabel } from "@/lib/content"
 import type { Content } from "@/types/database"
 
 interface ContentArtworkProps {
-  content: Pick<Content, "title" | "author" | "type" | "thumbnail_url"> & {
-    category?: { color: string | null; name?: string } | null
-  }
+  content: Pick<Content, "id" | "title" | "author" | "type" | "thumbnail_url"> &
+    Partial<Pick<Content, "preview_url" | "file_url">> & {
+      category?: { color: string | null; name?: string } | null
+    }
   variant?: "panel" | "background" | "mini"
   className?: string
   imageClassName?: string
@@ -23,6 +24,17 @@ const TYPE_ICONS = {
   course: GraduationCap,
 } as const
 
+function getAssetKind(url?: string | null) {
+  if (!url) return null
+
+  const cleanUrl = url.split("?")[0].toLowerCase()
+
+  if (/\.(mp4|webm|mov|m4v)$/.test(cleanUrl)) return "video"
+  if (/\.pdf$/.test(cleanUrl)) return "pdf"
+
+  return null
+}
+
 export function ContentArtwork({
   content,
   variant = "panel",
@@ -31,12 +43,48 @@ export function ContentArtwork({
   showTypeLabel = true,
 }: ContentArtworkProps) {
   const [hasError, setHasError] = useState(!content.thumbnail_url)
+  const [signedPreviewUrl, setSignedPreviewUrl] = useState<string | null>(null)
+  const [previewFailed, setPreviewFailed] = useState(false)
   const accent = getContentAccentColor(content)
   const TypeIcon = TYPE_ICONS[content.type]
+  const assetKind = getAssetKind(signedPreviewUrl)
 
   useEffect(() => {
     setHasError(!content.thumbnail_url)
   }, [content.thumbnail_url])
+
+  useEffect(() => {
+    let ignore = false
+
+    setSignedPreviewUrl(null)
+    setPreviewFailed(false)
+
+    async function loadSignedPreview() {
+      if (content.thumbnail_url || !content.id || (!content.preview_url && !content.file_url)) {
+        return
+      }
+
+      try {
+        const response = await fetch(`/api/content/${content.id}/preview`)
+        if (!response.ok) return
+
+        const data = await response.json()
+        if (!ignore) {
+          setSignedPreviewUrl(data.url ?? null)
+        }
+      } catch {
+        if (!ignore) {
+          setPreviewFailed(true)
+        }
+      }
+    }
+
+    void loadSignedPreview()
+
+    return () => {
+      ignore = true
+    }
+  }, [content.file_url, content.id, content.preview_url, content.thumbnail_url])
 
   if (content.thumbnail_url && !hasError) {
     return (
@@ -48,6 +96,30 @@ export function ContentArtwork({
         onError={() => setHasError(true)}
       />
     )
+  }
+
+  if (variant === "panel" && signedPreviewUrl && !previewFailed) {
+    if (assetKind === "video") {
+      return (
+        <VideoArtwork
+          url={signedPreviewUrl}
+          className={className}
+          imageClassName={imageClassName}
+          onError={() => setPreviewFailed(true)}
+        />
+      )
+    }
+
+    if (assetKind === "pdf") {
+      return (
+        <PdfArtwork
+          url={signedPreviewUrl}
+          title={content.title}
+          className={className}
+          imageClassName={imageClassName}
+        />
+      )
+    }
   }
 
   if (variant === "mini") {
@@ -130,6 +202,105 @@ export function ContentArtwork({
           )}
         </div>
       </div>
+    </div>
+  )
+}
+
+function PdfArtwork({
+  url,
+  title,
+  className,
+  imageClassName,
+}: {
+  url: string
+  title: string
+  className?: string
+  imageClassName?: string
+}) {
+  return (
+    <div className={cn("relative h-full w-full overflow-hidden bg-white", className)}>
+      <iframe
+        src={`${url}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+        title={`Preview de ${title}`}
+        className={cn("h-full w-full scale-[1.05] origin-top border-0", imageClassName)}
+        sandbox="allow-same-origin allow-scripts"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-white/12" />
+    </div>
+  )
+}
+
+function VideoArtwork({
+  url,
+  className,
+  imageClassName,
+  onError,
+}: {
+  url: string
+  className?: string
+  imageClassName?: string
+  onError: () => void
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [frameReady, setFrameReady] = useState(false)
+
+  useEffect(() => {
+    setFrameReady(false)
+  }, [url])
+
+  const captureFrame = (video: HTMLVideoElement) => {
+    const canvas = canvasRef.current
+    if (!canvas || !video.videoWidth || !video.videoHeight) return
+
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+
+    const context = canvas.getContext("2d")
+    if (!context) return
+
+    try {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height)
+      setFrameReady(true)
+    } catch {
+      onError()
+    }
+  }
+
+  return (
+    <div className={cn("relative h-full w-full overflow-hidden bg-black", className)}>
+      <video
+        ref={videoRef}
+        src={url}
+        className="hidden"
+        muted
+        playsInline
+        preload="metadata"
+        crossOrigin="anonymous"
+        onLoadedData={(event) => {
+          const video = event.currentTarget
+          const previewTime = Number.isFinite(video.duration) && video.duration > 0
+            ? Math.min(1, Math.max(0.1, video.duration * 0.08))
+            : 0.1
+
+          try {
+            video.currentTime = previewTime
+          } catch {
+            captureFrame(video)
+          }
+        }}
+        onSeeked={(event) => captureFrame(event.currentTarget)}
+        onError={onError}
+      />
+      <canvas
+        ref={canvasRef}
+        className={cn(
+          "h-full w-full object-cover transition-opacity",
+          frameReady ? "opacity-100" : "opacity-0",
+          imageClassName
+        )}
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/15" />
     </div>
   )
 }

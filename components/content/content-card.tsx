@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Play, Plus, Bookmark, ChevronDown, Lock, BookOpen, GraduationCap, Video, Headphones } from "lucide-react"
+import { ArrowUpRight, Play, Lock, BookOpen, GraduationCap, Video, Headphones } from "lucide-react"
 import Link from "next/link"
 import { ContentArtwork } from "@/components/content/content-artwork"
 import { getPrimaryContentHref } from "@/lib/content"
@@ -68,6 +68,11 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={isHovered ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
+                aria-label={
+                  primaryHref === "/subscribe"
+                    ? `Desbloquear ${content.title}`
+                    : `Abrir ${content.title}`
+                }
                 className="w-12 h-12 rounded-full bg-white/95 flex items-center justify-center hover:bg-white transition-colors shadow-lg"
               >
                 {primaryHref === "/subscribe" ? (
@@ -83,24 +88,27 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
 
           {/* Bottom action bar */}
           <div className="absolute bottom-0 left-0 right-0 p-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <button className="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center hover:border-white hover:bg-white/10 transition-colors">
-                  <Plus className="w-3.5 h-3.5 text-white" />
-                </button>
-                <button className="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center hover:border-white hover:bg-white/10 transition-colors">
-                  <Bookmark className="w-3.5 h-3.5 text-white" />
-                </button>
+            <div className="flex items-end justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-white/42">
+                  {isPremiumLocked ? "Solo Miembros" : "Disponible Ahora"}
+                </p>
+                <p className="mt-1 line-clamp-1 text-xs text-white/80">
+                  {content.author || typeConfig.label}
+                </p>
               </div>
               <Link href={`/content/${content.id}`}>
-                <button className="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center hover:border-white hover:bg-white/10 transition-colors">
-                  <ChevronDown className="w-3.5 h-3.5 text-white" />
+                <button
+                  aria-label={`Ver detalles de ${content.title}`}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-white/5 hover:border-white hover:bg-white/10 transition-colors"
+                >
+                  <ArrowUpRight className="w-3.5 h-3.5 text-white" />
                 </button>
               </Link>
             </div>
 
             {content.duration > 0 && (
-              <p className="text-[10px] text-white/50 mt-2">{formatDuration(content.duration)}</p>
+              <p className="mt-2 text-[10px] text-white/50">{formatDuration(content.duration)}</p>
             )}
           </div>
         </AnimateOverlay>

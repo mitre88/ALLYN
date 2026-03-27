@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, Search, Crown, LogOut, UserCircle, ChevronDown } from "lucide-react"
+import { Menu, X, Crown, LogOut, UserCircle, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { createClient } from "@/lib/supabase/client"
@@ -87,10 +87,6 @@ export function Header() {
 
           {/* Right Side */}
           <div className="flex items-center gap-2">
-            <button className="w-9 h-9 flex items-center justify-center text-foreground/60 hover:text-foreground transition-colors rounded-md hover:bg-muted">
-              <Search className="w-4 h-4" />
-            </button>
-
             {user ? (
               <div className="flex items-center gap-2">
                 {!isSubscribed && (
@@ -108,6 +104,7 @@ export function Header() {
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen((prev) => !prev)}
+                    aria-label={dropdownOpen ? "Cerrar menú de cuenta" : "Abrir menú de cuenta"}
                     className="flex items-center gap-1.5 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 p-0.5"
                   >
                     <Avatar className="w-8 h-8">
@@ -196,6 +193,7 @@ export function Header() {
 
             {/* Mobile hamburger */}
             <button
+              aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
               className="md:hidden w-9 h-9 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >

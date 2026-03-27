@@ -43,26 +43,28 @@ export function getContentAccentColor(
   return content.category?.color || TYPE_CONFIG[content.type].accent
 }
 
-export function hasContentPreview(content: Pick<Content, "preview_url">): boolean {
-  return Boolean(content.preview_url)
+export function hasContentPreview(
+  content: Pick<Content, "preview_url" | "file_url">
+): boolean {
+  return Boolean(content.preview_url || content.file_url)
 }
 
 export function canOpenContent(
-  content: Pick<Content, "preview_url">,
+  content: Pick<Content, "preview_url" | "file_url">,
   isSubscribed = false
 ): boolean {
   return isSubscribed || hasContentPreview(content)
 }
 
 export function getPrimaryContentHref(
-  content: Pick<Content, "id" | "type" | "preview_url">,
+  content: Pick<Content, "id" | "type" | "preview_url" | "file_url">,
   isSubscribed = false
 ): string {
   return canOpenContent(content, isSubscribed) ? getContentHref(content) : "/subscribe"
 }
 
 export function getPrimaryContentLabel(
-  content: Pick<Content, "type" | "preview_url">,
+  content: Pick<Content, "type" | "preview_url" | "file_url">,
   isSubscribed = false
 ): string {
   if (isSubscribed) {
