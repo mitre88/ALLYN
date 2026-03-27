@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function GET(
   request: NextRequest,
@@ -43,18 +44,19 @@ export async function GET(
     }
 
     // Extract the storage path from the file_url
-    // file_url format: https://<project>.supabase.co/storage/v1/object/public/<bucket>/<path>
+    // Supports both public and signed URL formats
     const url = new URL(content.file_url)
-    const pathParts = url.pathname.split('/storage/v1/object/public/')
-    if (pathParts.length < 2) {
+    const publicMatch = url.pathname.match(/\/storage\/v1\/object\/(?:public|sign)\/(.+)/)
+    if (!publicMatch) {
       return NextResponse.json({ error: 'Invalid file URL' }, { status: 500 })
     }
 
-    const [bucket, ...rest] = pathParts[1].split('/')
+    const [bucket, ...rest] = publicMatch[1].split('/')
     const filePath = rest.join('/')
 
-    // Create signed URL (60 min expiry)
-    const { data: signedData, error: signedError } = await supabase.storage
+    // Use admin client to create signed URL for private buckets (60 min expiry)
+    const admin = createAdminClient()
+    const { data: signedData, error: signedError } = await admin.storage
       .from(bucket)
       .createSignedUrl(filePath, 3600)
 

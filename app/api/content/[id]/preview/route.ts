@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function GET(
   request: NextRequest,
@@ -12,7 +13,7 @@ export async function GET(
     // No auth required for previews
     const { data: content, error: contentError } = await supabase
       .from('content')
-      .select('preview_url, status')
+      .select('preview_url, file_url, status')
       .eq('id', id)
       .eq('status', 'published')
       .single()
@@ -21,23 +22,29 @@ export async function GET(
       return NextResponse.json({ error: 'Content not found' }, { status: 404 })
     }
 
-    if (!content.preview_url) {
+    const assetUrl = content.preview_url || content.file_url
+    const source =
+      content.preview_url && content.preview_url !== content.file_url
+        ? 'preview'
+        : 'file'
+
+    if (!assetUrl) {
       return NextResponse.json({ error: 'No preview available' }, { status: 404 })
     }
 
-    // Extract storage path from preview_url
-    // preview_url format: https://<project>.supabase.co/storage/v1/object/public/<bucket>/<path>
-    const url = new URL(content.preview_url)
-    const pathParts = url.pathname.split('/storage/v1/object/public/')
-    if (pathParts.length < 2) {
+    // Extract storage path from preview_url or file_url fallback
+    const url = new URL(assetUrl)
+    const publicMatch = url.pathname.match(/\/storage\/v1\/object\/(?:public|sign)\/(.+)/)
+    if (!publicMatch) {
       return NextResponse.json({ error: 'Invalid preview URL' }, { status: 500 })
     }
 
-    const [bucket, ...rest] = pathParts[1].split('/')
+    const [bucket, ...rest] = publicMatch[1].split('/')
     const filePath = rest.join('/')
 
-    // Create signed URL for preview (30 min expiry)
-    const { data: signedData, error: signedError } = await supabase.storage
+    // Use admin client to create signed URL for private buckets (30 min expiry)
+    const admin = createAdminClient()
+    const { data: signedData, error: signedError } = await admin.storage
       .from(bucket)
       .createSignedUrl(filePath, 1800)
 
@@ -45,7 +52,7 @@ export async function GET(
       return NextResponse.json({ error: 'Could not generate preview URL' }, { status: 500 })
     }
 
-    return NextResponse.json({ url: signedData.signedUrl })
+    return NextResponse.json({ url: signedData.signedUrl, source })
   } catch (error) {
     console.error('[preview] Unexpected error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
