@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
+export const dynamic = 'force-dynamic'
+
 // One-time setup route to create the admin user
 // Call: POST /api/setup with { secret, email, password, username }
 export async function POST(req: NextRequest) {
