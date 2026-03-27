@@ -9,7 +9,7 @@ export default function MainLayout({
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main>{children}</main>
+      <main className="pt-16">{children}</main>
       <Footer />
     </div>
   )
