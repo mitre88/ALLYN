@@ -54,23 +54,8 @@ function RegisterFormInner() {
         return
       }
 
-      // Email confirmation disabled — user is logged in immediately
-      const accessToken =
-        data.session.access_token ?? (await supabase.auth.getSession()).data.session?.access_token
-
-      const ensureProfileResponse = await fetch("/api/auth/ensure-profile", {
-        method: "POST",
-        headers: accessToken
-          ? {
-              Authorization: `Bearer ${accessToken}`,
-            }
-          : undefined,
-      })
-
-      if (!ensureProfileResponse.ok) {
-        const payload = await ensureProfileResponse.json().catch(() => null)
-        throw new Error(payload?.details || "No se pudo crear el perfil del usuario")
-      }
+      // Fire-and-forget: create profile in background, don't block navigation
+      fetch("/api/auth/ensure-profile", { method: "POST" }).catch(() => {})
 
       router.push("/")
       router.refresh()
