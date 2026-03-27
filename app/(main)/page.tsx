@@ -48,25 +48,14 @@ async function getContentByCategory(categoryId: string): Promise<Content[]> {
   return data || []
 }
 
-async function getLatestContent(): Promise<Content[]> {
+async function getCourseContent(): Promise<Content[]> {
   const supabase = await createClient()
   const { data } = await supabase
     .from("content")
     .select("*, category:categories(*)")
+    .eq("type", "course")
     .eq("status", "published")
-    .order("published_at", { ascending: false })
-    .limit(10)
-  return data || []
-}
-
-async function getBookContent(): Promise<Content[]> {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from("content")
-    .select("*, category:categories(*)")
-    .in("type", ["book", "audiobook"])
-    .eq("status", "published")
-    .order("published_at", { ascending: false })
+    .order("sort_order", { ascending: true })
     .limit(10)
   return data || []
 }
@@ -76,10 +65,22 @@ async function getVideoContent(): Promise<Content[]> {
   const { data } = await supabase
     .from("content")
     .select("*, category:categories(*)")
-    .in("type", ["video", "course"])
+    .eq("type", "video")
     .eq("status", "published")
     .order("published_at", { ascending: false })
     .limit(10)
+  return data || []
+}
+
+async function getAllBooks(): Promise<Content[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from("content")
+    .select("*, category:categories(*)")
+    .in("type", ["book", "audiobook"])
+    .eq("status", "published")
+    .order("sort_order", { ascending: true })
+    .limit(50)
   return data || []
 }
 
@@ -91,12 +92,12 @@ export default async function HomePage() {
   const isSubscribed = (profile?.is_subscribed || profile?.role === 'admin') ?? false
   const displayName = profile?.full_name || profile?.username || user?.email?.split("@")[0] || "Bienvenido"
 
-  const [featuredContent, categories, latestContent, books, videos] = await Promise.all([
+  const [featuredContent, categories, courses, videos, allBooks] = await Promise.all([
     getFeaturedContent(),
     getCategories(),
-    getLatestContent(),
-    getBookContent(),
+    getCourseContent(),
     getVideoContent(),
+    getAllBooks(),
   ])
 
   const categoryContent = await Promise.all(
@@ -106,76 +107,71 @@ export default async function HomePage() {
     }))
   )
 
+  const libraryCount = courses.length + allBooks.length + (isSubscribed ? videos.length : 0)
+
   return (
     <div className="bg-background">
       {/* Hero Section */}
       {featuredContent && <Hero content={featuredContent} isSubscribed={isSubscribed} />}
 
       {/* Content Sections */}
-      <div className="relative z-10 -mt-10 space-y-8 pb-16 md:-mt-12 md:space-y-10 md:pb-20">
+      <div className="relative z-10 -mt-4 space-y-10 pb-20 md:-mt-6 md:space-y-12 md:pb-24 xl:space-y-14">
         {user && (
-          <div className="pt-10 md:pt-16">
+          <div className="pt-12 md:pt-16 xl:pt-20">
             <HomeWelcome
               name={displayName}
               isSubscribed={isSubscribed}
-              latestCount={latestContent.length}
+              libraryCount={libraryCount}
               categoryCount={categories.length}
             />
           </div>
         )}
 
-        {/* Latest */}
-        <ContentCarousel
-          eyebrow="Ahora En ALLYN"
-          title="Nuevos Lanzamientos"
-          description="Una selección reciente para entrar directo al contenido sin sentir el home saturado."
-          content={latestContent}
-          isSubscribed={isSubscribed}
-        />
-
-        {/* Subscriber-only sections */}
-        {isSubscribed && books.length > 0 && (
+        {/* ── Curso ── */}
+        {courses.length > 0 && (
           <ContentCarousel
-            eyebrow="Lectura & Audio"
-            title="Mis Libros"
-            description="Tus lecturas y audiolibros con una entrada más limpia y una navegación más clara."
-            content={books}
+            eyebrow="Formación"
+            title="Curso"
+            description="Aprende paso a paso con el material formativo de la plataforma."
+            content={courses}
             isSubscribed={isSubscribed}
           />
         )}
 
-        {isSubscribed && videos.length > 0 && (
+        {/* ── Todos los libros ── */}
+        {allBooks.length > 0 && (
           <ContentCarousel
-            eyebrow="Video Learning"
-            title="Mis Videos"
-            description="Cursos y piezas en video reunidos con más jerarquía visual y mejor separación."
-            content={videos}
+            eyebrow="Biblioteca"
+            title="Todos los Libros"
+            description="La colección completa de libros y audiolibros disponibles en la plataforma."
+            content={allBooks}
             isSubscribed={isSubscribed}
           />
         )}
 
-        {/* Category Sections */}
-        {categoryContent.map(({ category, content }) =>
-          content.length > 0 ? (
+        {/* ── Libros por categoría (Salud · Dinero · Amor) ── */}
+        {categoryContent.map(({ category, content }) => {
+          const books = content.filter(c => c.type === 'book' || c.type === 'audiobook')
+          return books.length > 0 ? (
             <ContentCarousel
               key={category.id}
-              eyebrow="Colección"
+              eyebrow="Libros"
               title={category.name}
               description={category.description || undefined}
-              content={content}
+              content={books}
               color={category.color}
               isSubscribed={isSubscribed}
             />
           ) : null
-        )}
+        })}
 
-        {/* Featured Section */}
-        {featuredContent && (
+        {/* ── Videos (suscriptores) ── */}
+        {isSubscribed && videos.length > 0 && (
           <ContentCarousel
-            eyebrow="Selección Editorial"
-            title="Destacados"
-            description="Una pieza central elegida para abrir el catálogo con más intención."
-            content={[featuredContent]}
+            eyebrow="Video"
+            title="Videos"
+            description="Contenido en video exclusivo para miembros."
+            content={videos}
             isSubscribed={isSubscribed}
           />
         )}
