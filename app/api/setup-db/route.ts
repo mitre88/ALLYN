@@ -22,7 +22,16 @@ export async function POST(req: NextRequest) {
     SECURITY DEFINER SET search_path = public
     AS $$
     BEGIN
-      INSERT INTO public.profiles (id, email, full_name, username, role, is_subscribed, affiliate_code)
+      INSERT INTO public.profiles (
+        id,
+        email,
+        full_name,
+        username,
+        role,
+        is_subscribed,
+        referral_code,
+        referred_by
+      )
       VALUES (
         NEW.id,
         NEW.email,
@@ -30,7 +39,8 @@ export async function POST(req: NextRequest) {
         COALESCE(NEW.raw_user_meta_data->>'username', split_part(NEW.email, '@', 1)),
         COALESCE(NEW.raw_user_meta_data->>'role', 'user'),
         false,
-        substr(md5(NEW.id::text), 1, 8)
+        substr(md5(NEW.id::text), 1, 8),
+        NULLIF(NEW.raw_user_meta_data->>'referred_by', '')
       )
       ON CONFLICT (id) DO NOTHING;
       RETURN NEW;
@@ -44,6 +54,30 @@ export async function POST(req: NextRequest) {
     CREATE TRIGGER on_auth_user_created
       AFTER INSERT ON auth.users
       FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+    -- Backfill profiles for users that already exist in auth.users
+    INSERT INTO public.profiles (
+      id,
+      email,
+      full_name,
+      username,
+      role,
+      is_subscribed,
+      referral_code,
+      referred_by
+    )
+    SELECT
+      u.id,
+      u.email,
+      COALESCE(u.raw_user_meta_data->>'full_name', split_part(u.email, '@', 1)),
+      COALESCE(u.raw_user_meta_data->>'username', split_part(u.email, '@', 1)),
+      COALESCE(u.raw_user_meta_data->>'role', 'user'),
+      false,
+      substr(md5(u.id::text), 1, 8),
+      NULLIF(u.raw_user_meta_data->>'referred_by', '')
+    FROM auth.users u
+    LEFT JOIN public.profiles p ON p.id = u.id
+    WHERE p.id IS NULL;
   `
 
   const { error } = await supabase.rpc('exec_sql', { sql_query: sql }).single()
