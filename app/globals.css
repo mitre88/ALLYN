@@ -4,27 +4,60 @@
 
 @layer base {
   :root {
-    /* Warm dark editorial palette */
-    --background: 28 12% 5%;
-    --foreground: 38 20% 92%;
-    --card: 28 10% 8%;
-    --card-foreground: 38 20% 92%;
-    --popover: 28 10% 8%;
-    --popover-foreground: 38 20% 92%;
-    --primary: 38 72% 56%;
-    --primary-foreground: 28 12% 6%;
-    --secondary: 28 8% 14%;
-    --secondary-foreground: 38 20% 92%;
-    --muted: 28 8% 13%;
-    --muted-foreground: 32 8% 52%;
-    --accent: 38 72% 56%;
-    --accent-foreground: 28 12% 6%;
+    /* Warm light editorial palette */
+    --background: 38 28% 95%;
+    --foreground: 28 22% 8%;
+    --card: 38 22% 98%;
+    --card-foreground: 28 22% 8%;
+    --popover: 38 20% 99%;
+    --popover-foreground: 28 22% 8%;
+    --primary: 38 70% 44%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 38 14% 87%;
+    --secondary-foreground: 28 16% 14%;
+    --muted: 38 14% 90%;
+    --muted-foreground: 32 10% 40%;
+    --accent: 38 70% 44%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 38 14% 82%;
+    --input: 38 14% 82%;
+    --ring: 38 70% 44%;
+    --radius: 0.5rem;
+
+    /* Glassmorphism tokens */
+    --glass-bg: rgba(255, 255, 255, 0.07);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-bg-strong: rgba(255, 255, 255, 0.11);
+  }
+
+  .dark {
+    /* Warm dark cinematic palette — deeper and richer */
+    --background: 28 18% 4%;
+    --foreground: 38 18% 90%;
+    --card: 28 14% 7%;
+    --card-foreground: 38 18% 90%;
+    --popover: 28 14% 7%;
+    --popover-foreground: 38 18% 90%;
+    --primary: 38 76% 58%;
+    --primary-foreground: 28 18% 5%;
+    --secondary: 28 10% 12%;
+    --secondary-foreground: 38 18% 90%;
+    --muted: 28 10% 11%;
+    --muted-foreground: 32 8% 50%;
+    --accent: 38 76% 58%;
+    --accent-foreground: 28 18% 5%;
     --destructive: 0 72% 52%;
-    --destructive-foreground: 38 20% 92%;
-    --border: 28 8% 14%;
-    --input: 28 8% 14%;
-    --ring: 38 72% 56%;
-    --radius: 0.375rem;
+    --destructive-foreground: 38 18% 90%;
+    --border: 28 10% 13%;
+    --input: 28 10% 13%;
+    --ring: 38 76% 58%;
+
+    /* Glassmorphism tokens — dark mode */
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-bg-strong: rgba(255, 255, 255, 0.07);
   }
 }
 
@@ -32,37 +65,81 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
+  html.light {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1, "kern" 1;
+    background-image:
+      radial-gradient(ellipse 80% 40% at 50% 0%, hsl(var(--primary) / 0.13), transparent 60%),
+      radial-gradient(ellipse 50% 30% at 85% 8%, hsl(var(--foreground) / 0.04), transparent 40%),
+      radial-gradient(ellipse 40% 50% at 10% 90%, hsl(var(--primary) / 0.05), transparent 50%);
+    background-attachment: fixed;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.25);
+    color: hsl(var(--foreground));
   }
 }
 
-/* Scrollbar */
+/* Global scrollbar — dark amber accent */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.30);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.55);
+}
+
+/* Scrollbar — hide utility */
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-html { scroll-behavior: smooth; }
-
-/* Hero gradient overlay */
+/* Hero gradient overlay — cinematic, deeper pull */
 .hero-gradient {
   background: linear-gradient(
     to top,
-    hsl(28 12% 5%) 0%,
-    hsl(28 12% 5% / 0.4) 40%,
-    transparent 70%
+    hsl(var(--background)) 0%,
+    hsl(var(--background) / 0.75) 30%,
+    hsl(var(--background) / 0.20) 60%,
+    transparent 80%
   );
 }
 
-/* Card hover gradient */
+/* Card hover gradient — dramatic */
+.dark .card-gradient {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.65) 38%,
+    transparent 100%
+  );
+}
+
 .card-gradient {
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.92) 0%,
-    rgba(0, 0, 0, 0.6) 40%,
+    rgba(0, 0, 0, 0.80) 0%,
+    rgba(0, 0, 0, 0.48) 40%,
     transparent 100%
   );
 }
@@ -80,4 +157,69 @@ html { scroll-behavior: smooth; }
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.shell-grid {
+  background-image:
+    linear-gradient(to right, hsl(var(--foreground) / 0.032) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--foreground) / 0.032) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), transparent 88%);
+}
+
+.grain-overlay {
+  background-image: radial-gradient(hsl(var(--foreground) / 0.07) 0.65px, transparent 0.65px);
+  background-size: 14px 14px;
+  opacity: 0.18;
+}
+
+/* Shimmer animation for skeletons */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    hsl(var(--muted-foreground) / 0.12) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+/* Nav link animated underline */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: hsl(var(--primary));
+  transition: width 0.25s ease;
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Logo hover glow */
+.logo-wordmark {
+  transition: opacity 0.2s ease, text-shadow 0.3s ease;
+}
+.logo-wordmark:hover {
+  text-shadow: 0 0 20px hsl(var(--primary) / 0.35), 0 0 40px hsl(var(--primary) / 0.12);
+}
+
+/* Content card artwork scale */
+.card-artwork {
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.group:hover .card-artwork {
+  transform: scale(1.06);
 }

@@ -38,49 +38,55 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
       whileHover={{ scale: 1.03, zIndex: 10 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
-      <div className="relative aspect-video rounded-lg overflow-hidden bg-muted ring-1 ring-border/50 group-hover:ring-border transition-all duration-300">
-        {/* Thumbnail */}
-        <ContentArtwork content={content} showTypeLabel={false} />
+      <div className="relative aspect-video rounded-xl overflow-hidden bg-muted ring-1 ring-white/8 group-hover:ring-white/18 shadow-[0_8px_32px_rgba(0,0,0,0.22)] group-hover:shadow-[0_16px_48px_rgba(0,0,0,0.38)] transition-all duration-300">
+        {/* Thumbnail — scale on hover via CSS class */}
+        <div className="card-artwork absolute inset-0">
+          <ContentArtwork content={content} showTypeLabel={false} />
+        </div>
 
-        {/* Type badge */}
-        <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/60 backdrop-blur-sm rounded-md px-2 py-1">
-          <TypeIcon className="w-2.5 h-2.5 text-primary/80" />
-          <span className="text-[9px] font-semibold text-white/80 uppercase tracking-wide">
+        {/* Persistent bottom gradient for readability */}
+        <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
+
+        {/* Type badge — rounded pill, tighter */}
+        <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/55 backdrop-blur-md rounded-full px-2.5 py-1 border border-white/8">
+          <TypeIcon className="w-2.5 h-2.5 text-primary" />
+          <span className="text-[9px] font-semibold text-white/75 uppercase tracking-[0.18em]">
             {typeConfig.label}
           </span>
         </div>
 
         {/* Lock badge */}
         {isPremiumLocked && (
-          <div className="absolute top-2 right-2 w-6 h-6 rounded-md bg-black/60 backdrop-blur-sm flex items-center justify-center">
-            <Lock className="w-3 h-3 text-primary/80" />
+          <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/55 backdrop-blur-md border border-white/8 flex items-center justify-center">
+            <Lock className="w-3 h-3 text-primary" />
           </div>
         )}
 
         {/* Hover overlay */}
         <AnimateOverlay visible={isHovered}>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/40 to-black/10" />
 
           {/* Center play button */}
           <div className="absolute inset-0 flex items-center justify-center">
             <Link href={primaryHref}>
               <motion.button
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={isHovered ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
+                initial={{ scale: 0.75, opacity: 0 }}
+                animate={isHovered ? { scale: 1, opacity: 1 } : { scale: 0.75, opacity: 0 }}
+                transition={{ duration: 0.22, ease: [0.34, 1.56, 0.64, 1] }}
                 aria-label={
                   primaryHref === "/subscribe"
                     ? `Desbloquear ${content.title}`
                     : `Abrir ${content.title}`
                 }
-                className="w-12 h-12 rounded-full bg-white/95 flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+                className="w-13 h-13 rounded-full bg-white flex items-center justify-center hover:scale-105 transition-transform shadow-[0_12px_36px_rgba(0,0,0,0.35)]"
+                style={{ width: "52px", height: "52px" }}
               >
                 {primaryHref === "/subscribe" ? (
                   <Lock className="w-5 h-5 text-black" />
                 ) : isReadingContent ? (
                   <BookOpen className="w-5 h-5 text-black" />
                 ) : (
-                  <Play className="w-5 h-5 text-black fill-black" />
+                  <Play className="w-5 h-5 text-black fill-black ml-0.5" />
                 )}
               </motion.button>
             </Link>
@@ -90,41 +96,48 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
           <div className="absolute bottom-0 left-0 right-0 p-3">
             <div className="flex items-end justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-[10px] uppercase tracking-[0.24em] text-white/42">
+                <p className="text-[9px] uppercase tracking-[0.26em] text-white/38 font-medium">
                   {isPremiumLocked ? "Solo Miembros" : "Disponible Ahora"}
                 </p>
-                <p className="mt-1 line-clamp-1 text-xs text-white/80">
+                <p className="mt-1 line-clamp-1 text-xs font-semibold text-white/88">
                   {content.author || typeConfig.label}
                 </p>
               </div>
               <Link href={`/content/${content.id}`}>
                 <button
                   aria-label={`Ver detalles de ${content.title}`}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-white/5 hover:border-white hover:bg-white/10 transition-colors"
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-white/22 bg-white/8 hover:border-white/55 hover:bg-white/14 transition-all"
                 >
-                  <ArrowUpRight className="w-3.5 h-3.5 text-white" />
+                  <ArrowUpRight className="w-3 h-3 text-white" />
                 </button>
               </Link>
             </div>
 
             {content.duration > 0 && (
-              <p className="mt-2 text-[10px] text-white/50">{formatDuration(content.duration)}</p>
+              <p className="mt-1.5 text-[9px] text-white/42 font-medium">{formatDuration(content.duration)}</p>
             )}
           </div>
         </AnimateOverlay>
 
         {/* Duration badge when not hovered */}
         {content.duration > 0 && !isHovered && (
-          <div className="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm px-1.5 py-0.5 rounded text-[10px] text-white/80 font-medium">
+          <div className="absolute bottom-2 right-2 bg-black/70 backdrop-blur-sm px-1.5 py-0.5 rounded-full text-[9px] text-white/72 font-semibold border border-white/8">
             {formatDuration(content.duration)}
           </div>
         )}
       </div>
 
-      {/* Title */}
-      <p className="mt-2.5 text-sm font-medium text-foreground/80 group-hover:text-foreground line-clamp-1 transition-colors px-0.5">
-        {content.title}
-      </p>
+      {/* Title + author */}
+      <div className="mt-2.5 px-0.5 space-y-0.5">
+        <p className="text-sm font-semibold text-foreground/82 group-hover:text-foreground line-clamp-1 transition-colors duration-200">
+          {content.title}
+        </p>
+        {content.author && (
+          <p className="text-[11px] text-foreground/40 line-clamp-1">
+            {content.author}
+          </p>
+        )}
+      </div>
     </motion.div>
   )
 }
