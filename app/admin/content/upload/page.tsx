@@ -83,7 +83,7 @@ export default function UploadContent() {
       toast.success('Contenido subido exitosamente')
       router.push('/admin/content')
     } catch (err: unknown) {
-      toast.error(`Error: ${err instanceof Error ? err.message : 'Unknown error'}`)
+      toast.error(`Error: ${err instanceof Error ? err.message : 'Error desconocido'}`)
     } finally {
       setLoading(false)
       setProgress({})

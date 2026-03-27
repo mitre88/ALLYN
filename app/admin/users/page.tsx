@@ -46,10 +46,11 @@ export default function AdminUsers() {
 
   async function toggleAdmin(id: string, current: string) {
     const newRole = current === 'admin' ? 'user' : 'admin'
-    if (!confirm(`¿Cambiar rol a ${newRole}?`)) return
+    const rolLabel = newRole === 'admin' ? 'Administrador' : 'Usuario'
+    if (!confirm(`¿Cambiar rol a ${rolLabel}?`)) return
     await supabase.from('profiles').update({ role: newRole }).eq('id', id)
     setUsers(prev => prev.map(u => u.id === id ? { ...u, role: newRole as 'user' | 'admin' } : u))
-    toast.success(`Rol cambiado a ${newRole}`)
+    toast.success(`Rol cambiado a ${rolLabel}`)
   }
 
   return (
