@@ -45,38 +45,42 @@ export async function GET(
     }
 
     // Extract the storage path from the file_url
-    // Supports both public and signed URL formats
     const url = new URL(content.file_url)
-    const publicMatch = url.pathname.match(/\/storage\/v1\/object\/(?:public|sign)\/(.+)/)
-    if (!publicMatch) {
-      return NextResponse.json({ error: 'Invalid file URL' }, { status: 500 })
-    }
-
-    const [bucket, ...rest] = publicMatch[1].split('/')
-    const filePath = rest.join('/')
-
-    // Use admin client to create signed URL for private buckets (60 min expiry)
-    const admin = createAdminClient()
-    const { data: signedData, error: signedError } = await admin.storage
-      .from(bucket)
-      .createSignedUrl(filePath, 3600)
-
-    if (signedError || !signedData?.signedUrl) {
-      return NextResponse.json({ error: 'Could not generate signed URL' }, { status: 500 })
-    }
+    const storageMatch = url.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/(.+)/)
 
     const headers: Record<string, string> = {}
-
-    // For books/PDFs: add headers to prevent download
     if (content.type === 'book' || content.type === 'audiobook') {
       headers['Content-Disposition'] = 'inline'
       headers['X-Content-Type-Options'] = 'nosniff'
     }
 
-    return NextResponse.json(
-      { url: signedData.signedUrl },
-      { headers }
-    )
+    // If the file is already in a public bucket, return the URL directly —
+    // no service role key needed and no risk of signed URL generation failing.
+    const isPublicBucket = url.pathname.includes('/object/public/')
+    if (isPublicBucket || !storageMatch) {
+      return NextResponse.json({ url: content.file_url }, { headers })
+    }
+
+    // Private bucket: create a time-limited signed URL (60 min) via admin client
+    const [bucket, ...rest] = storageMatch[1].split('/')
+    const filePath = rest.join('/')
+
+    try {
+      const admin = createAdminClient()
+      const { data: signedData, error: signedError } = await admin.storage
+        .from(bucket)
+        .createSignedUrl(filePath, 3600)
+
+      if (signedError || !signedData?.signedUrl) {
+        // Fall back to direct URL if signed URL creation fails
+        return NextResponse.json({ url: content.file_url }, { headers })
+      }
+
+      return NextResponse.json({ url: signedData.signedUrl }, { headers })
+    } catch {
+      // Service role key not configured — fall back to direct URL
+      return NextResponse.json({ url: content.file_url }, { headers })
+    }
   } catch (error) {
     console.error('[stream] Unexpected error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

@@ -8,7 +8,7 @@ async function getProfile(userId: string) {
   const supabase = await createClient()
   const { data } = await supabase
     .from("profiles")
-    .select("is_subscribed, full_name, username")
+    .select("is_subscribed, role, full_name, username")
     .eq("id", userId)
     .single()
   return data
@@ -88,7 +88,7 @@ export default async function HomePage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   const profile = user ? await getProfile(user.id) : null
-  const isSubscribed = profile?.is_subscribed ?? false
+  const isSubscribed = (profile?.is_subscribed || profile?.role === 'admin') ?? false
   const displayName = profile?.full_name || profile?.username || user?.email?.split("@")[0] || "Bienvenido"
 
   const [featuredContent, categories, latestContent, books, videos] = await Promise.all([
