@@ -48,7 +48,7 @@ export function useSubscription() {
   }, [])
 
   return {
-    isSubscribed: profile?.is_subscribed ?? false,
+    isSubscribed: (profile?.is_subscribed || profile?.role === 'admin') ?? false,
     isLoading,
     profile,
     refetch: async () => {

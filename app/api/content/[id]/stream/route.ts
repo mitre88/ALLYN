@@ -16,14 +16,15 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Verify subscription
+    // Verify subscription — admins always have full access
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('is_subscribed')
+      .select('is_subscribed, role')
       .eq('id', user.id)
       .single()
 
-    if (profileError || !profile?.is_subscribed) {
+    const hasAccess = profile?.is_subscribed || profile?.role === 'admin'
+    if (profileError || !hasAccess) {
       return NextResponse.json({ error: 'Subscription required' }, { status: 403 })
     }
 
