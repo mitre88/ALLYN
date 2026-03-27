@@ -8,12 +8,15 @@ import { ContentArtwork } from '@/components/content/content-artwork'
 import { createClient } from '@/lib/supabase/client'
 import type { Content } from '@/types/database'
 
+const FALLBACK_PREVIEW_SECONDS = 90
+
 export default function WatchPage() {
   const params = useParams<{ id: string }>()
   const id = params.id
 
   const [content, setContent] = useState<Content | null>(null)
   const [videoUrl, setVideoUrl] = useState<string | null>(null)
+  const [previewSource, setPreviewSource] = useState<'preview' | 'file' | null>(null)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [previewEnded, setPreviewEnded] = useState(false)
@@ -30,10 +33,10 @@ export default function WatchPage() {
       if (user) {
         const { data: profile } = await supabase
           .from('profiles')
-          .select('is_subscribed')
+          .select('is_subscribed, role')
           .eq('id', user.id)
           .single()
-        subscribed = profile?.is_subscribed ?? false
+        subscribed = (profile?.is_subscribed || profile?.role === 'admin') ?? false
         setIsSubscribed(subscribed)
       }
 
@@ -61,8 +64,9 @@ export default function WatchPage() {
         // Non-subscribers: try preview URL
         const res = await fetch(`/api/content/${id}/preview`)
         if (res.ok) {
-          const { url } = await res.json()
+          const { url, source } = await res.json()
           setVideoUrl(url)
+          setPreviewSource(source ?? 'preview')
         }
       }
     } catch (err) {
@@ -89,7 +93,21 @@ export default function WatchPage() {
 
   if (!content) return null
 
+  const previewLimitSeconds =
+    !isSubscribed && previewSource === 'file'
+      ? Math.min(content.duration || FALLBACK_PREVIEW_SECONDS, FALLBACK_PREVIEW_SECONDS)
+      : null
   const showLockOverlay = !isSubscribed && (previewEnded || !videoUrl)
+
+  const handlePreviewBoundary = (video: HTMLVideoElement) => {
+    if (!previewLimitSeconds || previewEnded) return
+
+    if (video.currentTime >= previewLimitSeconds) {
+      video.currentTime = previewLimitSeconds
+      video.pause()
+      setPreviewEnded(true)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-black">
@@ -123,6 +141,8 @@ export default function WatchPage() {
             controlsList="nodownload nofullscreen noremoteplayback"
             disablePictureInPicture
             onContextMenu={e => e.preventDefault()}
+            onTimeUpdate={e => handlePreviewBoundary(e.currentTarget)}
+            onSeeking={e => handlePreviewBoundary(e.currentTarget)}
             onEnded={() => {
               if (!isSubscribed) setPreviewEnded(true)
             }}
@@ -150,7 +170,9 @@ export default function WatchPage() {
               </h2>
               <p className="text-zinc-400 text-sm mb-6">
                 {previewEnded
-                  ? 'Suscríbete para ver el video completo y acceder a todo el contenido ALLYN.'
+                  ? previewSource === 'file'
+                    ? 'Ya viste una muestra del contenido. Suscríbete para reproducirlo completo.'
+                    : 'Suscríbete para ver el video completo y acceder a todo el contenido ALLYN.'
                   : 'Este video está disponible solo para suscriptores.'}
               </p>
               <Link href="/subscribe">
@@ -184,7 +206,9 @@ export default function WatchPage() {
         {!isSubscribed && videoUrl && !previewEnded && (
           <div className="absolute top-16 right-4 z-20 bg-black/70 border border-purple-500/40 rounded-full px-3 py-1.5 flex items-center gap-1.5">
             <Lock className="w-3 h-3 text-purple-400" />
-            <span className="text-xs text-purple-300 font-medium">Vista previa</span>
+            <span className="text-xs text-purple-300 font-medium">
+              {previewLimitSeconds ? `Muestra ${previewLimitSeconds}s` : 'Vista previa'}
+            </span>
           </div>
         )}
       </div>

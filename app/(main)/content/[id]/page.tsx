@@ -59,10 +59,10 @@ export default async function ContentPage({ params }: ContentPageProps) {
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("is_subscribed")
+      .select("is_subscribed, role")
       .eq("id", user.id)
       .single()
-    isSubscribed = profile?.is_subscribed ?? false
+    isSubscribed = (profile?.is_subscribed || profile?.role === 'admin') ?? false
   }
 
   const relatedContent = content.category_id

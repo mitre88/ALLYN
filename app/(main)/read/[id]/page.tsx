@@ -15,6 +15,7 @@ export default function ReadPage() {
 
   const [content, setContent] = useState<Content | null>(null)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
+  const [previewSource, setPreviewSource] = useState<'preview' | 'file' | null>(null)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -32,10 +33,10 @@ export default function ReadPage() {
       if (user) {
         const { data: profile } = await supabase
           .from('profiles')
-          .select('is_subscribed')
+          .select('is_subscribed, role')
           .eq('id', user.id)
           .single()
-        subscribed = profile?.is_subscribed ?? false
+        subscribed = (profile?.is_subscribed || profile?.role === 'admin') ?? false
         setIsSubscribed(subscribed)
       }
 
@@ -66,10 +67,11 @@ export default function ReadPage() {
       } else {
         const res = await fetch(`/api/content/${id}/preview`)
         if (res.ok) {
-          const { url } = await res.json()
+          const { url, source } = await res.json()
           setPdfUrl(url)
+          setPreviewSource(source ?? 'preview')
         }
-        // If no preview, pdfUrl stays null — we'll show the lock overlay
+        // If no preview nor fallback file exists, pdfUrl stays null — we'll show the lock overlay
       }
     } catch (err) {
       console.error('[ReadPage] Error:', err)
@@ -116,6 +118,11 @@ export default function ReadPage() {
             <p className="text-xs text-zinc-500 truncate">{content.author}</p>
           )}
         </div>
+        {!isSubscribed && pdfUrl && (
+          <span className="hidden sm:inline-flex items-center rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 py-1 text-[11px] font-medium text-purple-300">
+            Vista previa
+          </span>
+        )}
         {!isSubscribed && (
           <Link href="/subscribe">
             <button className="flex items-center gap-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full transition-colors">
@@ -174,7 +181,11 @@ export default function ReadPage() {
                 <Lock className="w-7 h-7 text-purple-400" />
               </div>
               <h3 className="text-white font-bold text-lg mb-1">
-                {pdfUrl ? 'Solo estás viendo una vista previa' : 'Contenido Premium'}
+                {pdfUrl
+                  ? previewSource === 'file'
+                    ? 'Estás viendo una muestra protegida'
+                    : 'Solo estás viendo una vista previa'
+                  : 'Contenido Premium'}
               </h3>
               <p className="text-zinc-400 text-sm mb-4">
                 Suscríbete para leer el libro completo y acceder a todo el contenido.
