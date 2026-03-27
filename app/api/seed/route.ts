@@ -27,7 +27,13 @@ export async function POST(req: NextRequest) {
   for (const c of cats || []) catMap[c.slug] = c.id
 
   // Seed content
-  const { error: contentError } = await supabase.from('content').upsert([
+  // Check if content already exists
+  const { count } = await supabase.from('content').select('*', { count: 'exact', head: true })
+  if (count && count > 0) {
+    return NextResponse.json({ success: true, categories: cats?.length, message: 'Ya sembrado', skippedContent: true })
+  }
+
+  const { error: contentError } = await supabase.from('content').insert([
     {
       title: 'El Poder de los Hábitos',
       description: 'Descubre cómo pequeños cambios diarios pueden transformar tu vida completamente. Un libro esencial sobre la neurociencia detrás de los hábitos.',
