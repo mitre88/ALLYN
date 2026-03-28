@@ -72,18 +72,6 @@ async function getVideoContent(): Promise<Content[]> {
   return data || []
 }
 
-async function getAllBooks(): Promise<Content[]> {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from("content")
-    .select("*, category:categories(*)")
-    .in("type", ["book", "audiobook"])
-    .eq("status", "published")
-    .order("sort_order", { ascending: true })
-    .limit(50)
-  return data || []
-}
-
 export default async function HomePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -92,12 +80,11 @@ export default async function HomePage() {
   const isSubscribed = (profile?.is_subscribed || profile?.role === 'admin') ?? false
   const displayName = profile?.full_name || profile?.username || user?.email?.split("@")[0] || "Bienvenido"
 
-  const [featuredContent, categories, courses, videos, allBooks] = await Promise.all([
+  const [featuredContent, categories, courses, videos] = await Promise.all([
     getFeaturedContent(),
     getCategories(),
     getCourseContent(),
     getVideoContent(),
-    getAllBooks(),
   ])
 
   const categoryContent = await Promise.all(
@@ -107,7 +94,10 @@ export default async function HomePage() {
     }))
   )
 
-  const libraryCount = courses.length + allBooks.length + (isSubscribed ? videos.length : 0)
+  const libraryCount =
+    courses.length +
+    categoryContent.reduce((total, collection) => total + collection.content.length, 0) +
+    (isSubscribed ? videos.length : 0)
 
   return (
     <div className="bg-background">
@@ -127,50 +117,35 @@ export default async function HomePage() {
           </div>
         )}
 
-        {/* ── Curso ── */}
         {courses.length > 0 && (
           <ContentCarousel
-            eyebrow="Formación"
-            title="Curso"
-            description="Aprende paso a paso con el material formativo de la plataforma."
+            eyebrow="Curso"
+            title="Curso Principal"
+            description="El curso vive en su propio apartado para no mezclarse con libros ni piezas promocionales."
             content={courses}
             isSubscribed={isSubscribed}
           />
         )}
 
-        {/* ── Todos los libros ── */}
-        {allBooks.length > 0 && (
-          <ContentCarousel
-            eyebrow="Biblioteca"
-            title="Todos los Libros"
-            description="La colección completa de libros y audiolibros disponibles en la plataforma."
-            content={allBooks}
-            isSubscribed={isSubscribed}
-          />
-        )}
-
-        {/* ── Libros por categoría (Salud · Dinero · Amor) ── */}
-        {categoryContent.map(({ category, content }) => {
-          const books = content.filter(c => c.type === 'book' || c.type === 'audiobook')
-          return books.length > 0 ? (
+        {categoryContent.map(({ category, content }) =>
+          content.length > 0 ? (
             <ContentCarousel
               key={category.id}
-              eyebrow="Libros"
+              eyebrow="Colección"
               title={category.name}
               description={category.description || undefined}
-              content={books}
+              content={content}
               color={category.color}
               isSubscribed={isSubscribed}
             />
           ) : null
-        })}
+        )}
 
-        {/* ── Videos (suscriptores) ── */}
         {isSubscribed && videos.length > 0 && (
           <ContentCarousel
             eyebrow="Video"
             title="Videos"
-            description="Contenido en video exclusivo para miembros."
+            description="Piezas de video separadas del curso para mantener la biblioteca mejor organizada."
             content={videos}
             isSubscribed={isSubscribed}
           />

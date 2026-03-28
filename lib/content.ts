@@ -61,10 +61,8 @@ export function canOpenContent(
   content: Pick<Content, "type" | "preview_url" | "file_url" | "is_free">,
   isSubscribed = false
 ): boolean {
-  // Free content is always openable
   if (content.is_free) return Boolean(content.file_url || content.preview_url)
 
-  // Books/audiobooks always openable (show prologue preview for non-subscribers)
   if (isReadingContent(content)) {
     return Boolean(content.file_url || content.preview_url)
   }
@@ -83,17 +81,12 @@ export function getPrimaryContentLabel(
   content: Pick<Content, "type" | "preview_url" | "file_url" | "is_free">,
   isSubscribed = false
 ): string {
-  // Free content
   if (content.is_free) {
     return TYPE_CONFIG[content.type].cta
   }
 
-  // Books/audiobooks
   if (isReadingContent(content)) {
-    if (isSubscribed) {
-      return content.type === "audiobook" ? "Escuchar completo" : "Leer completo"
-    }
-    return "Leer prólogo"
+    return content.type === "audiobook" ? "Escuchar completo" : "Leer completo"
   }
 
   if (isSubscribed) {
@@ -107,10 +100,8 @@ export function isContentLocked(
   content: Pick<Content, "type" | "is_free">,
   isSubscribed = false
 ): boolean {
-  // Free content is never locked
   if (content.is_free) return false
 
-  // Books show prologue, never fully "locked" (but gated)
   if (isReadingContent(content)) return false
 
   return !isSubscribed
@@ -123,10 +114,7 @@ export function getContentAccessLabel(
   if (content.is_free) return "Gratis"
 
   if (isReadingContent(content)) {
-    if (isSubscribed) {
-      return content.type === "audiobook" ? "Escucha completa" : "Lectura completa"
-    }
-    return "Prólogo disponible"
+    return content.type === "audiobook" ? "Escucha completa" : "Lectura completa"
   }
 
   if (isSubscribed) return "Acceso completo"
