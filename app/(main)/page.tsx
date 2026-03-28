@@ -42,6 +42,7 @@ async function getContentByCategory(categoryId: string): Promise<Content[]> {
     .from("content")
     .select("*, category:categories(*)")
     .eq("category_id", categoryId)
+    .in("type", ["book", "audiobook"])
     .eq("status", "published")
     .order("sort_order", { ascending: true })
     .limit(10)

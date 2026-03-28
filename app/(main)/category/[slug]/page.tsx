@@ -24,8 +24,9 @@ async function getContentByCategory(categoryId: string): Promise<Content[]> {
     .from("content")
     .select("*, category:categories(*)")
     .eq("category_id", categoryId)
+    .in("type", ["book", "audiobook"])
     .eq("status", "published")
-    .order("published_at", { ascending: false })
+    .order("sort_order", { ascending: true })
   
   return data || []
 }
@@ -76,7 +77,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         {/* Content Grid */}
         {content.length > 0 ? (
           <ContentCarousel 
-            title={`Todo en ${category.name}`}
+            eyebrow="Biblioteca"
+            title={`Libros en ${category.name}`}
             content={content}
             color={category.color}
           />
