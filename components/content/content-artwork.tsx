@@ -255,7 +255,7 @@ function PdfArtwork({
         const context = canvas.getContext("2d")
         if (!context) return
 
-        await page.render({ canvasContext: context, viewport }).promise
+        await page.render({ canvasContext: context, viewport, canvas } as any).promise
 
         if (!cancelled) setReady(true)
         doc.destroy()
