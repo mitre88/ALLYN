@@ -1,11 +1,11 @@
 import { createClient } from "@/lib/supabase/server"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { Play, Plus, Share2, Clock, User, BookOpen } from "lucide-react"
+import { Play, Share2, Clock, User, BookOpen, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ContentArtwork } from "@/components/content/content-artwork"
 import { ContentCarousel } from "@/components/content/content-carousel"
-import { getPrimaryContentHref, getPrimaryContentLabel } from "@/lib/content"
+import { getPrimaryContentHref, getPrimaryContentLabel, getContentTypeLabel, getContentAccessLabel } from "@/lib/content"
 import type { Content } from "@/types/database"
 import { formatDuration } from "@/lib/utils"
 
@@ -104,18 +104,27 @@ export default async function ContentPage({ params }: ContentPageProps) {
               {content.title}
             </h1>
 
-            <div className="flex flex-wrap items-center gap-4 text-white/70 mb-6">
-              <span className="text-green-400 font-semibold">98% Match</span>
+            <div className="flex flex-wrap items-center gap-3 text-foreground/60 mb-6">
+              <span className="border border-foreground/20 px-2 py-0.5 rounded-full text-xs font-medium">
+                {getContentTypeLabel(content.type)}
+              </span>
+              {content.is_free && (
+                <span className="bg-primary/15 border border-primary/25 text-primary px-2 py-0.5 rounded-full text-xs font-semibold">
+                  Gratis
+                </span>
+              )}
+              <span className="text-xs">
+                {getContentAccessLabel(content, isSubscribed)}
+              </span>
               {content.published_at && (
-                <span>{new Date(content.published_at).getFullYear()}</span>
+                <span className="text-xs">{new Date(content.published_at).getFullYear()}</span>
               )}
               {content.duration > 0 && (
-                <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
+                <span className="flex items-center gap-1 text-xs">
+                  <Clock className="w-3.5 h-3.5" />
                   {formatDuration(content.duration)}
                 </span>
               )}
-              <span className="border border-white/30 px-1.5 py-0.5 rounded text-xs">HD</span>
             </div>
 
             <div className="flex flex-wrap gap-4 mb-8">
@@ -169,7 +178,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
 
               <div className="mb-4">
                 <span className="text-white/50 text-sm">Tipo de contenido</span>
-                <p className="text-white capitalize mt-1">{content.type}</p>
+                <p className="text-white mt-1">{getContentTypeLabel(content.type)}</p>
               </div>
 
               {content.published_at && (

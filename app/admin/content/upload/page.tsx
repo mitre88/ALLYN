@@ -138,6 +138,7 @@ export default function UploadContent() {
     category_id: '',
     status: 'draft' as 'draft' | 'published',
     duration: 0,
+    is_free: false,
   })
   const [files, setFiles] = useState<{
     main: File | null
@@ -212,6 +213,7 @@ export default function UploadContent() {
         category_id: form.category_id,
         status: form.status,
         duration: form.duration || 0,
+        is_free: form.is_free,
         file_url,
         preview_url,
         thumbnail_url,
@@ -342,6 +344,20 @@ export default function UploadContent() {
             />
           </div>
         </div>
+
+        {/* Free content toggle */}
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.is_free}
+            onChange={e => setForm(f => ({ ...f, is_free: e.target.checked }))}
+            className="w-4 h-4 rounded border-border accent-primary"
+          />
+          <div>
+            <p className="text-sm font-medium text-foreground">Contenido gratuito</p>
+            <p className="text-xs text-muted-foreground">Visible para todos sin suscripción (ej. videos promocionales)</p>
+          </div>
+        </label>
 
         {/* Drop Zones */}
         <div className="space-y-4 pt-2 border-t border-border/40">

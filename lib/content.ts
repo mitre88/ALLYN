@@ -27,6 +27,14 @@ const TYPE_CONFIG = {
   },
 } as const
 
+export function isReadingContentType(type: Content["type"]): boolean {
+  return type === "book" || type === "audiobook"
+}
+
+export function isReadingContent(content: Pick<Content, "type">): boolean {
+  return isReadingContentType(content.type)
+}
+
 export function getContentHref(content: Pick<Content, "id" | "type">): string {
   return TYPE_CONFIG[content.type].href(content.id)
 }
@@ -50,26 +58,78 @@ export function hasContentPreview(
 }
 
 export function canOpenContent(
-  content: Pick<Content, "preview_url" | "file_url">,
+  content: Pick<Content, "type" | "preview_url" | "file_url" | "is_free">,
   isSubscribed = false
 ): boolean {
+  // Free content is always openable
+  if (content.is_free) return Boolean(content.file_url || content.preview_url)
+
+  // Books/audiobooks always openable (show prologue preview for non-subscribers)
+  if (isReadingContent(content)) {
+    return Boolean(content.file_url || content.preview_url)
+  }
+
   return isSubscribed || hasContentPreview(content)
 }
 
 export function getPrimaryContentHref(
-  content: Pick<Content, "id" | "type" | "preview_url" | "file_url">,
+  content: Pick<Content, "id" | "type" | "preview_url" | "file_url" | "is_free">,
   isSubscribed = false
 ): string {
   return canOpenContent(content, isSubscribed) ? getContentHref(content) : "/subscribe"
 }
 
 export function getPrimaryContentLabel(
-  content: Pick<Content, "type" | "preview_url" | "file_url">,
+  content: Pick<Content, "type" | "preview_url" | "file_url" | "is_free">,
   isSubscribed = false
 ): string {
+  // Free content
+  if (content.is_free) {
+    return TYPE_CONFIG[content.type].cta
+  }
+
+  // Books/audiobooks
+  if (isReadingContent(content)) {
+    if (isSubscribed) {
+      return content.type === "audiobook" ? "Escuchar completo" : "Leer completo"
+    }
+    return "Leer prólogo"
+  }
+
   if (isSubscribed) {
     return TYPE_CONFIG[content.type].cta
   }
 
   return hasContentPreview(content) ? "Vista previa" : "Suscribirse"
+}
+
+export function isContentLocked(
+  content: Pick<Content, "type" | "is_free">,
+  isSubscribed = false
+): boolean {
+  // Free content is never locked
+  if (content.is_free) return false
+
+  // Books show prologue, never fully "locked" (but gated)
+  if (isReadingContent(content)) return false
+
+  return !isSubscribed
+}
+
+export function getContentAccessLabel(
+  content: Pick<Content, "type" | "preview_url" | "file_url" | "is_free">,
+  isSubscribed = false
+): string {
+  if (content.is_free) return "Gratis"
+
+  if (isReadingContent(content)) {
+    if (isSubscribed) {
+      return content.type === "audiobook" ? "Escucha completa" : "Lectura completa"
+    }
+    return "Prólogo disponible"
+  }
+
+  if (isSubscribed) return "Acceso completo"
+
+  return hasContentPreview(content) ? "Fragmento disponible" : "Solo miembros"
 }

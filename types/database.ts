@@ -37,6 +37,7 @@ export interface Content {
   duration: number
   status: 'draft' | 'published' | 'archived'
   featured: boolean
+  is_free: boolean
   sort_order: number
   author: string | null
   published_at: string | null
