@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
-import { join } from "path"
-import { pathToFileURL } from "url"
+import { extractPdfText } from "@/lib/pdf-text"
 import { createClient } from "@/lib/supabase/server"
 import { isReadingContent } from "@/lib/content"
 import { resolveStorageAssetUrl } from "@/lib/storage"
@@ -32,13 +31,6 @@ export async function GET(
     }
 
     const resolvedUrl = await resolveStorageAssetUrl(assetUrl)
-    const extractorUrl = pathToFileURL(
-      join(process.cwd(), "scripts", "extract-pdf-text.mjs")
-    ).href
-    const { extractPdfText } = await import(
-      /* webpackIgnore: true */
-      extractorUrl
-    )
     const parsed = await extractPdfText(resolvedUrl)
 
     return NextResponse.json({
