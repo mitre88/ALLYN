@@ -2,12 +2,15 @@
 
 import Link from "next/link"
 import { useState, useEffect, useRef } from "react"
+import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, Crown, LogOut, UserCircle, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { createClient } from "@/lib/supabase/client"
 import { useSubscription } from "@/lib/hooks/use-subscription"
+import { cn } from "@/lib/utils"
 
 const categories = [
   { name: "Inicio", href: "/" },
@@ -17,6 +20,7 @@ const categories = [
 ]
 
 export function Header() {
+  const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -48,55 +52,67 @@ export function Header() {
   }
 
   const avatarFallback = (user?.email as string | undefined)?.charAt(0).toUpperCase() ?? "U"
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname?.startsWith(href)
 
   return (
     <>
       <motion.header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? "bg-background/96 backdrop-blur-md border-b border-border/50"
-            : "bg-gradient-to-b from-background/90 to-transparent"
-        }`}
+        className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-5"
         initial={{ y: -80 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* Top accent line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          {/* Wordmark */}
-          <Link href="/" className="flex items-center">
-            <span className="font-sf text-2xl font-bold tracking-tight text-foreground">
-              ALLYN
-            </span>
+        <div
+          className={cn(
+            "pointer-events-auto mx-auto flex h-16 max-w-7xl items-center justify-between rounded-[26px] border px-3 shadow-[0_18px_70px_rgba(0,0,0,0.14)] backdrop-blur-2xl transition-all duration-500 md:px-5",
+            isScrolled
+              ? "border-white/12 bg-background/82"
+              : "border-white/8 bg-background/58"
+          )}
+        >
+          <Link href="/" className="flex min-w-0 items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/12 bg-[linear-gradient(155deg,hsl(var(--primary)/0.95)_0%,rgba(23,18,14,0.92)_100%)] shadow-[0_12px_30px_rgba(0,0,0,0.2)]">
+              <span className="font-display text-lg font-bold text-white">A</span>
+            </div>
+            <div className="min-w-0">
+              <p className="font-display text-lg font-semibold tracking-[0.01em] text-foreground md:text-xl">
+                ALLYN
+              </p>
+              <p className="hidden text-[10px] uppercase tracking-[0.28em] text-foreground/40 sm:block">
+                Salud • Dinero • Amor
+              </p>
+            </div>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center rounded-full border border-white/10 bg-white/[0.045] p-1 backdrop-blur-xl">
             {categories.map((category) => (
               <Link
                 key={category.name}
                 href={category.href}
-                className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors duration-200"
+                className={cn(
+                  "rounded-full px-4 py-2 text-sm font-medium transition-all duration-200",
+                  isActive(category.href)
+                    ? "bg-white text-black shadow-[0_8px_24px_rgba(255,255,255,0.18)]"
+                    : "text-foreground/62 hover:bg-white/[0.07] hover:text-foreground"
+                )}
               >
                 {category.name}
               </Link>
             ))}
           </nav>
 
-          {/* Right Side */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.045] p-1.5 backdrop-blur-xl">
             {user ? (
               <div className="flex items-center gap-2">
                 {!isSubscribed && (
                   <Link href="/subscribe" className="hidden sm:block">
                     <Button
                       size="sm"
-                      className="bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold h-8 px-3 gap-1.5"
+                      className="h-9 rounded-full bg-primary px-4 text-xs font-semibold text-primary-foreground shadow-[0_10px_28px_hsl(var(--primary)/0.34)] hover:bg-primary/90"
                     >
-                      <Crown className="w-3 h-3" />
-                      Acceso Completo
+                      <Crown className="mr-1.5 h-3.5 w-3.5" />
+                      $499/mes
                     </Button>
                   </Link>
                 )}
@@ -105,69 +121,73 @@ export function Header() {
                   <button
                     onClick={() => setDropdownOpen((prev) => !prev)}
                     aria-label={dropdownOpen ? "Cerrar menú de cuenta" : "Abrir menú de cuenta"}
-                    className="flex items-center gap-1.5 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 p-0.5"
+                    className="flex items-center gap-2 rounded-full border border-white/10 bg-black/10 py-1 pl-1 pr-2 transition-colors hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-primary/30"
                   >
-                    <Avatar className="w-8 h-8">
+                    <Avatar className="h-8 w-8">
                       <AvatarImage src={user.user_metadata?.avatar_url} />
-                      <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold border border-primary/30">
+                      <AvatarFallback className="border border-primary/25 bg-primary/20 text-xs font-bold text-primary">
                         {avatarFallback}
                       </AvatarFallback>
                     </Avatar>
-                    {isSubscribed && (
-                      <Crown className="w-3 h-3 text-primary hidden sm:block" />
-                    )}
+                    <div className="hidden text-left sm:block">
+                      <p className="max-w-[9rem] truncate text-xs font-semibold text-foreground">
+                        {profile?.full_name || user.email}
+                      </p>
+                      <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35">
+                        {isSubscribed ? "Miembro" : "Cuenta"}
+                      </p>
+                    </div>
                     <ChevronDown
-                      className={`w-3 h-3 text-foreground/40 transition-transform hidden sm:block ${
-                        dropdownOpen ? "rotate-180" : ""
-                      }`}
+                      className={cn(
+                        "hidden h-3 w-3 text-foreground/40 transition-transform sm:block",
+                        dropdownOpen && "rotate-180"
+                      )}
                     />
                   </button>
 
                   <AnimatePresence>
                     {dropdownOpen && (
                       <motion.div
-                        initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                        initial={{ opacity: 0, y: 8, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 6, scale: 0.97 }}
-                        transition={{ duration: 0.15, ease: "easeOut" }}
-                        className="absolute right-0 mt-2 w-52 rounded-xl bg-card border border-border shadow-xl shadow-black/30 overflow-hidden"
+                        exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                        transition={{ duration: 0.18, ease: "easeOut" }}
+                        className="absolute right-0 mt-3 w-60 overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(24,18,14,0.94)_0%,rgba(11,10,10,0.98)_100%)] shadow-[0_24px_80px_rgba(0,0,0,0.42)] backdrop-blur-2xl"
                       >
-                        <div className="px-4 py-3 border-b border-border">
-                          <p className="text-sm font-medium text-foreground truncate">
+                        <div className="border-b border-white/8 px-4 py-4">
+                          <p className="truncate text-sm font-semibold text-white">
                             {profile?.full_name || user.email}
                           </p>
-                          <p className="text-xs text-muted-foreground truncate mt-0.5">{user.email}</p>
-                          {isSubscribed && (
-                            <span className="inline-flex items-center gap-1 mt-2 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
-                              <Crown className="w-2.5 h-2.5" />
-                              Miembro Vitalicio
-                            </span>
-                          )}
+                          <p className="mt-1 truncate text-xs text-white/45">{user.email}</p>
+                          <span className="mt-3 inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[11px] font-medium text-white/72">
+                            <Crown className="h-3 w-3 text-primary" />
+                            {isSubscribed ? "Miembro Activo" : "Modo Preview"}
+                          </span>
                         </div>
-                        <div className="py-1">
+                        <div className="py-2">
                           <Link
                             href="/profile"
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground/70 hover:text-foreground hover:bg-muted transition-colors"
+                            className="flex items-center gap-3 px-4 py-3 text-sm text-white/72 transition-colors hover:bg-white/[0.05] hover:text-white"
                           >
-                            <UserCircle className="w-4 h-4" />
+                            <UserCircle className="h-4 w-4" />
                             Mi Perfil
                           </Link>
                           {!isSubscribed && (
                             <Link
                               href="/subscribe"
                               onClick={() => setDropdownOpen(false)}
-                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-primary hover:text-primary/80 hover:bg-primary/5 transition-colors"
+                              className="flex items-center gap-3 px-4 py-3 text-sm text-primary transition-colors hover:bg-white/[0.05] hover:text-primary/85"
                             >
-                              <Crown className="w-4 h-4" />
-                              Obtener acceso vitalicio
+                              <Crown className="h-4 w-4" />
+                              Suscribirse
                             </Link>
                           )}
                           <button
                             onClick={handleSignOut}
-                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground/50 hover:text-foreground hover:bg-muted transition-colors"
+                            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-white/45 transition-colors hover:bg-white/[0.05] hover:text-white"
                           >
-                            <LogOut className="w-4 h-4" />
+                            <LogOut className="h-4 w-4" />
                             Cerrar sesión
                           </button>
                         </div>
@@ -177,44 +197,49 @@ export function Header() {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="hidden items-center gap-2 sm:flex">
                 <Link href="/login">
-                  <Button variant="ghost" size="sm" className="text-sm font-medium h-8">
+                  <Button variant="ghost" size="sm" className="h-9 rounded-full px-4 text-sm font-medium">
                     Entrar
                   </Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-semibold h-8">
+                  <Button size="sm" className="h-9 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-[0_10px_28px_hsl(var(--primary)/0.34)] hover:bg-primary/90">
                     Registrarse
                   </Button>
                 </Link>
               </div>
             )}
 
-            {/* Mobile hamburger */}
+            <ThemeToggle />
+
             <button
               aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-              className="md:hidden w-9 h-9 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.045] text-foreground/72 transition-colors hover:bg-white/[0.09] hover:text-foreground md:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-40 bg-background md:hidden"
+            className="fixed inset-x-3 top-[5.2rem] z-40 overflow-hidden rounded-[28px] border border-white/10 bg-background/92 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl md:hidden"
           >
-            <div className="pt-20 px-6 pb-8 flex flex-col h-full">
-              <nav className="flex flex-col gap-1">
+            <div className="p-5">
+              <div className="mb-5">
+                <p className="text-[11px] uppercase tracking-[0.28em] text-foreground/36">
+                  Navegación
+                </p>
+              </div>
+              <nav className="flex flex-col gap-2">
                 {categories.map((category, index) => (
                   <motion.div
                     key={category.name}
@@ -224,7 +249,12 @@ export function Header() {
                   >
                     <Link
                       href={category.href}
-                      className="block py-3 text-xl font-medium text-foreground/80 hover:text-foreground transition-colors border-b border-border/30"
+                      className={cn(
+                        "block rounded-2xl border px-4 py-3 text-lg font-medium transition-colors",
+                        isActive(category.href)
+                          ? "border-primary/30 bg-primary/10 text-foreground"
+                          : "border-white/8 bg-white/[0.045] text-foreground/72 hover:text-foreground"
+                      )}
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {category.name}
@@ -234,31 +264,46 @@ export function Header() {
               </nav>
 
               {user && !isSubscribed && (
-                <div className="mt-6">
+                <div className="mt-5">
                   <Link href="/subscribe" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold gap-2">
-                      <Crown className="w-4 h-4" />
-                      Acceso Completo $499
+                    <Button className="h-11 w-full rounded-full bg-primary font-semibold text-primary-foreground shadow-[0_12px_28px_hsl(var(--primary)/0.34)] hover:bg-primary/90">
+                      <Crown className="mr-2 h-4 w-4" />
+                      Suscribirme — $499/mes
+                    </Button>
+                  </Link>
+                </div>
+              )}
+
+              {!user && (
+                <div className="mt-5 grid gap-2 sm:grid-cols-2">
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="h-11 w-full rounded-full">
+                      Entrar
+                    </Button>
+                  </Link>
+                  <Link href="/register" onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="h-11 w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
+                      Registrarse
                     </Button>
                   </Link>
                 </div>
               )}
 
               {user && (
-                <div className="mt-auto pt-6 border-t border-border/30 space-y-3">
+                <div className="mt-6 space-y-3 border-t border-white/8 pt-5">
                   <Link
                     href="/profile"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 text-base font-medium text-foreground/70 hover:text-foreground"
+                    className="flex items-center gap-3 text-base font-medium text-foreground/72 hover:text-foreground"
                   >
-                    <UserCircle className="w-5 h-5" />
+                    <UserCircle className="h-5 w-5" />
                     Mi Perfil
                   </Link>
                   <button
                     onClick={handleSignOut}
-                    className="flex items-center gap-3 text-base font-medium text-foreground/50 hover:text-foreground transition-colors"
+                    className="flex items-center gap-3 text-base font-medium text-foreground/46 transition-colors hover:text-foreground"
                   >
-                    <LogOut className="w-5 h-5" />
+                    <LogOut className="h-5 w-5" />
                     Cerrar sesión
                   </button>
                 </div>
