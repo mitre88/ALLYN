@@ -22,11 +22,9 @@ export async function GET(
       return NextResponse.json({ error: 'Content not found' }, { status: 404 })
     }
 
-    // Books and audiobooks must have an explicit preview_url — never expose the full file
-    const isReadingContent = content.type === 'book' || content.type === 'audiobook'
-    const assetUrl = isReadingContent
-      ? content.preview_url
-      : (content.preview_url || content.file_url)
+    // Use preview_url if available, otherwise fall back to file_url.
+    // For books, the read page protects the full file with blur overlay + disabled pointer events.
+    const assetUrl = content.preview_url || content.file_url
 
     const source =
       content.preview_url && content.preview_url !== content.file_url

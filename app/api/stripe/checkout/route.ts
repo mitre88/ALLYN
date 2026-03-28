@@ -30,16 +30,17 @@ export async function POST(request: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      mode: 'payment',
+      mode: 'subscription',
       customer_email: user.email,
       line_items: [
         {
           price_data: {
             currency: 'mxn',
             unit_amount: 49900,
+            recurring: { interval: 'month' },
             product_data: {
-              name: 'ALLYN - Acceso Vitalicio',
-              description: 'Acceso de por vida a todos los libros, cursos, audiolibros y actualizaciones futuras.',
+              name: 'ALLYN - Membresía Mensual',
+              description: 'Acceso mensual a todos los libros, cursos, audiolibros y contenido nuevo.',
               images: [`${APP_URL}/og-image.png`],
             },
           },

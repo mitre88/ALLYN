@@ -39,7 +39,7 @@ export default function ProfilePage() {
   const [authUser, setAuthUser] = useState<{ email?: string; user_metadata?: { avatar_url?: string } } | null>(null)
   const supabase = createClient()
 
-  const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://allyn.com'
+  const APP_URL = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_APP_URL || 'https://allyn.com')
   const referralLink = profile?.referral_code
     ? `${APP_URL}/?ref=${profile.referral_code}`
     : null
@@ -126,7 +126,7 @@ export default function ProfilePage() {
               {isSubscribed && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-300 text-xs font-medium">
                   <Crown className="w-3 h-3" />
-                  Miembro Vitalicio
+                  Suscriptor Activo
                 </span>
               )}
             </div>
@@ -162,15 +162,15 @@ export default function ProfilePage() {
                   <Crown className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">Acceso Vitalicio Activo</p>
-                  <p className="text-white/50 text-sm">Disfruta de todo el contenido de ALLYN sin límites.</p>
+                  <p className="font-semibold text-white">Suscripción Mensual Activa</p>
+                  <p className="text-white/50 text-sm">Disfruta de todo el contenido de ALLYN mientras tu suscripción esté activa.</p>
                 </div>
               </div>
             ) : (
               <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
                 <div>
                   <p className="font-semibold text-white">Sin suscripción activa</p>
-                  <p className="text-white/50 text-sm">Obtén acceso vitalicio por $499 MXN.</p>
+                  <p className="text-white/50 text-sm">Suscríbete por $499 MXN al mes para acceder a todo.</p>
                 </div>
                 <Button
                   onClick={() => router.push('/subscribe')}

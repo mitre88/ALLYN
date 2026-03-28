@@ -117,7 +117,7 @@ function SuccessContent() {
         >
           <div className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-4 py-2 mb-4">
             <Crown className="w-4 h-4 text-yellow-400" />
-            <span className="text-sm text-yellow-300 font-medium">Miembro Vitalicio</span>
+            <span className="text-sm text-yellow-300 font-medium">Suscripción Activa</span>
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -129,7 +129,7 @@ function SuccessContent() {
           </h1>
 
           <p className="text-white/60 text-lg mb-8">
-            Tu acceso vitalicio está activo. Ahora tienes acceso a todos los libros, cursos y audiolibros.
+            Tu suscripción mensual está activa. Ahora tienes acceso a todos los libros, cursos y audiolibros.
           </p>
 
           <div className="grid grid-cols-3 gap-4 mb-10">

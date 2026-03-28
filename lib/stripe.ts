@@ -18,6 +18,6 @@ export const stripe = new Proxy({} as Stripe, {
   },
 })
 
-export const SUBSCRIPTION_PRICE_MXN = 49900 // $499.00 MXN en centavos
-export const AFFILIATE_COMMISSION_MXN = 29900 // $299.00 MXN en centavos
+export const SUBSCRIPTION_PRICE_MXN = 49900 // $499.00 MXN/mes en centavos
+export const AFFILIATE_COMMISSION_MXN = 24950 // $249.50 MXN — 50% del primer mes
 export const STRIPE_PRODUCT_ID = process.env.STRIPE_PRODUCT_ID || 'prod_UE462yyW9WvoGd'

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation"
 import type { Category, Content } from "@/types/database"
 
 interface CategoryPageProps {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 async function getCategory(slug: string): Promise<Category | null> {
@@ -22,7 +22,7 @@ async function getContentByCategory(categoryId: string): Promise<Content[]> {
   const supabase = await createClient()
   const { data } = await supabase
     .from("content")
-    .select("*, category:categories(*), creator:creators(*)")
+    .select("*, category:categories(*)")
     .eq("category_id", categoryId)
     .eq("status", "published")
     .order("published_at", { ascending: false })
@@ -31,7 +31,8 @@ async function getContentByCategory(categoryId: string): Promise<Content[]> {
 }
 
 export async function generateMetadata({ params }: CategoryPageProps) {
-  const category = await getCategory(params.slug)
+  const { slug } = await params
+  const category = await getCategory(slug)
   
   if (!category) {
     return {
@@ -46,7 +47,8 @@ export async function generateMetadata({ params }: CategoryPageProps) {
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const category = await getCategory(params.slug)
+  const { slug } = await params
+  const category = await getCategory(slug)
   
   if (!category) {
     notFound()

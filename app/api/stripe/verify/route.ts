@@ -15,7 +15,8 @@ export async function GET(request: NextRequest) {
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id)
 
-    if (session.payment_status !== 'paid') {
+    // For subscriptions, payment_status is 'paid' on successful first charge
+    if (session.payment_status !== 'paid' && session.status !== 'complete') {
       return NextResponse.json({ paid: false, status: session.payment_status })
     }
 

@@ -1,0 +1,3 @@
+[     332ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://allyn-qczvcbrtb-alex-s-projects-b543771d.vercel.app/category/salud:0
+[    2505ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://allyn-qczvcbrtb-alex-s-projects-b543771d.vercel.app/category/salud:0
+[    2917ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://allyn-qczvcbrtb-alex-s-projects-b543771d.vercel.app/favicon.ico:0

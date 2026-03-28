@@ -47,6 +47,7 @@ export function ContentArtwork({
   const [previewFailed, setPreviewFailed] = useState(false)
   const accent = getContentAccentColor(content)
   const TypeIcon = TYPE_ICONS[content.type]
+  const sourceAssetKind = getAssetKind(content.preview_url || content.file_url || undefined)
   const assetKind = getAssetKind(signedPreviewUrl)
 
   useEffect(() => {
@@ -60,7 +61,12 @@ export function ContentArtwork({
     setPreviewFailed(false)
 
     async function loadSignedPreview() {
-      if (content.thumbnail_url || !content.id || (!content.preview_url && !content.file_url)) {
+      if (
+        content.thumbnail_url ||
+        !content.id ||
+        variant !== "panel" ||
+        (!content.preview_url && !content.file_url)
+      ) {
         return
       }
 
@@ -84,7 +90,14 @@ export function ContentArtwork({
     return () => {
       ignore = true
     }
-  }, [content.file_url, content.id, content.preview_url, content.thumbnail_url])
+  }, [
+    content.file_url,
+    content.id,
+    content.preview_url,
+    content.thumbnail_url,
+    sourceAssetKind,
+    variant,
+  ])
 
   if (content.thumbnail_url && !hasError) {
     return (
@@ -109,14 +122,13 @@ export function ContentArtwork({
         />
       )
     }
-
     if (assetKind === "pdf") {
       return (
         <PdfArtwork
           url={signedPreviewUrl}
-          title={content.title}
           className={className}
           imageClassName={imageClassName}
+          onError={() => setPreviewFailed(true)}
         />
       )
     }
@@ -208,24 +220,72 @@ export function ContentArtwork({
 
 function PdfArtwork({
   url,
-  title,
   className,
   imageClassName,
+  onError,
 }: {
   url: string
-  title: string
   className?: string
   imageClassName?: string
+  onError: () => void
 }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    setReady(false)
+    let cancelled = false
+
+    async function renderFirstPage() {
+      try {
+        const pdfjsLib = await import("pdfjs-dist")
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`
+
+        const doc = await pdfjsLib.getDocument({ url, withCredentials: false }).promise
+        const page = await doc.getPage(1)
+
+        const canvas = canvasRef.current
+        if (!canvas || cancelled) return
+
+        // Render at 1.5x scale for crisp thumbnails
+        const viewport = page.getViewport({ scale: 1.5 })
+        canvas.width = viewport.width
+        canvas.height = viewport.height
+
+        const context = canvas.getContext("2d")
+        if (!context) return
+
+        await page.render({ canvasContext: context, viewport }).promise
+
+        if (!cancelled) setReady(true)
+        doc.destroy()
+      } catch {
+        if (!cancelled) onError()
+      }
+    }
+
+    void renderFirstPage()
+    return () => {
+      cancelled = true
+    }
+  }, [url, onError])
+
   return (
     <div className={cn("relative h-full w-full overflow-hidden bg-white", className)}>
-      <iframe
-        src={`${url}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
-        title={`Preview de ${title}`}
-        className={cn("h-full w-full scale-[1.05] origin-top border-0", imageClassName)}
-        sandbox="allow-same-origin allow-scripts"
+      <canvas
+        ref={canvasRef}
+        className={cn(
+          "h-full w-full object-cover transition-opacity duration-300",
+          ready ? "opacity-100" : "opacity-0",
+          imageClassName
+        )}
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-white/12" />
+      {!ready && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <BookOpen className="h-6 w-6 animate-pulse text-zinc-300" />
+        </div>
+      )}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/5" />
     </div>
   )
 }

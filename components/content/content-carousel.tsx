@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { ContentCard } from "./content-card"
@@ -37,7 +37,7 @@ export function ContentCarousel({
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = window.innerWidth * 0.8
+      const scrollAmount = scrollRef.current.clientWidth * 0.82
       scrollRef.current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -46,17 +46,26 @@ export function ContentCarousel({
     }
   }
 
+  useEffect(() => {
+    const handleResize = () => checkScrollability()
+
+    handleResize()
+    window.addEventListener("resize", handleResize)
+
+    return () => window.removeEventListener("resize", handleResize)
+  }, [content.length])
+
   if (!content || content.length === 0) return null
 
   return (
-    <section className="py-7 md:py-9">
+    <section className="py-8 md:py-10 xl:py-12">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, ease: "easeOut" }}
-          className="mb-5 flex items-end justify-between gap-4 md:mb-6"
+          className="mb-6 flex items-end justify-between gap-5 md:mb-7"
         >
           <div className="min-w-0 space-y-2.5">
             {/* Eyebrow with accent line */}
@@ -93,50 +102,49 @@ export function ContentCarousel({
       </div>
 
       {/* Carousel Container */}
-      <div className="relative group">
-        {/* Left Arrow */}
-        {canScrollLeft && (
-          <button
-            onClick={() => scroll("left")}
-            aria-label={`Desplazar ${title} a la izquierda`}
-            className="absolute left-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-background via-background/85 to-transparent flex items-center pl-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          >
-            <div className="w-9 h-9 rounded-full border border-border/60 bg-background/80 backdrop-blur-sm flex items-center justify-center shadow-sm hover:border-border hover:bg-background transition-all">
-              <ChevronLeft className="w-4 h-4 text-foreground/70" />
-            </div>
-          </button>
-        )}
-
-        {/* Right Arrow */}
-        {canScrollRight && (
-          <button
-            onClick={() => scroll("right")}
-            aria-label={`Desplazar ${title} a la derecha`}
-            className="absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-l from-background via-background/85 to-transparent flex items-center justify-end pr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          >
-            <div className="w-9 h-9 rounded-full border border-border/60 bg-background/80 backdrop-blur-sm flex items-center justify-center shadow-sm hover:border-border hover:bg-background transition-all">
-              <ChevronRight className="w-4 h-4 text-foreground/70" />
-            </div>
-          </button>
-        )}
-
-        {/* Scrollable Content */}
-        <div
-          ref={scrollRef}
-          onScroll={checkScrollability}
-          className="flex gap-4 overflow-x-auto hide-scrollbar px-4 md:px-12 scroll-smooth"
-        >
-          {content.map((item, index) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="group relative overflow-hidden rounded-[30px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(255,255,255,0.02)_100%)] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.12)] backdrop-blur-sm sm:p-5 md:p-6">
+          {canScrollLeft && (
+            <button
+              onClick={() => scroll("left")}
+              aria-label={`Desplazar ${title} a la izquierda`}
+              className="absolute inset-y-0 left-0 z-10 hidden w-20 items-center justify-center bg-gradient-to-r from-background via-background/72 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 lg:flex"
             >
-              <ContentCard content={item} isSubscribed={isSubscribed} />
-            </motion.div>
-          ))}
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border/60 bg-background/80 shadow-sm backdrop-blur-sm transition-all hover:border-border hover:bg-background">
+                <ChevronLeft className="h-4 w-4 text-foreground/70" />
+              </div>
+            </button>
+          )}
+
+          {canScrollRight && (
+            <button
+              onClick={() => scroll("right")}
+              aria-label={`Desplazar ${title} a la derecha`}
+              className="absolute inset-y-0 right-0 z-10 hidden w-20 items-center justify-center bg-gradient-to-l from-background via-background/72 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 lg:flex"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border/60 bg-background/80 shadow-sm backdrop-blur-sm transition-all hover:border-border hover:bg-background">
+                <ChevronRight className="h-4 w-4 text-foreground/70" />
+              </div>
+            </button>
+          )}
+
+          <div
+            ref={scrollRef}
+            onScroll={checkScrollability}
+            className="flex gap-4 overflow-x-auto pb-1 scroll-smooth hide-scrollbar snap-x snap-proximity sm:gap-5 lg:gap-6"
+          >
+            {content.map((item, index) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <ContentCard content={item} isSubscribed={isSubscribed} />
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
