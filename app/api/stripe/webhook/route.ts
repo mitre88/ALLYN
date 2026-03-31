@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
             referrer_id: referrerProfile.id,
             referred_user_id: user_id,
             referred_email: session.customer_email || '',
-            commission_amount: 24950,
+            commission_amount: 29900,
             status: 'earned',
             subscription_id: subscription?.id || null,
           })

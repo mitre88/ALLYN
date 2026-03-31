@@ -170,7 +170,7 @@ export function BookReaderShell({
             <div className="border-b border-white/10 bg-white/[0.02] xl:border-b-0 xl:border-r xl:border-white/10">
               <div className="relative h-[68vh] min-h-[560px] bg-white sm:h-[74vh] xl:h-[calc(100vh-11rem)]">
                 <iframe
-                  src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=1&view=FitPage`}
+                  src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&page=1`}
                   title={content.title}
                   className="h-full w-full border-0"
                   style={{ pointerEvents: isSubscribed ? "auto" : "none" }}
@@ -182,9 +182,9 @@ export function BookReaderShell({
                     <div
                       className="pointer-events-none absolute bottom-0 left-0 right-0"
                       style={{
-                        height: "65%",
+                        height: "45%",
                         background:
-                          "linear-gradient(to bottom, transparent 0%, rgba(9,9,11,0.7) 40%, rgba(9,9,11,0.95) 100%)",
+                          "linear-gradient(to bottom, transparent 0%, rgba(9,9,11,0.65) 50%, rgba(9,9,11,0.97) 100%)",
                       }}
                     />
                     <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center justify-end px-6 pb-10">
@@ -241,7 +241,7 @@ export function BookReaderShell({
                           Escuchar completo
                         </p>
                         <p className="mt-1 text-sm text-white/72">
-                          Extraigo el texto real del PDF para reproducirlo con voz del navegador.
+                          Escucha el libro completo con voz IA · OpenAI TTS.
                         </p>
                       </div>
                       {audioStatus === "ready" && (
