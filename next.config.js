@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Prevent Next.js from bundling native binaries that don't run in serverless
+  serverExternalPackages: ['canvas', '@napi-rs/canvas', 'pdf-parse'],
   images: {
     remotePatterns: [
       {
@@ -17,7 +19,10 @@ const nextConfig = {
     ],
   },
   outputFileTracingIncludes: {
-    '/*': ['./node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs'],
+    '/api/content/**': [
+      './node_modules/pdfjs-dist/legacy/build/pdf.mjs',
+      './node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs',
+    ],
   },
   env: {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
