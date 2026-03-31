@@ -1,11 +1,11 @@
 import { createClient } from "@/lib/supabase/server"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { Play, Share2, Clock, User, BookOpen, Plus } from "lucide-react"
+import { Play, Share2, Clock, User, BookOpen, Plus, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ContentArtwork } from "@/components/content/content-artwork"
 import { ContentCarousel } from "@/components/content/content-carousel"
-import { getPrimaryContentHref, getPrimaryContentLabel, getContentTypeLabel, getContentAccessLabel } from "@/lib/content"
+import { getPrimaryContentHref, getPrimaryContentLabel, getContentTypeLabel, getContentAccessLabel, isContentLocked } from "@/lib/content"
 import type { Content } from "@/types/database"
 import { formatDuration } from "@/lib/utils"
 
@@ -70,6 +70,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
     : []
 
   const isBook = content.type === 'book' || content.type === 'audiobook'
+  const locked = isContentLocked(content, isSubscribed)
   const primaryHref = getPrimaryContentHref(content, isSubscribed)
   const primaryLabel = getPrimaryContentLabel(content, isSubscribed)
 
@@ -152,6 +153,27 @@ export default async function ContentPage({ params }: ContentPageProps) {
                 Compartir
               </Button>
             </div>
+
+            {/* Paywall banner for locked video content */}
+            {locked && (
+              <div className="mb-8 flex items-start gap-4 bg-white/5 border border-white/10 rounded-2xl p-5">
+                <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
+                  <Lock className="w-5 h-5 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-semibold mb-1">Contenido exclusivo para miembros</p>
+                  <p className="text-white/60 text-sm mb-3">
+                    Accede a este y todo el contenido de ALLYN por{" "}
+                    <span className="text-primary font-semibold">$499/mes</span>. Cancela cuando quieras.
+                  </p>
+                  <Link href="/subscribe">
+                    <Button size="sm" className="bg-primary text-white hover:bg-primary/90 font-semibold">
+                      Ver planes
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
 
             <div className="mb-8">
               <h2 className="text-lg font-semibold text-white mb-2">Descripción</h2>
