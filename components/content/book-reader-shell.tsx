@@ -241,7 +241,7 @@ export function BookReaderShell({
                           Escuchar completo
                         </p>
                         <p className="mt-1 text-sm text-white/72">
-                          Escucha el libro completo con voz IA · OpenAI TTS.
+                          Escucha el libro completo con voz del navegador.
                         </p>
                       </div>
                       {audioStatus === "ready" && (
