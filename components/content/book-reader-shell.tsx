@@ -152,17 +152,19 @@ export function BookReaderShell({
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2.5">
-                <a
-                  href={pdfUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.05] px-4 py-2.5 text-sm font-medium text-white/82 transition-colors hover:border-white/22 hover:bg-white/[0.08]"
-                >
-                  <ArrowUpRight className="h-4 w-4" />
-                  Abrir aparte
-                </a>
-              </div>
+              {isSubscribed && (
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <a
+                    href={pdfUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.05] px-4 py-2.5 text-sm font-medium text-white/82 transition-colors hover:border-white/22 hover:bg-white/[0.08]"
+                  >
+                    <ArrowUpRight className="h-4 w-4" />
+                    Abrir aparte
+                  </a>
+                </div>
+              )}
             </div>
           </div>
 
@@ -176,35 +178,25 @@ export function BookReaderShell({
                   style={{ pointerEvents: isSubscribed ? "auto" : "none" }}
                 />
 
-                {/* Non-subscriber blur + lock overlay */}
+                {/* Non-subscriber paywall — fully opaque, covers entire iframe */}
                 {!isSubscribed && (
-                  <>
-                    <div
-                      className="pointer-events-none absolute bottom-0 left-0 right-0"
-                      style={{
-                        height: "45%",
-                        background:
-                          "linear-gradient(to bottom, transparent 0%, rgba(9,9,11,0.65) 50%, rgba(9,9,11,0.97) 100%)",
-                      }}
-                    />
-                    <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center justify-end px-6 pb-10">
-                      <div className="w-14 h-14 rounded-full bg-black/60 border border-primary/30 flex items-center justify-center mx-auto mb-4">
-                        <Lock className="w-6 h-6 text-primary" />
-                      </div>
-                      <h3 className="text-white font-bold text-lg text-center mb-1">
-                        Estás leyendo el prólogo
-                      </h3>
-                      <p className="text-white/50 text-sm text-center max-w-xs mb-5">
-                        Suscríbete para leer el libro completo y acceder a toda la biblioteca.
-                      </p>
-                      <Link href="/subscribe">
-                        <button className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-3 rounded-full transition-colors shadow-lg shadow-primary/25">
-                          <Crown className="w-4 h-4" />
-                          Suscribirse — $499/mes
-                        </button>
-                      </Link>
+                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-zinc-950/95 px-6 backdrop-blur-sm">
+                    <div className="w-16 h-16 rounded-full bg-black/60 border border-primary/30 flex items-center justify-center mb-5">
+                      <Lock className="w-7 h-7 text-primary" />
                     </div>
-                  </>
+                    <h3 className="text-white font-bold text-xl text-center mb-2">
+                      Acceso exclusivo para suscriptores
+                    </h3>
+                    <p className="text-white/50 text-sm text-center max-w-xs mb-6">
+                      Suscríbete para leer este libro completo y acceder a toda la biblioteca.
+                    </p>
+                    <Link href="/subscribe">
+                      <button className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-3 rounded-full transition-colors shadow-lg shadow-primary/25">
+                        <Crown className="w-4 h-4" />
+                        Suscribirse — $499/mes
+                      </button>
+                    </Link>
+                  </div>
                 )}
               </div>
             </div>

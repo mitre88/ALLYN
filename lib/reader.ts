@@ -1,5 +1,4 @@
 import { isReadingContent } from "@/lib/content"
-import { resolveStorageAssetUrl } from "@/lib/storage"
 import { createClient } from "@/lib/supabase/server"
 import type { Content } from "@/types/database"
 
@@ -40,17 +39,9 @@ export async function getReaderContent(
     isSubscribed = (profile?.is_subscribed || profile?.role === "admin") ?? false
   }
 
-  // Subscribers get the full file; non-subscribers get preview_url or fall back to file_url
-  // (the book-reader-shell handles the blur/lock overlay for non-subscribers)
-  const assetUrl = isSubscribed
-    ? (content.file_url || content.preview_url)
-    : (content.preview_url || content.file_url)
-
-  if (!assetUrl) {
-    return null
-  }
-
-  const pdfUrl = await resolveStorageAssetUrl(assetUrl)
+  // Use proxy URL — the proxy validates auth/subscription server-side
+  // and streams the correct file. Supabase signed URLs are never sent to the client.
+  const pdfUrl = `/api/content/${id}/pdf`
   const backHref = content.category?.slug ? `/category/${content.category.slug}` : "/"
   const backLabel = content.category?.name
     ? `Volver a ${content.category.name}`
