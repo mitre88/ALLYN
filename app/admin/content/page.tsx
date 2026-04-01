@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core'
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { GripVertical, Pencil, Trash2, Plus, Eye, EyeOff, BookOpen, Video, GraduationCap } from 'lucide-react'
+import { GripVertical, Pencil, Trash2, Plus, Eye, EyeOff, BookOpen, Video, GraduationCap, Search } from 'lucide-react'
 import { ContentArtwork } from '@/components/content/content-artwork'
 import Link from 'next/link'
 import { toast } from 'sonner'
@@ -99,6 +99,7 @@ export default function AdminContent() {
   const [items, setItems] = useState<ContentItem[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<string>('all')
+  const [search, setSearch] = useState('')
   const supabase = createClient()
 
   const sensors = useSensors(
@@ -118,7 +119,9 @@ export default function AdminContent() {
     load()
   }, [])
 
-  const filtered = filter === 'all' ? items : items.filter(i => i.type === filter)
+  const filtered = items
+    .filter(i => filter === 'all' || i.type === filter)
+    .filter(i => !search.trim() || i.title.toLowerCase().includes(search.toLowerCase()))
 
   async function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
@@ -169,7 +172,17 @@ export default function AdminContent() {
         </Link>
       </div>
 
-      {/* Filters */}
+      {/* Search and Filters */}
+      <div className="relative mb-4">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Buscar por título..."
+          className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-10 pr-4 py-2.5 text-white text-sm placeholder:text-slate-500 focus:border-purple-500 focus:outline-none transition-colors"
+        />
+      </div>
       <div className="flex gap-2 mb-6">
         {['all', 'book', 'video', 'course'].map(f => (
           <button

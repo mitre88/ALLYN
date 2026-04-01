@@ -5,6 +5,7 @@ import { Play, Share2, Clock, User, BookOpen, Plus, Lock, Headphones } from "luc
 import { Button } from "@/components/ui/button"
 import { ContentArtwork } from "@/components/content/content-artwork"
 import { ContentCarousel } from "@/components/content/content-carousel"
+import { VideoPlayer } from "@/components/content/video-player"
 import { getPrimaryContentHref, getPrimaryContentLabel, getContentTypeLabel, getContentAccessLabel, getContentAccentColor, isContentLocked, isReadingContent } from "@/lib/content"
 import type { Content } from "@/types/database"
 import { formatDuration } from "@/lib/utils"
@@ -69,6 +70,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
     : []
 
   const isBook = isReadingContent(content)
+  const isVideo = content.type === 'video' || content.type === 'course'
   const locked = isContentLocked(content, isSubscribed)
   const primaryHref = getPrimaryContentHref(content, isSubscribed)
   const primaryLabel = getPrimaryContentLabel(content, isSubscribed)
@@ -216,6 +218,16 @@ export default async function ContentPage({ params }: ContentPageProps) {
           </div>
         </div>
       </section>
+
+      {isVideo && content.file_url && (
+        <section className="container mx-auto px-4 pb-4 pt-2 md:px-8">
+          <VideoPlayer
+            contentId={content.id}
+            isSubscribed={isSubscribed}
+            isFree={content.is_free}
+          />
+        </section>
+      )}
 
       {locked && (
         <section className="container mx-auto px-4 py-8 md:px-8">

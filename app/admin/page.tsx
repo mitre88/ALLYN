@@ -1,5 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
-import { Users, BookOpen, Video, DollarSign, TrendingUp, Star } from 'lucide-react'
+import { Users, BookOpen, Video, DollarSign, TrendingUp, Star, Activity, UserPlus, CreditCard } from 'lucide-react'
+
+interface ActivityEvent {
+  type: 'content_published' | 'user_registered' | 'subscription'
+  label: string
+  detail: string
+  timestamp: string
+  color: string
+}
 
 async function getStats() {
   const supabase = await createClient()
@@ -25,11 +33,45 @@ async function getStats() {
   const totalRevenue = Math.round((subAmounts || []).reduce((sum: number, s: { amount: number }) => sum + s.amount / 100, 0))
   const pendingPayout = (pendingCommissions || []).reduce((sum: number, a: { commission_amount: number }) => sum + a.commission_amount / 100, 0)
 
-  return { totalUsers: totalUsers || 0, subscribedUsers: subscribedUsers || 0, totalContent: totalContent || 0, totalRevenue, recentSubs: recentSubs || [], pendingPayout }
+  // Activity feed: recent events from multiple tables
+  const [
+    { data: recentContent },
+    { data: recentUsers },
+    { data: recentSubscriptions },
+  ] = await Promise.all([
+    supabase.from('content').select('title, published_at').eq('status', 'published').not('published_at', 'is', null).order('published_at', { ascending: false }).limit(5),
+    supabase.from('profiles').select('full_name, email, created_at').order('created_at', { ascending: false }).limit(5),
+    supabase.from('subscriptions').select('created_at, profiles(full_name, email)').eq('status', 'completed').order('created_at', { ascending: false }).limit(5),
+  ])
+
+  const activity: ActivityEvent[] = []
+
+  for (const c of recentContent || []) {
+    if (c.published_at) {
+      activity.push({ type: 'content_published', label: 'Contenido publicado', detail: c.title, timestamp: c.published_at, color: 'text-purple-400' })
+    }
+  }
+  for (const u of recentUsers || []) {
+    activity.push({ type: 'user_registered', label: 'Nuevo usuario', detail: u.full_name || u.email || 'Usuario', timestamp: u.created_at, color: 'text-blue-400' })
+  }
+  for (const s of (recentSubscriptions || []) as { created_at: string; profiles: { full_name?: string; email?: string } | null }[]) {
+    activity.push({ type: 'subscription', label: 'Nueva suscripción', detail: s.profiles?.full_name || s.profiles?.email || 'Usuario', timestamp: s.created_at, color: 'text-green-400' })
+  }
+
+  activity.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+  const recentActivity = activity.slice(0, 10)
+
+  return { totalUsers: totalUsers || 0, subscribedUsers: subscribedUsers || 0, totalContent: totalContent || 0, totalRevenue, recentSubs: recentSubs || [], pendingPayout, recentActivity }
+}
+
+const activityIcons = {
+  content_published: BookOpen,
+  user_registered: UserPlus,
+  subscription: CreditCard,
 }
 
 export default async function AdminDashboard() {
-  const { totalUsers, subscribedUsers, totalContent, totalRevenue, recentSubs, pendingPayout } = await getStats()
+  const { totalUsers, subscribedUsers, totalContent, totalRevenue, recentSubs, pendingPayout, recentActivity } = await getStats()
 
   const stats = [
     { label: 'Usuarios Totales', value: totalUsers, icon: Users, color: 'text-blue-400' },
@@ -79,6 +121,39 @@ export default async function AdminDashboard() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+      </div>
+
+      {/* Activity Feed */}
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mt-6">
+        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <Activity className="w-5 h-5 text-purple-400" />
+          Actividad Reciente
+        </h2>
+        {recentActivity.length === 0 ? (
+          <p className="text-slate-500 text-sm text-center py-8">No hay actividad reciente</p>
+        ) : (
+          <div className="space-y-3">
+            {recentActivity.map((event, i) => {
+              const Icon = activityIcons[event.type]
+              return (
+                <div key={`${event.type}-${event.timestamp}-${i}`} className="flex items-center gap-3 py-2 border-b border-slate-800 last:border-0">
+                  <div className={`p-1.5 rounded-lg bg-slate-800 ${event.color}`}>
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-white truncate">{event.detail}</p>
+                    <p className={`text-xs ${event.color}`}>{event.label}</p>
+                  </div>
+                  <p className="text-xs text-slate-400 whitespace-nowrap">
+                    {new Date(event.timestamp).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
+                    {' '}
+                    {new Date(event.timestamp).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              )
+            })}
           </div>
         )}
       </div>
