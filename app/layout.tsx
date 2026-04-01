@@ -1,20 +1,7 @@
 import type { Metadata } from "next"
-import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import "./globals.css"
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-})
-
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-})
 
 export const metadata: Metadata = {
   title: "ALLYN — Transformación Personal",
@@ -29,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${playfair.variable} ${jakarta.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <ThemeProvider>
           {children}
           <Toaster position="bottom-right" richColors closeButton />

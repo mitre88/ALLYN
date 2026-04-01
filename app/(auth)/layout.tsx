@@ -95,7 +95,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             >
               <div className="inline-flex items-center gap-2 bg-primary/8 border border-primary/14 rounded-full px-4 py-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                <span className="font-sf text-[11px] font-semibold text-primary/80 tracking-[0.22em] uppercase">
+                <span className="text-[11px] font-semibold text-primary/80 tracking-[0.22em] uppercase">
                   Plataforma de transformación
                 </span>
               </div>
