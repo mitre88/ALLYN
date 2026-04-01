@@ -129,7 +129,7 @@ function SuccessContent() {
           </h1>
 
           <p className="text-white/60 text-lg mb-8">
-            Tu suscripción mensual está activa. Ahora tienes acceso a todos los libros, cursos y audiolibros.
+            Tu acceso anual está activo. Ahora tienes acceso a todos los libros, cursos y audiolibros por un año completo.
           </p>
 
           <div className="grid grid-cols-3 gap-4 mb-10">

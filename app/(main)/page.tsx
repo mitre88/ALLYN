@@ -142,12 +142,22 @@ export default async function HomePage() {
           ) : null
         )}
 
-        {isSubscribed && videos.length > 0 && (
+        {videos.filter(v => v.is_free).length > 0 && (
+          <ContentCarousel
+            eyebrow="Video"
+            title="Promocionales gratuitos"
+            description="Mira fragmentos promocionales gratis — sin suscripción."
+            content={videos.filter(v => v.is_free)}
+            isSubscribed={isSubscribed}
+          />
+        )}
+
+        {isSubscribed && videos.filter(v => !v.is_free).length > 0 && (
           <ContentCarousel
             eyebrow="Video"
             title="Videos"
-            description="Piezas de video separadas del curso para mantener la biblioteca mejor organizada."
-            content={videos}
+            description="Piezas de video exclusivas para miembros."
+            content={videos.filter(v => !v.is_free)}
             isSubscribed={isSubscribed}
           />
         )}

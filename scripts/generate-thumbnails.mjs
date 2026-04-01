@@ -122,7 +122,33 @@ async function generateFallbackThumbnail(title, author, categoryColor = '#c8951a
   return await sharp(pngBuffer).resize(THUMB_W, THUMB_H).jpeg({ quality: 88 }).toBuffer()
 }
 
+async function generatePdfThumbnailViaGhostscript(pdfPath) {
+  const tmpPng = join(TMP_DIR, `gs_${Date.now()}.png`)
+  const tmpJpg = join(TMP_DIR, `gs_${Date.now()}.jpg`)
+  try {
+    execSync(
+      `gs -dNOPAUSE -dBATCH -sDEVICE=png16m -dFirstPage=1 -dLastPage=1 -dPDFFitPage -dFIXEDMEDIA -sPAPERSIZE=letter -r150 -o "${tmpPng}" "${pdfPath}"`,
+      { stdio: 'pipe', timeout: 30000 }
+    )
+    const buf = await sharp(readFileSync(tmpPng))
+      .resize(THUMB_W, THUMB_H, { fit: 'cover', position: 'top' })
+      .jpeg({ quality: 88 })
+      .toBuffer()
+    return buf
+  } finally {
+    try { unlinkSync(tmpPng) } catch {}
+    try { unlinkSync(tmpJpg) } catch {}
+  }
+}
+
 async function generatePdfThumbnail(pdfPath, title, author, categoryColor) {
+  const stat = await import('fs').then(m => m.statSync(pdfPath))
+  const fileSizeMB = stat.size / (1024 * 1024)
+
+  if (fileSizeMB > 30) {
+    return generatePdfThumbnailViaGhostscript(pdfPath)
+  }
+
   const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs').catch(
     () => import('pdfjs-dist')
   )
@@ -139,7 +165,6 @@ async function generatePdfThumbnail(pdfPath, title, author, categoryColor) {
   const page = await doc.getPage(1)
   const viewport = page.getViewport({ scale: 1.0 })
 
-  // Scale to cover THUMB_W x THUMB_H
   const scale = Math.max(THUMB_W / viewport.width, THUMB_H / viewport.height)
   const scaledViewport = page.getViewport({ scale })
 
@@ -150,7 +175,6 @@ async function generatePdfThumbnail(pdfPath, title, author, categoryColor) {
 
   await page.render({ canvasContext: ctx, viewport: scaledViewport }).promise
 
-  // Use PNG buffer from canvas → sharp (avoids raw/BGRA issues)
   const pngBuffer = canvas.toBuffer('image/png')
   const thumbBuffer = await sharp(pngBuffer)
     .resize(THUMB_W, THUMB_H, { fit: 'cover', position: 'top' })

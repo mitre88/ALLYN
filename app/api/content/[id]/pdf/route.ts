@@ -38,8 +38,9 @@ export async function GET(
     isSubscribed = (profile?.is_subscribed || profile?.role === "admin") ?? false
   }
 
-  // Determine asset: subscribers get full file, non-subscribers only get preview
-  const assetUrl = isSubscribed
+  // Determine asset: reading content (books/audiobooks) is free for everyone
+  const isFreeAccess = isReadingContent(content)
+  const assetUrl = (isFreeAccess || isSubscribed)
     ? content.file_url || content.preview_url
     : content.preview_url
 

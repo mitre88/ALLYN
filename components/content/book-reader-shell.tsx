@@ -6,11 +6,9 @@ import {
   ArrowUpRight,
   BookOpen,
   ChevronLeft,
-  Crown,
   FileText,
   Headphones,
   LoaderCircle,
-  Lock,
   Sparkles,
   Waves,
 } from "lucide-react"
@@ -130,7 +128,7 @@ export function BookReaderShell({
                     {content.category?.name || "Colección"}
                   </span>
                   <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 font-medium text-white/68">
-                    {isSubscribed ? "Libro completo" : "Prólogo · Vista previa"}
+                    Libro completo
                   </span>
                   <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 font-medium text-white/54">
                     {content.type === "audiobook" ? "Lectura + audio" : "Lectura inmersiva"}
@@ -175,29 +173,7 @@ export function BookReaderShell({
                   src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&page=1`}
                   title={content.title}
                   className="h-full w-full border-0"
-                  style={{ pointerEvents: isSubscribed ? "auto" : "none" }}
                 />
-
-                {/* Non-subscriber paywall — fully opaque, covers entire iframe */}
-                {!isSubscribed && (
-                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-zinc-950/95 px-6 backdrop-blur-sm">
-                    <div className="w-16 h-16 rounded-full bg-black/60 border border-primary/30 flex items-center justify-center mb-5">
-                      <Lock className="w-7 h-7 text-primary" />
-                    </div>
-                    <h3 className="text-white font-bold text-xl text-center mb-2">
-                      Acceso exclusivo para suscriptores
-                    </h3>
-                    <p className="text-white/50 text-sm text-center max-w-xs mb-6">
-                      Suscríbete para leer este libro completo y acceder a toda la biblioteca.
-                    </p>
-                    <Link href="/subscribe">
-                      <button className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-3 rounded-full transition-colors shadow-lg shadow-primary/25">
-                        <Crown className="w-4 h-4" />
-                        Suscribirse — $499/mes
-                      </button>
-                    </Link>
-                  </div>
-                )}
               </div>
             </div>
 

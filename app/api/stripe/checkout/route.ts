@@ -34,34 +34,34 @@ export async function POST(request: NextRequest) {
       mode: 'subscription',
       customer_email: user.email,
       line_items: [
+        // Item 1 — recurrente: $99/año (renovaciones automáticas a partir del año 2)
         {
           price_data: {
             currency: 'mxn',
-            unit_amount: RENEWAL_PRICE_MXN, // $99 — precio recurrente anual
+            unit_amount: RENEWAL_PRICE_MXN,
             recurring: { interval: 'year' },
             product_data: {
               name: 'ALLYN — Membresía Anual',
-              description: 'Acceso completo a todos los cursos, audiolibros y libros. Renovación automática cada año.',
+              description: 'Acceso completo a todos los cursos, audiolibros y libros.',
               images: [`${APP_URL}/og-image.png`],
+            },
+          },
+          quantity: 1,
+        },
+        // Item 2 — pago único: $400 solo en la primera factura (primer año = $99 + $400 = $499)
+        {
+          price_data: {
+            currency: 'mxn',
+            unit_amount: SETUP_FEE_MXN,
+            product_data: {
+              name: 'ALLYN — Registro Inicial',
+              description: 'Cargo único al registrarse. Solo se cobra el primer año.',
             },
           },
           quantity: 1,
         },
       ],
       subscription_data: {
-        // Cargo único de inicio: primer pago = $99 + $400 = $499 total
-        add_invoice_items: [
-          {
-            price_data: {
-              currency: 'mxn',
-              unit_amount: SETUP_FEE_MXN, // $400 — solo se cobra una vez
-              product_data: {
-                name: 'ALLYN — Registro Inicial',
-                description: 'Cargo único al registrarse.',
-              },
-            },
-          },
-        ],
         metadata: {
           user_id: user.id,
           affiliate_code: affiliate_code || '',

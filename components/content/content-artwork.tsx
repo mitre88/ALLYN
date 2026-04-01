@@ -24,7 +24,7 @@ const TYPE_ICONS = {
   course: GraduationCap,
 } as const
 
-const SF_PRO = "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+const COVER_FONT = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
 
 // Derives a deterministic integer 0-5 from content.id
 function getTemplateIndex(id: string): number {
@@ -108,25 +108,25 @@ function TemplateDiagonal({ title, author, accent }: TemplateProps) {
       <text
         x="20"
         y="228"
-        fontFamily={SF_PRO}
+        fontFamily={COVER_FONT}
         fontWeight="800"
         fontSize="22"
         fill="white"
         style={{ letterSpacing: "-0.02em" }}
       >
-        {truncate(title, 16)}
+        {truncate(title, 24)}
       </text>
-      {title.length > 16 && (
+      {title.length > 24 && (
         <text
           x="20"
-          y="254"
-          fontFamily={SF_PRO}
+          y="250"
+          fontFamily={COVER_FONT}
           fontWeight="800"
           fontSize="22"
           fill="white"
           style={{ letterSpacing: "-0.02em" }}
         >
-          {truncate(title.slice(16), 14)}
+          {truncate(title.slice(24), 22)}
         </text>
       )}
 
@@ -138,7 +138,7 @@ function TemplateDiagonal({ title, author, accent }: TemplateProps) {
         <text
           x="20"
           y="284"
-          fontFamily={SF_PRO}
+          fontFamily={COVER_FONT}
           fontWeight="400"
           fontSize="11"
           fill="rgba(255,255,255,0.55)"
@@ -190,26 +190,26 @@ function TemplateCircle({ title, author, accent }: TemplateProps) {
         x="120"
         y="238"
         textAnchor="middle"
-        fontFamily={SF_PRO}
+        fontFamily={COVER_FONT}
         fontWeight="800"
         fontSize="20"
         fill="white"
         style={{ letterSpacing: "-0.02em" }}
       >
-        {truncate(title, 17)}
+        {truncate(title, 24)}
       </text>
-      {title.length > 17 && (
+      {title.length > 24 && (
         <text
           x="120"
-          y="261"
+          y="259"
           textAnchor="middle"
-          fontFamily={SF_PRO}
+          fontFamily={COVER_FONT}
           fontWeight="800"
           fontSize="20"
           fill="white"
           style={{ letterSpacing: "-0.02em" }}
         >
-          {truncate(title.slice(17), 17)}
+          {truncate(title.slice(24), 24)}
         </text>
       )}
 
@@ -219,13 +219,13 @@ function TemplateCircle({ title, author, accent }: TemplateProps) {
           x="120"
           y="284"
           textAnchor="middle"
-          fontFamily={SF_PRO}
+          fontFamily={COVER_FONT}
           fontWeight="400"
           fontSize="11"
           fill={hexAlpha(accent, 0.75)}
           style={{ letterSpacing: "0.05em" }}
         >
-          {truncate(author, 28)}
+          {truncate(author, 30)}
         </text>
       )}
     </svg>
@@ -279,25 +279,25 @@ function TemplateGrid({ title, author, accent }: TemplateProps) {
       <text
         x="20"
         y="246"
-        fontFamily={SF_PRO}
+        fontFamily={COVER_FONT}
         fontWeight="700"
         fontSize="18"
         fill="white"
         style={{ letterSpacing: "-0.01em" }}
       >
-        {truncate(title, 18)}
+        {truncate(title, 26)}
       </text>
-      {title.length > 18 && (
+      {title.length > 26 && (
         <text
           x="20"
-          y="266"
-          fontFamily={SF_PRO}
+          y="264"
+          fontFamily={COVER_FONT}
           fontWeight="700"
           fontSize="18"
           fill="white"
           style={{ letterSpacing: "-0.01em" }}
         >
-          {truncate(title.slice(18), 18)}
+          {truncate(title.slice(26), 26)}
         </text>
       )}
 
@@ -306,7 +306,7 @@ function TemplateGrid({ title, author, accent }: TemplateProps) {
         <text
           x="20"
           y="285"
-          fontFamily={SF_PRO}
+          fontFamily={COVER_FONT}
           fontWeight="400"
           fontSize="11"
           fill="rgba(255,255,255,0.5)"
@@ -349,38 +349,38 @@ function TemplateVerticalSplit({ title, author, accent }: TemplateProps) {
       <text
         x="114"
         y="190"
-        fontFamily={SF_PRO}
+        fontFamily={COVER_FONT}
         fontWeight="800"
-        fontSize="19"
+        fontSize="17"
         fill="white"
         style={{ letterSpacing: "-0.02em" }}
       >
-        {truncate(title, 10)}
+        {truncate(title, 14)}
       </text>
-      {title.length > 10 && (
+      {title.length > 14 && (
         <text
           x="114"
-          y="213"
-          fontFamily={SF_PRO}
+          y="210"
+          fontFamily={COVER_FONT}
           fontWeight="800"
-          fontSize="19"
+          fontSize="17"
           fill="white"
           style={{ letterSpacing: "-0.02em" }}
         >
-          {truncate(title.slice(10), 10)}
+          {truncate(title.slice(14), 14)}
         </text>
       )}
-      {title.length > 20 && (
+      {title.length > 28 && (
         <text
           x="114"
-          y="236"
-          fontFamily={SF_PRO}
+          y="230"
+          fontFamily={COVER_FONT}
           fontWeight="800"
-          fontSize="19"
+          fontSize="17"
           fill="white"
           style={{ letterSpacing: "-0.02em" }}
         >
-          {truncate(title.slice(20), 10)}
+          {truncate(title.slice(28), 14)}
         </text>
       )}
 
@@ -392,7 +392,7 @@ function TemplateVerticalSplit({ title, author, accent }: TemplateProps) {
         <text
           x="114"
           y="278"
-          fontFamily={SF_PRO}
+          fontFamily={COVER_FONT}
           fontWeight="400"
           fontSize="10"
           fill="rgba(255,255,255,0.5)"
@@ -461,26 +461,26 @@ function TemplateConcentric({ title, author, accent }: TemplateProps) {
         x="120"
         y="228"
         textAnchor="middle"
-        fontFamily={SF_PRO}
+        fontFamily={COVER_FONT}
         fontWeight="700"
         fontSize="21"
         fill="white"
         style={{ letterSpacing: "-0.02em" }}
       >
-        {truncate(title, 15)}
+        {truncate(title, 22)}
       </text>
-      {title.length > 15 && (
+      {title.length > 22 && (
         <text
           x="120"
-          y="253"
+          y="251"
           textAnchor="middle"
-          fontFamily={SF_PRO}
+          fontFamily={COVER_FONT}
           fontWeight="700"
           fontSize="21"
           fill="white"
           style={{ letterSpacing: "-0.02em" }}
         >
-          {truncate(title.slice(15), 15)}
+          {truncate(title.slice(22), 22)}
         </text>
       )}
 
@@ -493,7 +493,7 @@ function TemplateConcentric({ title, author, accent }: TemplateProps) {
           x="120"
           y="284"
           textAnchor="middle"
-          fontFamily={SF_PRO}
+          fontFamily={COVER_FONT}
           fontWeight="400"
           fontSize="11"
           fill="rgba(255,255,255,0.55)"
@@ -530,7 +530,7 @@ function TemplateBoldPublisher({ title, author, accent }: TemplateProps) {
         x="30"
         y="33"
         textAnchor="middle"
-        fontFamily={SF_PRO}
+        fontFamily={COVER_FONT}
         fontWeight="800"
         fontSize="16"
         fill="rgba(255,255,255,0.9)"
@@ -545,38 +545,38 @@ function TemplateBoldPublisher({ title, author, accent }: TemplateProps) {
       <text
         x="20"
         y="108"
-        fontFamily={SF_PRO}
+        fontFamily={COVER_FONT}
         fontWeight="800"
-        fontSize="24"
+        fontSize="21"
         fill="#111111"
         style={{ letterSpacing: "-0.03em" }}
       >
-        {truncate(title, 12)}
+        {truncate(title, 18)}
       </text>
-      {title.length > 12 && (
+      {title.length > 18 && (
         <text
           x="20"
-          y="136"
-          fontFamily={SF_PRO}
+          y="133"
+          fontFamily={COVER_FONT}
           fontWeight="800"
-          fontSize="24"
+          fontSize="21"
           fill="#111111"
           style={{ letterSpacing: "-0.03em" }}
         >
-          {truncate(title.slice(12), 12)}
+          {truncate(title.slice(18), 18)}
         </text>
       )}
-      {title.length > 24 && (
+      {title.length > 36 && (
         <text
           x="20"
-          y="164"
-          fontFamily={SF_PRO}
+          y="158"
+          fontFamily={COVER_FONT}
           fontWeight="800"
-          fontSize="24"
+          fontSize="21"
           fill="#111111"
           style={{ letterSpacing: "-0.03em" }}
         >
-          {truncate(title.slice(24), 12)}
+          {truncate(title.slice(36), 18)}
         </text>
       )}
 
@@ -589,7 +589,7 @@ function TemplateBoldPublisher({ title, author, accent }: TemplateProps) {
         <text
           x="20"
           y="216"
-          fontFamily={SF_PRO}
+          fontFamily={COVER_FONT}
           fontWeight="500"
           fontSize="12"
           fill="#555555"
@@ -604,7 +604,7 @@ function TemplateBoldPublisher({ title, author, accent }: TemplateProps) {
       <text
         x="20"
         y="289"
-        fontFamily={SF_PRO}
+        fontFamily={COVER_FONT}
         fontWeight="600"
         fontSize="9"
         fill={accent}
@@ -776,6 +776,8 @@ export function ContentArtwork({
           alt={content.title}
           className={cn("h-full w-full object-cover", imageClassName, className)}
           draggable={false}
+          loading="lazy"
+          decoding="async"
           onError={() => setImgError(true)}
         />
       )
@@ -789,6 +791,8 @@ export function ContentArtwork({
           alt={content.title}
           className={cn("h-full w-full object-cover", imageClassName)}
           draggable={false}
+          loading="lazy"
+          decoding="async"
           onError={() => setImgError(true)}
         />
         {showTypeLabel && (

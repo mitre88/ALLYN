@@ -19,8 +19,6 @@ export async function extractPdfText(resolvedUrl: string) {
     useWorkerFetch: false,
     isEvalSupported: false,
     disableFontFace: true,
-    // Suppress the @napi-rs/canvas warning — canvas is not needed for text
-    canvasFactory: undefined,
   })
 
   const pdf = await loadingTask.promise
