@@ -18,7 +18,11 @@ async function getStats() {
     supabase.from('affiliates').select('commission_amount').eq('status', 'earned'),
   ])
 
-  const totalRevenue = ((subscribedUsers || 0) * 499)
+  const { data: subAmounts } = await supabase
+    .from('subscriptions')
+    .select('amount')
+    .eq('status', 'completed')
+  const totalRevenue = Math.round((subAmounts || []).reduce((sum: number, s: { amount: number }) => sum + s.amount / 100, 0))
   const pendingPayout = (pendingCommissions || []).reduce((sum: number, a: { commission_amount: number }) => sum + a.commission_amount / 100, 0)
 
   return { totalUsers: totalUsers || 0, subscribedUsers: subscribedUsers || 0, totalContent: totalContent || 0, totalRevenue, recentSubs: recentSubs || [], pendingPayout }

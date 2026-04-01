@@ -162,7 +162,7 @@ export default function ProfilePage() {
                   <Crown className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">Suscripción Mensual Activa</p>
+                  <p className="font-semibold text-white">Membresía Anual Activa</p>
                   <p className="text-white/50 text-sm">Disfruta de todo el contenido de ALLYN mientras tu suscripción esté activa.</p>
                 </div>
               </div>
@@ -170,7 +170,7 @@ export default function ProfilePage() {
               <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
                 <div>
                   <p className="font-semibold text-white">Sin suscripción activa</p>
-                  <p className="text-white/50 text-sm">Suscríbete por $499 MXN al mes para acceder a todo.</p>
+                  <p className="text-white/50 text-sm">$499 MXN el primer año, luego $99/año.</p>
                 </div>
                 <Button
                   onClick={() => router.push('/subscribe')}

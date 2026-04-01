@@ -139,7 +139,7 @@ export default function WatchPage() {
           <Link href="/subscribe">
             <button className="flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-full transition-colors">
               <Crown className="w-3 h-3" />
-              $499/mes
+              $499 primer año
             </button>
           </Link>
         )}
@@ -190,7 +190,7 @@ export default function WatchPage() {
               <Link href="/subscribe">
                 <button className="flex items-center gap-2 mx-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10 py-3 rounded-full transition-colors shadow-lg shadow-primary/25 text-base">
                   <Crown className="w-4 h-4" />
-                  Suscribirse — $499/mes
+                  Suscribirse — $499 primer año
                 </button>
               </Link>
               {!isLoggedIn && (

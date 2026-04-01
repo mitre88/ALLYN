@@ -112,7 +112,7 @@ export function Header() {
                       className="h-9 rounded-full bg-primary px-4 text-xs font-semibold text-primary-foreground shadow-[0_10px_28px_hsl(var(--primary)/0.34)] hover:bg-primary/90"
                     >
                       <Crown className="mr-1.5 h-3.5 w-3.5" />
-                      $499/mes
+                      $499 primer año
                     </Button>
                   </Link>
                 )}
@@ -268,7 +268,7 @@ export function Header() {
                   <Link href="/subscribe" onClick={() => setMobileMenuOpen(false)}>
                     <Button className="h-11 w-full rounded-full bg-primary font-semibold text-primary-foreground shadow-[0_12px_28px_hsl(var(--primary)/0.34)] hover:bg-primary/90">
                       <Crown className="mr-2 h-4 w-4" />
-                      Suscribirme — $499/mes
+                      Suscribirme — $499 primer año
                     </Button>
                   </Link>
                 </div>

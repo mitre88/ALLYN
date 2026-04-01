@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
         user_id,
         stripe_session_id: session.id,
         stripe_payment_intent_id: session.payment_intent as string || null,
-        amount: session.amount_total || 49900,
+        amount: session.amount_total || 49900, // primer pago $499
         currency: session.currency || 'mxn',
         status: 'completed',
         affiliate_code: affiliate_code || null,

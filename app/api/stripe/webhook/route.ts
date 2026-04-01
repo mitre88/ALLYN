@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         user_id,
         stripe_session_id: session.id,
         stripe_payment_intent_id: session.subscription as string || null,
-        amount: session.amount_total || 49900,
+        amount: session.amount_total || 49900, // primer pago $499
         currency: session.currency || 'mxn',
         status: 'completed',
         affiliate_code: affiliate_code || null,
@@ -95,6 +95,18 @@ export async function POST(request: NextRequest) {
           console.error('Error inserting affiliate record:', affiliateError)
         }
       }
+    }
+  }
+
+  // Confirm access on annual renewal payment ($99/año)
+  if (event.type === 'invoice.payment_succeeded') {
+    const invoice = event.data.object as Stripe.Invoice
+    // Only handle subscription renewals (not the initial checkout invoice)
+    if (invoice.billing_reason === 'subscription_cycle' && invoice.customer) {
+      await supabase
+        .from('profiles')
+        .update({ is_subscribed: true })
+        .eq('stripe_customer_id', invoice.customer as string)
     }
   }
 

@@ -20,24 +20,24 @@ import Link from 'next/link'
 
 const features = [
   {
-    icon: BookOpen,
-    title: 'Todos los Libros',
-    description: 'Biblioteca completa de libros y resúmenes — acceso inmediato mientras tu membresía esté activa.',
-  },
-  {
     icon: GraduationCap,
-    title: 'Todos los Cursos',
-    description: 'Cursos en video sobre salud, finanzas personales y relaciones de pareja.',
+    title: 'Todos los Cursos en Video',
+    description: 'Cursos completos sobre salud, finanzas personales y relaciones de pareja.',
   },
   {
     icon: Headphones,
-    title: 'Audiolibros',
-    description: 'Aprende en movimiento con la colección de audiolibros premium.',
+    title: 'Audiolibros Premium',
+    description: 'Aprende en movimiento con la colección de audiolibros exclusivos.',
+  },
+  {
+    icon: BookOpen,
+    title: 'Libros y Resúmenes',
+    description: 'Biblioteca completa de libros — gratis para todos, con contenido premium adicional para miembros.',
   },
   {
     icon: RefreshCw,
-    title: 'Nuevo Contenido Cada Mes',
-    description: 'Todo el material nuevo que agreguemos está incluido en tu suscripción mensual.',
+    title: 'Nuevo Contenido Continuamente',
+    description: 'Todo el material nuevo que agreguemos está incluido durante tu año de acceso.',
   },
 ]
 
@@ -99,7 +99,7 @@ function SubscribeContent() {
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-3">Tu membresía está activa</h1>
           <p className="text-foreground/55 mb-8">
-            Tienes acceso completo a todos los libros, cursos y audiolibros mientras tu membresía mensual esté vigente.
+            Tienes acceso completo a todos los libros, cursos y audiolibros durante tu año de membresía.
           </p>
           <Link href="/">
             <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-12 rounded-full font-semibold gap-2 shadow-[0_12px_28px_hsl(var(--primary)/0.3)]">
@@ -130,7 +130,7 @@ function SubscribeContent() {
         >
           <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-6">
             <Crown className="w-4 h-4 text-primary" />
-            <span className="text-sm text-primary font-semibold">Membresía Mensual · $499 MXN/mes</span>
+            <span className="text-sm text-primary font-semibold">Membresía Anual · $499 primer año</span>
           </div>
 
           <h1 className="font-display text-4xl md:text-6xl font-bold text-foreground mb-4 leading-tight">
@@ -139,7 +139,7 @@ function SubscribeContent() {
           </h1>
           <p className="text-lg text-foreground/55 max-w-2xl mx-auto">
             Todos los libros, cursos y audiolibros sobre salud, dinero y amor —
-            cancela cuando quieras, sin compromisos ni pagos adicionales.
+            $499 el primer año, luego $99/año de renovación automática.
           </p>
         </motion.div>
 
@@ -187,7 +187,7 @@ function SubscribeContent() {
                 {/* Badge */}
                 <div className="inline-flex items-center gap-2 bg-primary/12 border border-primary/20 rounded-full px-3 py-1.5 mb-5">
                   <Crown className="w-3.5 h-3.5 text-primary" />
-                  <span className="text-xs font-semibold text-primary">Suscripción Mensual</span>
+                  <span className="text-xs font-semibold text-primary">Acceso Anual</span>
                 </div>
 
                 {/* Price */}
@@ -196,23 +196,23 @@ function SubscribeContent() {
                     <span className="text-5xl font-bold text-foreground">$499</span>
                     <div className="mb-2 leading-tight">
                       <p className="text-foreground/70 text-sm font-medium">MXN</p>
-                      <p className="text-foreground/45 text-xs">por mes</p>
+                      <p className="text-foreground/45 text-xs">primer año</p>
                     </div>
                   </div>
                   <p className="text-foreground/45 text-sm mt-2">
-                    Se renueva cada mes · Cancela cuando quieras
+                    Luego $99/año · Renovación automática anual
                   </p>
                 </div>
 
                 {/* Checklist */}
                 <ul className="space-y-3 mb-8">
                   {[
-                    'Todos los libros y resúmenes',
                     'Todos los cursos en video',
-                    'Colección completa de audiolibros',
-                    'Acceso mientras tu membresía esté activa',
-                    'Contenido nuevo cada mes incluido',
-                    'Sin permanencia ni contratos',
+                    'Colección de audiolibros premium',
+                    'Contenido exclusivo para miembros',
+                    'Acceso completo por un año',
+                    'Contenido nuevo incluido',
+                    'Renovación automática anual $99',
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-3 text-sm text-foreground/80">
                       <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
@@ -239,7 +239,7 @@ function SubscribeContent() {
                     </>
                   ) : (
                     <>
-                      Suscribirme — $499 MXN/mes
+                      Pagar $499 MXN — Primer año
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
