@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { ContentCard } from "./content-card"
 import type { Content } from "@/types/database"
@@ -23,6 +23,7 @@ export function ContentCarousel({
   color,
   isSubscribed = false,
 }: ContentCarouselProps) {
+  const reduceMotion = useReducedMotion()
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
@@ -61,10 +62,10 @@ export function ContentCarousel({
     <section className="py-8 md:py-10 xl:py-12">
       <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45, ease: "easeOut" }}
+          transition={{ duration: reduceMotion ? 0 : 0.45, ease: "easeOut" }}
           className="mb-6 flex items-end justify-between gap-5 md:mb-7"
         >
           <div className="min-w-0 space-y-2.5">
@@ -136,10 +137,10 @@ export function ContentCarousel({
             {content.map((item, index) => (
               <motion.div
                 key={item.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={reduceMotion ? false : { opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: reduceMotion ? 0 : index * 0.05 }}
               >
                 <ContentCard content={item} isSubscribed={isSubscribed} />
               </motion.div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { Heart, TrendingUp, Sparkles, Star, ArrowRight } from "lucide-react"
 
 const pillars = [
@@ -42,6 +42,8 @@ const stagger = {
 }
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  const reduceMotion = useReducedMotion()
+
   return (
     <div className="min-h-screen flex bg-background">
       {/* LEFT — brand panel */}
@@ -74,9 +76,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="relative z-10 flex flex-col h-full px-12 xl:px-16 py-12">
           {/* Logo */}
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
+            initial={reduceMotion ? false : { opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: reduceMotion ? 0 : 0.5, ease: "easeOut" }}
             className="flex items-center gap-3"
           >
             <div className="w-9 h-9 rounded-2xl border border-white/10 bg-[linear-gradient(155deg,hsl(var(--primary)/0.9)_0%,rgba(18,13,8,0.9)_100%)] flex items-center justify-center shadow-[0_8px_24px_rgba(0,0,0,0.3)]">
@@ -88,9 +90,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           {/* Main copy */}
           <div className="flex-1 flex flex-col justify-center gap-8 mt-14">
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.15, ease: "easeOut" }}
+              transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : 0.15, ease: "easeOut" }}
               className="space-y-5"
             >
               <div className="inline-flex items-center gap-2 bg-primary/8 border border-primary/14 rounded-full px-4 py-1.5">
@@ -107,14 +109,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               </h1>
 
               <p className="text-[15px] text-white/46 leading-relaxed max-w-sm">
-                Cursos, libros, videos y guías de expertos sobre salud, dinero y relaciones.
+                Una biblioteca digital enfocada en salud, dinero y relaciones, con una experiencia clara y sin ruido visual.
               </p>
             </motion.div>
 
             {/* Pillars — staggered entrance */}
             <motion.div
               variants={stagger.container}
-              initial="hidden"
+              initial={reduceMotion ? false : "hidden"}
               animate="show"
               className="flex flex-col gap-2"
             >
@@ -138,13 +140,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
             {/* Social proof */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.7, ease: "easeOut" }}
+              transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.7, ease: "easeOut" }}
               className="flex items-center gap-4"
             >
-              <div className="flex -space-x-2">
-                {["A", "M", "R", "S"].map((letter, i) => (
+              <div aria-hidden="true" className="flex -space-x-2">
+                {["S", "D", "A"].map((letter, i) => (
                   <div
                     key={i}
                     className="w-8 h-8 rounded-full border-2 border-[#0c0803] bg-gradient-to-br from-amber-500 to-rose-500 flex items-center justify-center text-xs font-bold text-white shadow-sm"
@@ -159,16 +161,18 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                     <Star key={i} className="w-3 h-3 fill-primary text-primary" />
                   ))}
                 </div>
-                <p className="text-xs text-white/36 mt-0.5">+2,400 personas transformando su vida</p>
+                <p className="text-xs text-white/36 mt-0.5">
+                  Salud, dinero y amor organizados en una sola biblioteca.
+                </p>
               </div>
             </motion.div>
           </div>
 
-          {/* Testimonial */}
+          {/* Brand note */}
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={reduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
+            transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : 0.9 }}
             className="mt-auto pt-8 border-t border-white/7"
           >
             <div className="flex gap-1 mb-3">
@@ -176,24 +180,15 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                 <Star key={i} className="w-2.5 h-2.5 fill-primary/60 text-primary/60" />
               ))}
             </div>
-            <blockquote className="text-sm text-white/46 leading-relaxed italic">
-              "En 3 meses mejoré mi salud, dupliqué mis ingresos y encontré el amor. ALLYN cambió mi perspectiva por completo."
-            </blockquote>
-            <div className="mt-4 flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-rose-400 flex items-center justify-center text-xs font-bold text-black shadow-sm">
-                K
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-white/55">Karla M.</p>
-                <p className="text-[11px] text-white/28">Ciudad de México</p>
-              </div>
-            </div>
+            <p className="text-sm text-white/46 leading-relaxed">
+              Interfaz enfocada en claridad editorial, navegación simple y acceso rápido al contenido correcto.
+            </p>
           </motion.div>
         </div>
       </div>
 
       {/* RIGHT — form panel */}
-      <div className="flex-1 flex flex-col items-center justify-center min-h-screen px-6 py-12 sm:px-10 relative">
+      <main id="main-content" className="flex-1 flex flex-col items-center justify-center min-h-screen px-6 py-12 sm:px-10 relative">
         {/* Subtle right-panel background glow */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/4 rounded-full blur-[80px] pointer-events-none" />
 
@@ -208,7 +203,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="w-full max-w-[400px] relative z-10">
           {children}
         </div>
-      </div>
+      </main>
     </div>
   )
 }

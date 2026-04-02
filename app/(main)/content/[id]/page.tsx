@@ -1,10 +1,11 @@
 import { createClient } from "@/lib/supabase/server"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { Play, Share2, Clock, User, BookOpen, Plus, Lock, Headphones } from "lucide-react"
+import { Play, Clock, User, BookOpen, Lock, Headphones, Crown, GraduationCap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ContentArtwork } from "@/components/content/content-artwork"
 import { ContentCarousel } from "@/components/content/content-carousel"
+import { ShareContentButton } from "@/components/content/share-content-button"
 import { VideoPlayer } from "@/components/content/video-player"
 import { getPrimaryContentHref, getPrimaryContentLabel, getContentTypeLabel, getContentAccessLabel, getContentAccentColor, isContentLocked, isReadingContent } from "@/lib/content"
 import type { Content } from "@/types/database"
@@ -169,32 +170,36 @@ export default async function ContentPage({ params }: ContentPageProps) {
                     {primaryLabel}
                   </Button>
                 </Link>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="h-12 rounded-full border-white/18 bg-white/[0.06] px-7 text-sm font-medium text-foreground hover:border-white/36 hover:bg-white/[0.12]"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Mi Lista
-                </Button>
-                <Button
-                  size="lg"
-                  variant="ghost"
+                {isBook && (
+                  <Link href={locked ? "/subscribe" : `/read/${content.id}?autoplay=true`}>
+                    <Button
+                      size="lg"
+                      className="h-12 rounded-full bg-purple-600 px-7 text-sm font-semibold text-white shadow-[0_16px_36px_rgba(147,51,234,0.3)] hover:bg-purple-500"
+                    >
+                      {locked ? (
+                        <Lock className="mr-2 h-4 w-4" />
+                      ) : (
+                        <Headphones className="mr-2 h-4 w-4" />
+                      )}
+                      Escuchar
+                    </Button>
+                  </Link>
+                )}
+                <ShareContentButton
                   className="h-12 rounded-full px-7 text-foreground/60 hover:bg-white/[0.08] hover:text-foreground"
-                >
-                  <Share2 className="mr-2 h-4 w-4" />
-                  Compartir
-                </Button>
+                  description={content.description || undefined}
+                  title={content.title}
+                />
               </div>
             </div>
 
             <aside className="hidden lg:flex lg:flex-col lg:gap-4">
               <div className="overflow-hidden rounded-[30px] border border-white/10 bg-black/24 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
                 <p className="text-[11px] uppercase tracking-[0.28em] text-foreground/38">
-                  Portada
+                  {isVideo ? "Miniatura" : "Portada"}
                 </p>
                 <div className="mt-4 overflow-hidden rounded-[24px] border border-white/10 bg-black/20">
-                  <div className="aspect-[4/5]">
+                  <div className={isVideo ? "aspect-video" : "aspect-[4/5]"}>
                     <ContentArtwork content={content} showTypeLabel={false} />
                   </div>
                 </div>
@@ -219,13 +224,66 @@ export default async function ContentPage({ params }: ContentPageProps) {
         </div>
       </section>
 
-      {isVideo && content.file_url && (
+      {isVideo && (isSubscribed || content.is_free) && content.file_url && (
         <section className="container mx-auto px-4 pb-4 pt-2 md:px-8">
           <VideoPlayer
             contentId={content.id}
             isSubscribed={isSubscribed}
             isFree={content.is_free}
           />
+        </section>
+      )}
+
+      {/* Trailer / preview for non-subscribers on video/course content */}
+      {isVideo && !isSubscribed && !content.is_free && content.preview_url && (
+        <section className="container mx-auto px-4 pb-4 pt-2 md:px-8">
+          <div className="mb-3 flex items-center gap-2">
+            <Play className="h-4 w-4 text-primary" />
+            <span className="text-sm font-semibold text-foreground/70">
+              {content.type === "course" ? "Adelanto del curso" : "Avance"}
+            </span>
+            <span className="rounded-full border border-primary/25 bg-primary/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+              Gratis
+            </span>
+          </div>
+          <VideoPlayer
+            contentId={content.id}
+            isSubscribed={false}
+            isFree={false}
+          />
+        </section>
+      )}
+
+      {/* Placeholder when no preview available for non-subscribers */}
+      {isVideo && !isSubscribed && !content.is_free && !content.preview_url && (
+        <section className="container mx-auto px-4 pb-4 pt-2 md:px-8">
+          <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/10 bg-black">
+            <div className="absolute inset-0">
+              <ContentArtwork content={content} variant="background" />
+              <div className="absolute inset-0 bg-black/60" />
+            </div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+              <div className="text-center max-w-md">
+                <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-white/15 bg-black/50 backdrop-blur-sm">
+                  <GraduationCap className="h-9 w-9 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">
+                  {content.type === "course" ? "Curso completo" : "Video completo"}
+                </h3>
+                <p className="text-sm text-white/55 mb-6 leading-relaxed">
+                  {content.type === "course"
+                    ? "Accede al curso completo con todos los módulos y material de apoyo."
+                    : "Mira el video completo sin interrupciones."}
+                </p>
+                <Link href="/subscribe">
+                  <Button className="h-12 rounded-full bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-[0_14px_36px_hsl(var(--primary)/0.35)] hover:bg-primary/90 gap-2">
+                    <Crown className="h-4 w-4" />
+                    Suscribirse — $499 primer año
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
         </section>
       )}
 

@@ -18,7 +18,9 @@ export default function MainLayout({
         <div className="absolute right-0 top-[18rem] h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,hsl(var(--foreground)/0.09)_0%,transparent_72%)] blur-3xl" />
       </div>
       <Header />
-      <main className="relative z-10 pt-20 md:pt-24">{children}</main>
+      <main id="main-content" className="relative z-10 pt-20 md:pt-24">
+        {children}
+      </main>
       <Footer />
       {modal}
     </div>

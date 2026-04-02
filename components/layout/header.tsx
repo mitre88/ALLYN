@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, Crown, LogOut, UserCircle, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { createClient } from "@/lib/supabase/client"
 import { useSubscription } from "@/lib/hooks/use-subscription"
 import { cn } from "@/lib/utils"
@@ -211,11 +210,9 @@ export function Header() {
               </div>
             )}
 
-            <ThemeToggle />
-
             <button
               aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.045] text-foreground/72 transition-colors hover:bg-white/[0.09] hover:text-foreground md:hidden"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.045] text-foreground/72 transition-colors hover:bg-white/[0.09] hover:text-foreground lg:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

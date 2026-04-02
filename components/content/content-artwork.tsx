@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useState } from "react"
 import { BookOpen, GraduationCap, Sparkles, Video } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -771,29 +772,36 @@ export function ContentArtwork({
   if (content.thumbnail_url && !imgError) {
     if (variant === "mini" || variant === "background") {
       return (
-        <img
-          src={content.thumbnail_url}
-          alt={content.title}
-          className={cn("h-full w-full object-cover", imageClassName, className)}
-          draggable={false}
-          loading="lazy"
-          decoding="async"
-          onError={() => setImgError(true)}
-        />
+        <div className={cn("relative h-full w-full overflow-hidden", className)}>
+          <Image
+            alt={variant === "background" ? "" : content.title}
+            aria-hidden={variant === "background"}
+            className={cn("object-cover", imageClassName)}
+            decoding="async"
+            draggable={false}
+            fill
+            loading="lazy"
+            onError={() => setImgError(true)}
+            sizes="100vw"
+            src={content.thumbnail_url}
+          />
+        </div>
       )
     }
 
     // Panel variant with thumbnail — show image with type label overlay
     return (
       <div className={cn("relative h-full w-full overflow-hidden", className)}>
-        <img
-          src={content.thumbnail_url}
+        <Image
           alt={content.title}
-          className={cn("h-full w-full object-cover", imageClassName)}
-          draggable={false}
-          loading="lazy"
+          className={cn("object-cover", imageClassName)}
           decoding="async"
+          draggable={false}
+          fill
+          loading="lazy"
           onError={() => setImgError(true)}
+          sizes="(max-width: 640px) 78vw, (max-width: 1024px) 340px, 388px"
+          src={content.thumbnail_url}
         />
         {showTypeLabel && (
           <div className="absolute inset-x-0 top-0 flex items-start p-2">

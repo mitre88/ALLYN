@@ -1,12 +1,11 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { Play, Info, Volume2, VolumeX, BookOpen, Lock, Headphones } from "lucide-react"
+import { motion, useReducedMotion } from "framer-motion"
+import { Play, Info, BookOpen, Lock, Headphones } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ContentArtwork } from "@/components/content/content-artwork"
 import { getContentAccessLabel, getPrimaryContentHref, getPrimaryContentLabel, isReadingContent } from "@/lib/content"
 import Link from "next/link"
-import { useState } from "react"
 import type { Content } from "@/types/database"
 import { formatDuration } from "@/lib/utils"
 
@@ -23,7 +22,7 @@ interface HeroProps {
 }
 
 export function Hero({ content, isSubscribed = false }: HeroProps) {
-  const [muted, setMuted] = useState(true)
+  const reduceMotion = useReducedMotion()
   const primaryHref = getPrimaryContentHref(content, isSubscribed)
   const primaryLabel = getPrimaryContentLabel(content, isSubscribed)
   const readingContent = isReadingContent(content)
@@ -59,9 +58,9 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
         <div className="grid items-end gap-10 lg:grid-cols-[minmax(0,1.1fr)_360px] lg:gap-12">
           <div className="max-w-2xl">
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.12, ease: "easeOut" }}
+              transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.12, ease: "easeOut" }}
               className="mb-5 flex flex-wrap items-center gap-2.5"
             >
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.28em] text-white/55 backdrop-blur-sm">
@@ -89,9 +88,9 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.22, ease: "easeOut" }}
+              transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : 0.22, ease: "easeOut" }}
               className="mb-5 space-y-4"
             >
               <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-white/38">
@@ -104,9 +103,9 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.32, ease: "easeOut" }}
+              transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.32, ease: "easeOut" }}
               className="mb-6 flex flex-wrap items-center gap-3 text-sm text-white/54"
             >
               {content.author && <span>{content.author}</span>}
@@ -125,18 +124,18 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
             </motion.div>
 
             <motion.p
-              initial={{ opacity: 0, y: 12 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.42, ease: "easeOut" }}
+              transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.42, ease: "easeOut" }}
               className="mb-8 max-w-2xl text-base leading-relaxed text-white/72 md:text-lg"
             >
               {content.description}
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.52, ease: "easeOut" }}
+              transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.52, ease: "easeOut" }}
               className="flex flex-wrap items-center gap-3"
             >
               <Link href={primaryHref}>
@@ -162,9 +161,9 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
           </div>
 
           <motion.aside
-            initial={{ opacity: 0, y: 18 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.4, ease: "easeOut" }}
+            transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : 0.4, ease: "easeOut" }}
             className="hidden lg:flex lg:flex-col lg:gap-4"
           >
             <div className="overflow-hidden rounded-[30px] border border-white/10 bg-black/24 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
@@ -194,18 +193,6 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
           </motion.aside>
         </div>
       </div>
-
-      {content.file_url && content.type === "video" && (
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.8 }}
-          onClick={() => setMuted(!muted)}
-          className="absolute bottom-10 right-4 flex h-11 w-11 items-center justify-center rounded-full border border-white/14 bg-black/28 text-white backdrop-blur-xl transition-all hover:border-white/36 hover:bg-black/42 md:bottom-12 md:right-8"
-        >
-          {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-        </motion.button>
-      )}
     </section>
   )
 }

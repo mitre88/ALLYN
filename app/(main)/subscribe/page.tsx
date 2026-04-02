@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import {
   BookOpen,
   GraduationCap,
@@ -46,6 +46,7 @@ function SubscribeContent() {
   const affiliateCode = searchParams.get('ref') || ''
   const [loading, setLoading] = useState(false)
   const { isSubscribed, isLoading } = useSubscription()
+  const reduceMotion = useReducedMotion()
 
   const handleSubscribe = async () => {
     setLoading(true)
@@ -61,7 +62,7 @@ function SubscribeContent() {
       if (!res.ok) {
         if (res.status === 401) {
           toast.error('Inicia sesión para continuar')
-          window.location.href = '/login'
+          window.location.href = '/login?redirect=/subscribe'
           return
         }
         toast.error(data.error || 'Error al procesar el pago')
@@ -90,8 +91,9 @@ function SubscribeContent() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={reduceMotion ? false : { opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: reduceMotion ? 0 : 0.25 }}
           className="text-center max-w-md"
         >
           <div className="w-20 h-20 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center mx-auto mb-6">
@@ -123,9 +125,9 @@ function SubscribeContent() {
       <div className="relative z-10 container mx-auto px-4 py-24 max-w-5xl">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55 }}
+          transition={{ duration: reduceMotion ? 0 : 0.55 }}
           className="text-center mb-16"
         >
           <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-6">
@@ -147,18 +149,18 @@ function SubscribeContent() {
         <div className="grid md:grid-cols-2 gap-8 items-start">
           {/* Features */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={reduceMotion ? false : { opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.55, delay: 0.15 }}
+            transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : 0.15 }}
             className="space-y-4"
           >
             <h2 className="text-xl font-semibold text-foreground mb-6">¿Qué incluye?</h2>
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 16 }}
+                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.25 + index * 0.08 }}
+                transition={{ duration: reduceMotion ? 0 : 0.4, delay: reduceMotion ? 0 : 0.25 + index * 0.08 }}
                 className="flex gap-4 p-4 rounded-2xl bg-foreground/[0.04] border border-foreground/[0.07] hover:border-primary/25 transition-colors"
               >
                 <div className="w-10 h-10 rounded-xl bg-primary/12 border border-primary/15 flex items-center justify-center flex-shrink-0">
@@ -174,9 +176,9 @@ function SubscribeContent() {
 
           {/* Pricing card */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={reduceMotion ? false : { opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.55, delay: 0.15 }}
+            transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : 0.15 }}
             className="sticky top-24"
           >
             <div className="relative rounded-3xl border border-primary/25 bg-[linear-gradient(160deg,hsl(var(--primary)/0.08)_0%,hsl(var(--background))_50%)] p-8 overflow-hidden shadow-[0_24px_80px_hsl(var(--primary)/0.12)]">
