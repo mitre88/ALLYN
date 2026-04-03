@@ -7,6 +7,7 @@ import { isReadingContent } from "@/lib/content"
 import { generateFullAudio } from "@/lib/tts"
 
 export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
 export const maxDuration = 300 // 5 min for long books
 
 const AUDIO_BUCKET = "audio-cache"
