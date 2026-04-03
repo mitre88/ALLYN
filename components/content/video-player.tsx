@@ -57,6 +57,14 @@ export function VideoPlayer({ contentId, isSubscribed, isFree, autoPlay = false 
   const [isSeeking, setIsSeeking] = useState(false)
   const [hoverTime, setHoverTime] = useState<number | null>(null)
   const [hoverX, setHoverX] = useState(0)
+  const [skipIndicator, setSkipIndicator] = useState<'back' | 'forward' | null>(null)
+  const skipTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const showSkipIndicator = (direction: 'back' | 'forward') => {
+    if (skipTimerRef.current) clearTimeout(skipTimerRef.current)
+    setSkipIndicator(direction)
+    skipTimerRef.current = setTimeout(() => setSkipIndicator(null), 600)
+  }
 
   useEffect(() => {
     async function fetchVideoUrl() {
@@ -170,6 +178,7 @@ export function VideoPlayer({ contentId, isSubscribed, isFree, autoPlay = false 
     const video = videoRef.current
     if (!video) return
     video.currentTime = Math.max(0, Math.min(video.duration, video.currentTime + seconds))
+    showSkipIndicator(seconds < 0 ? 'back' : 'forward')
     resetHideTimer()
   }
 
@@ -296,17 +305,48 @@ export function VideoPlayer({ contentId, isSubscribed, isFree, autoPlay = false 
         <source src={videoUrl} type="video/mp4" />
       </video>
 
-      {/* Big center play button (when paused) */}
-      {!isPlaying && (
+      {/* Center controls — skip back, play/pause, skip forward */}
+      <div
+        className="absolute inset-0 z-10 flex items-center justify-center gap-8 transition-opacity duration-300"
+        style={{ opacity: showControls || !isPlaying ? 1 : 0, pointerEvents: showControls || !isPlaying ? 'auto' : 'none' }}
+      >
+        {/* Dim overlay when controls visible */}
+        {(!isPlaying || showControls) && (
+          <div className="absolute inset-0 bg-black/30 pointer-events-none" />
+        )}
+
+        {/* Skip back */}
+        <button
+          onClick={(e) => { e.stopPropagation(); skip(-10) }}
+          className={`relative z-10 flex h-14 w-14 items-center justify-center rounded-full text-white/70 transition-all hover:bg-white/15 hover:text-white hover:scale-110 ${skipIndicator === 'back' ? 'bg-white/20 scale-110 text-white' : ''}`}
+          title="Retroceder 10s"
+        >
+          <RotateCcw className="h-6 w-6" />
+          <span className="absolute -bottom-5 text-[10px] font-semibold text-white/60">10s</span>
+        </button>
+
+        {/* Play/Pause center button */}
         <button
           onClick={togglePlay}
-          className="absolute inset-0 z-10 flex items-center justify-center bg-black/30 transition-opacity"
+          className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-white/15 backdrop-blur-xl border border-white/20 shadow-[0_16px_48px_rgba(0,0,0,0.5)] transition-transform hover:scale-105"
         >
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/15 backdrop-blur-xl border border-white/20 shadow-[0_16px_48px_rgba(0,0,0,0.5)] transition-transform hover:scale-105">
+          {isPlaying ? (
+            <Pause className="h-9 w-9 fill-white text-white" />
+          ) : (
             <Play className="h-9 w-9 fill-white text-white ml-1" />
-          </div>
+          )}
         </button>
-      )}
+
+        {/* Skip forward */}
+        <button
+          onClick={(e) => { e.stopPropagation(); skip(10) }}
+          className={`relative z-10 flex h-14 w-14 items-center justify-center rounded-full text-white/70 transition-all hover:bg-white/15 hover:text-white hover:scale-110 ${skipIndicator === 'forward' ? 'bg-white/20 scale-110 text-white' : ''}`}
+          title="Adelantar 10s"
+        >
+          <RotateCw className="h-6 w-6" />
+          <span className="absolute -bottom-5 text-[10px] font-semibold text-white/60">10s</span>
+        </button>
+      </div>
 
       {/* Controls overlay */}
       <div
@@ -373,7 +413,7 @@ export function VideoPlayer({ contentId, isSubscribed, isFree, autoPlay = false 
 
           {/* Controls row */}
           <div className="flex items-center gap-2">
-            {/* Play/Pause */}
+            {/* Play/Pause (bottom bar) */}
             <button
               onClick={togglePlay}
               className="flex h-10 w-10 items-center justify-center rounded-full text-white/90 transition-colors hover:bg-white/10 hover:text-white"
@@ -384,24 +424,6 @@ export function VideoPlayer({ contentId, isSubscribed, isFree, autoPlay = false 
               ) : (
                 <Play className="h-5 w-5 fill-white ml-0.5" />
               )}
-            </button>
-
-            {/* Skip back 10s */}
-            <button
-              onClick={() => skip(-10)}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-              title="Retroceder 10s (J)"
-            >
-              <RotateCcw className="h-4.5 w-4.5" />
-            </button>
-
-            {/* Skip forward 10s */}
-            <button
-              onClick={() => skip(10)}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-              title="Adelantar 10s (L)"
-            >
-              <RotateCw className="h-4.5 w-4.5" />
             </button>
 
             {/* Volume */}
