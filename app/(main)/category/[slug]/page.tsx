@@ -1,7 +1,14 @@
+import Image from "next/image"
 import { createClient } from "@/lib/supabase/server"
 import { ContentCarousel } from "@/components/content/content-carousel"
 import { notFound } from "next/navigation"
 import type { Category, Content } from "@/types/database"
+
+const CATEGORY_HEROES: Record<string, string> = {
+  salud: "/assets/categories/salud.svg",
+  dinero: "/assets/categories/dinero.svg",
+  amor: "/assets/categories/amor.svg",
+}
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>
@@ -88,22 +95,41 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   const totalContent = books.length + courses.length + videos.length
 
+  const heroSrc = CATEGORY_HEROES[slug]
+
   return (
     <div className="pb-20">
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `radial-gradient(ellipse at 50% 0%, ${category.color}22 0%, transparent 60%), radial-gradient(ellipse at 80% 10%, ${category.color}12 0%, transparent 40%)`,
-            }}
+      {/* Hero image — full-bleed below navbar */}
+      {heroSrc && (
+        <section className="relative w-full overflow-hidden" style={{ height: "clamp(220px, 34vw, 420px)" }}>
+          <Image
+            src={heroSrc}
+            alt={`${category.name} — ALLYN`}
+            fill
+            priority
+            className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
-        </div>
+          {/* Bottom gradient into background */}
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background to-transparent" />
+        </section>
+      )}
 
-        <div className="relative container mx-auto px-4 pt-28 pb-8 md:px-8 md:pt-32 md:pb-12">
+      <section className="relative overflow-hidden" style={heroSrc ? { marginTop: "-5rem" } : undefined}>
+        {!heroSrc && (
+          <div className="absolute inset-0">
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `radial-gradient(ellipse at 50% 0%, ${category.color}22 0%, transparent 60%), radial-gradient(ellipse at 80% 10%, ${category.color}12 0%, transparent 40%)`,
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
+          </div>
+        )}
+
+        <div className="relative container mx-auto px-4 pt-12 pb-8 md:px-8 md:pt-16 md:pb-12">
           <div className="max-w-3xl">
-            <div className="mb-6 flex items-center gap-2.5 text-[11px] uppercase tracking-[0.3em] text-foreground/38">
+            <div className="mb-6 flex items-center gap-2.5 text-[11px] uppercase tracking-[0.3em] text-white/50">
               <span
                 className="h-px w-8 rounded-full"
                 style={{ backgroundColor: category.color || "hsl(var(--primary) / 0.65)" }}

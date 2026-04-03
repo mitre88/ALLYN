@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 480" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1400" y2="480" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="100%" stop-color="#12080e"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0.35" cy="0.35" r="0.55">
+      <stop offset="0%" stop-color="#ec4899" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ec4899" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0.75" cy="0.65" r="0.45">
+      <stop offset="0%" stop-color="#f472b6" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#f472b6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow3" cx="0.5" cy="0.1" r="0.35">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.06"/>
+      </feComponentTransfer>
+      <feBlend in="SourceGraphic" mode="overlay"/>
+    </filter>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#ec4899" stroke-opacity="0.05" stroke-width="0.5"/>
+    </pattern>
+    <!-- Bokeh blur -->
+    <filter id="bokeh">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="480" fill="url(#bg)"/>
+  <rect width="1400" height="480" fill="url(#glow1)"/>
+  <rect width="1400" height="480" fill="url(#glow2)"/>
+  <rect width="1400" height="480" fill="url(#glow3)"/>
+  <rect width="1400" height="480" fill="url(#grid)"/>
+
+  <!-- Bokeh circles -->
+  <circle cx="300" cy="150" r="80" fill="#ec4899" opacity="0.04" filter="url(#bokeh)"/>
+  <circle cx="900" cy="100" r="100" fill="#f472b6" opacity="0.035" filter="url(#bokeh)"/>
+  <circle cx="1200" cy="350" r="70" fill="#a855f7" opacity="0.03" filter="url(#bokeh)"/>
+  <circle cx="500" cy="400" r="90" fill="#ec4899" opacity="0.025" filter="url(#bokeh)"/>
+
+  <!-- Decorative rings -->
+  <circle cx="250" cy="200" r="180" fill="none" stroke="#ec4899" stroke-opacity="0.07" stroke-width="0.8"/>
+  <circle cx="250" cy="200" r="260" fill="none" stroke="#ec4899" stroke-opacity="0.035" stroke-width="0.5"/>
+  <circle cx="1150" cy="300" r="150" fill="none" stroke="#f472b6" stroke-opacity="0.06" stroke-width="0.8"/>
+
+  <!-- Scattered hearts -->
+  <!-- Heart 1 - large, center-right -->
+  <g transform="translate(980, 80) scale(1.8)" opacity="0.10">
+    <path d="M25,8 C25,3.6 21.4,0 17,0 C14,0 11.4,1.6 10,4 C8.6,1.6 6,0 3,0 C-1.4,0 -5,3.6 -5,8 C-5,18 10,28 10,28 C10,28 25,18 25,8Z" fill="#ec4899"/>
+  </g>
+  <!-- Heart 2 - medium, left -->
+  <g transform="translate(350, 300) scale(1.2)" opacity="0.08">
+    <path d="M25,8 C25,3.6 21.4,0 17,0 C14,0 11.4,1.6 10,4 C8.6,1.6 6,0 3,0 C-1.4,0 -5,3.6 -5,8 C-5,18 10,28 10,28 C10,28 25,18 25,8Z" fill="#f472b6"/>
+  </g>
+  <!-- Heart 3 - small -->
+  <g transform="translate(750, 380) scale(0.8)" opacity="0.12">
+    <path d="M25,8 C25,3.6 21.4,0 17,0 C14,0 11.4,1.6 10,4 C8.6,1.6 6,0 3,0 C-1.4,0 -5,3.6 -5,8 C-5,18 10,28 10,28 C10,28 25,18 25,8Z" fill="#ec4899"/>
+  </g>
+  <!-- Heart 4 - tiny -->
+  <g transform="translate(600, 100) scale(0.6)" opacity="0.15">
+    <path d="M25,8 C25,3.6 21.4,0 17,0 C14,0 11.4,1.6 10,4 C8.6,1.6 6,0 3,0 C-1.4,0 -5,3.6 -5,8 C-5,18 10,28 10,28 C10,28 25,18 25,8Z" fill="#a855f7"/>
+  </g>
+
+  <!-- Flowing curves (connection/energy) -->
+  <path d="M0,300 C200,280 300,320 500,260 C700,200 800,250 1000,200 C1200,150 1300,180 1400,160"
+    fill="none" stroke="#ec4899" stroke-opacity="0.1" stroke-width="1" stroke-linecap="round"/>
+  <path d="M0,340 C200,330 350,360 550,310 C750,260 850,290 1050,250 C1250,210 1350,230 1400,210"
+    fill="none" stroke="#f472b6" stroke-opacity="0.06" stroke-width="0.8" stroke-linecap="round"/>
+
+  <!-- Sparkle/star elements -->
+  <g transform="translate(480, 160)" opacity="0.2">
+    <line x1="0" y1="-6" x2="0" y2="6" stroke="#ec4899" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="-6" y1="0" x2="6" y2="0" stroke="#ec4899" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="-4" y1="-4" x2="4" y2="4" stroke="#ec4899" stroke-width="0.8" stroke-linecap="round"/>
+    <line x1="4" y1="-4" x2="-4" y2="4" stroke="#ec4899" stroke-width="0.8" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(1100, 160)" opacity="0.15">
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#f472b6" stroke-width="1" stroke-linecap="round"/>
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#f472b6" stroke-width="1" stroke-linecap="round"/>
+    <line x1="-3.5" y1="-3.5" x2="3.5" y2="3.5" stroke="#f472b6" stroke-width="0.6" stroke-linecap="round"/>
+    <line x1="3.5" y1="-3.5" x2="-3.5" y2="3.5" stroke="#f472b6" stroke-width="0.6" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(200, 400)" opacity="0.12">
+    <line x1="0" y1="-4" x2="0" y2="4" stroke="#a855f7" stroke-width="0.8" stroke-linecap="round"/>
+    <line x1="-4" y1="0" x2="4" y2="0" stroke="#a855f7" stroke-width="0.8" stroke-linecap="round"/>
+  </g>
+
+  <!-- Floating dots -->
+  <circle cx="150" cy="80" r="2.5" fill="#ec4899" opacity="0.28"/>
+  <circle cx="680" cy="60" r="2" fill="#f472b6" opacity="0.22"/>
+  <circle cx="1300" cy="120" r="2.8" fill="#a855f7" opacity="0.18"/>
+  <circle cx="850" cy="440" r="2" fill="#ec4899" opacity="0.25"/>
+  <circle cx="450" cy="430" r="1.8" fill="#f472b6" opacity="0.2"/>
+  <circle cx="1050" cy="420" r="2.2" fill="#ec4899" opacity="0.15"/>
+
+  <!-- Bottom fade -->
+  <linearGradient id="bottomFade" x1="0" y1="360" x2="0" y2="480" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#0a0a0a" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#0a0a0a" stop-opacity="1"/>
+  </linearGradient>
+  <rect y="360" width="1400" height="120" fill="url(#bottomFade)"/>
+
+  <!-- Texture -->
+  <rect width="1400" height="480" filter="url(#noise)" opacity="0.4"/>
+</svg>

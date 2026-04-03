@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 480" fill="none">
+  <defs>
+    <!-- Base gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1400" y2="480" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="100%" stop-color="#1a0a0a"/>
+    </linearGradient>
+    <!-- Accent glow -->
+    <radialGradient id="glow1" cx="0.25" cy="0.3" r="0.6">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0.8" cy="0.7" r="0.5">
+      <stop offset="0%" stop-color="#f87171" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#f87171" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow3" cx="0.6" cy="0.1" r="0.4">
+      <stop offset="0%" stop-color="#fca5a5" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#fca5a5" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Noise filter -->
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.06"/>
+      </feComponentTransfer>
+      <feBlend in="SourceGraphic" mode="overlay"/>
+    </filter>
+    <!-- Grid pattern -->
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#ef4444" stroke-opacity="0.06" stroke-width="0.5"/>
+    </pattern>
+    <!-- Heartbeat line -->
+    <clipPath id="clipAll"><rect width="1400" height="480"/></clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="480" fill="url(#bg)"/>
+  <rect width="1400" height="480" fill="url(#glow1)"/>
+  <rect width="1400" height="480" fill="url(#glow2)"/>
+  <rect width="1400" height="480" fill="url(#glow3)"/>
+  <rect width="1400" height="480" fill="url(#grid)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="180" cy="120" r="200" fill="none" stroke="#ef4444" stroke-opacity="0.08" stroke-width="0.8"/>
+  <circle cx="180" cy="120" r="280" fill="none" stroke="#ef4444" stroke-opacity="0.04" stroke-width="0.5"/>
+  <circle cx="1200" cy="380" r="160" fill="none" stroke="#f87171" stroke-opacity="0.06" stroke-width="0.8"/>
+  <circle cx="1200" cy="380" r="240" fill="none" stroke="#f87171" stroke-opacity="0.03" stroke-width="0.5"/>
+
+  <!-- Heartbeat ECG line -->
+  <g clip-path="url(#clipAll)">
+    <polyline points="0,260 200,260 240,260 260,260 280,220 300,300 320,180 340,340 360,240 380,260 420,260 600,260 640,260 660,260 680,220 700,300 720,180 740,340 760,240 780,260 820,260 1000,260 1040,260 1060,260 1080,220 1100,300 1120,180 1140,340 1160,240 1180,260 1220,260 1400,260"
+      fill="none" stroke="#ef4444" stroke-opacity="0.15" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Large heart icon (right side) -->
+  <g transform="translate(1050, 100)" opacity="0.12">
+    <path d="M150,45 C150,20 125,0 100,0 C75,0 50,20 50,45 C50,20 25,0 0,0 C-25,0 -50,20 -50,45 C-50,130 50,180 50,200 C50,200 150,130 150,45Z"
+      fill="#ef4444" transform="scale(1.4)"/>
+  </g>
+
+  <!-- Small floating elements -->
+  <circle cx="400" cy="80" r="3" fill="#ef4444" opacity="0.3"/>
+  <circle cx="600" cy="400" r="2" fill="#f87171" opacity="0.25"/>
+  <circle cx="900" cy="60" r="2.5" fill="#fca5a5" opacity="0.2"/>
+  <circle cx="1100" cy="420" r="1.8" fill="#ef4444" opacity="0.25"/>
+  <circle cx="300" cy="380" r="2.2" fill="#f87171" opacity="0.18"/>
+
+  <!-- Plus/cross medical symbols -->
+  <g transform="translate(520, 100)" opacity="0.1">
+    <rect x="-1.5" y="-8" width="3" height="16" rx="1.5" fill="#ef4444"/>
+    <rect x="-8" y="-1.5" width="16" height="3" rx="1.5" fill="#ef4444"/>
+  </g>
+  <g transform="translate(850, 380)" opacity="0.08">
+    <rect x="-2" y="-10" width="4" height="20" rx="2" fill="#f87171"/>
+    <rect x="-10" y="-2" width="20" height="4" rx="2" fill="#f87171"/>
+  </g>
+  <g transform="translate(1300, 140)" opacity="0.07">
+    <rect x="-1.5" y="-8" width="3" height="16" rx="1.5" fill="#fca5a5"/>
+    <rect x="-8" y="-1.5" width="16" height="3" rx="1.5" fill="#fca5a5"/>
+  </g>
+
+  <!-- Bottom fade -->
+  <rect y="360" width="1400" height="120" fill="url(#bg)" opacity="0.6"/>
+  <linearGradient id="bottomFade" x1="0" y1="360" x2="0" y2="480" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#0a0a0a" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#0a0a0a" stop-opacity="1"/>
+  </linearGradient>
+  <rect y="360" width="1400" height="120" fill="url(#bottomFade)"/>
+
+  <!-- Texture overlay -->
+  <rect width="1400" height="480" filter="url(#noise)" opacity="0.4"/>
+</svg>
