@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { Play, Clock, User, BookOpen, Lock, Headphones, Crown, GraduationCap } from "lucide-react"
+import { Play, Clock, User, BookOpen, Lock, Headphones, Crown, GraduationCap, ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ContentArtwork } from "@/components/content/content-artwork"
 import { ContentCarousel } from "@/components/content/content-carousel"
@@ -100,6 +100,15 @@ export default async function ContentPage({ params }: ContentPageProps) {
         </div>
 
         <div className="relative container mx-auto px-4 pb-8 pt-28 md:px-8 md:pb-12 md:pt-32 lg:pt-36">
+          {/* Back button */}
+          <Link
+            href={content.category?.slug ? `/category/${content.category.slug}` : "/"}
+            className="mb-6 inline-flex items-center gap-1.5 text-sm text-foreground/50 transition-colors hover:text-foreground"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            {content.category?.name ? `Volver a ${content.category.name}` : "Volver al inicio"}
+          </Link>
+
           <div className="grid items-end gap-10 lg:grid-cols-[minmax(0,1.15fr)_340px] lg:gap-12">
             <div className="max-w-2xl">
               <div className="mb-5 flex flex-wrap items-center gap-2.5">

@@ -1,4 +1,6 @@
 import Image from "next/image"
+import Link from "next/link"
+import { ChevronLeft } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 import { ContentCarousel } from "@/components/content/content-carousel"
 import { notFound } from "next/navigation"
@@ -128,6 +130,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         )}
 
         <div className="relative container mx-auto px-4 pt-12 pb-8 md:px-8 md:pt-16 md:pb-12">
+          <Link
+            href="/"
+            className="mb-6 inline-flex items-center gap-1.5 text-sm text-foreground/50 transition-colors hover:text-foreground"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Volver al inicio
+          </Link>
+
           <div className="max-w-3xl">
             <div className="mb-6 flex items-center gap-2.5 text-[11px] uppercase tracking-[0.3em] text-white/50">
               <span
