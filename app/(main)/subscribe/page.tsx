@@ -17,6 +17,9 @@ import { Button } from '@/components/ui/button'
 import { sileo as toast } from 'sileo'
 import { useSubscription } from '@/lib/hooks/use-subscription'
 import Link from 'next/link'
+import { Particles } from '@/components/magicui/particles'
+import { BorderBeam } from '@/components/magicui/border-beam'
+import { BlurFade } from '@/components/magicui/blur-fade'
 
 const features = [
   {
@@ -121,6 +124,7 @@ function SubscribeContent() {
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/8 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px]" />
       </div>
+      <Particles className="absolute inset-0" quantity={50} size={0.3} color="hsl(38, 76%, 58%)" staticity={60} />
 
       <div className="relative z-10 container mx-auto px-4 py-24 max-w-5xl">
         {/* Header */}
@@ -156,13 +160,8 @@ function SubscribeContent() {
           >
             <h2 className="text-xl font-semibold text-foreground mb-6">¿Qué incluye?</h2>
             {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: reduceMotion ? 0 : 0.4, delay: reduceMotion ? 0 : 0.25 + index * 0.08 }}
-                className="flex gap-4 p-4 rounded-2xl bg-foreground/[0.04] border border-foreground/[0.07] hover:border-primary/25 transition-colors"
-              >
+              <BlurFade key={feature.title} delay={0.25 + index * 0.1} inView>
+              <div className="flex gap-4 p-4 rounded-2xl bg-foreground/[0.04] border border-foreground/[0.07] hover:border-primary/25 transition-colors">
                 <div className="w-10 h-10 rounded-xl bg-primary/12 border border-primary/15 flex items-center justify-center flex-shrink-0">
                   <feature.icon className="w-5 h-5 text-primary" />
                 </div>
@@ -170,7 +169,8 @@ function SubscribeContent() {
                   <h3 className="font-semibold text-foreground text-sm">{feature.title}</h3>
                   <p className="text-foreground/50 text-xs mt-1 leading-relaxed">{feature.description}</p>
                 </div>
-              </motion.div>
+              </div>
+              </BlurFade>
             ))}
           </motion.div>
 
@@ -182,6 +182,7 @@ function SubscribeContent() {
             className="sticky top-24"
           >
             <div className="relative rounded-3xl border border-primary/25 bg-[linear-gradient(160deg,hsl(var(--primary)/0.08)_0%,hsl(var(--background))_50%)] p-8 overflow-hidden shadow-[0_24px_80px_hsl(var(--primary)/0.12)]">
+              <BorderBeam size={200} duration={10} colorFrom="hsl(var(--primary))" colorTo="hsl(var(--primary) / 0.2)" />
               {/* Glow */}
               <div className="pointer-events-none absolute -top-16 -right-16 w-48 h-48 bg-primary/15 rounded-full blur-[60px]" />
 

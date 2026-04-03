@@ -30,9 +30,13 @@ export function AnonymousCta() {
         <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-rose-500/10 blur-3xl" />
 
         <div className="relative space-y-7">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            Plataforma de desarrollo personal
+          <Particles className="rounded-[36px]" quantity={40} size={0.3} color="hsl(38, 76%, 58%)" staticity={80} />
+
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] px-3 py-1.5 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+            <AnimatedShinyText className="text-[11px] font-medium uppercase tracking-[0.28em]">
+              Plataforma de desarrollo personal
+            </AnimatedShinyText>
           </div>
 
           <div className="max-w-3xl space-y-4">
@@ -88,17 +92,16 @@ export function AnonymousCta() {
               { icon: BookOpen, title: "6 Libros", desc: "Vista previa gratuita de toda la biblioteca" },
               { icon: GraduationCap, title: "Cursos en video", desc: "Fragmentos de 90s para que pruebes antes de decidir" },
               { icon: Sparkles, title: "Contenido nuevo", desc: "Actualizado continuamente con material fresco" },
-            ].map(({ icon: Icon, title, desc }) => (
-              <div
-                key={title}
-                className="rounded-[20px] border border-border/40 bg-[var(--glass-bg)] p-4 backdrop-blur-sm"
-              >
-                <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-[var(--glass-bg)]">
-                  <Icon aria-hidden="true" className="h-4 w-4 text-primary" />
+            ].map(({ icon: Icon, title, desc }, index) => (
+              <BlurFade key={title} delay={0.3 + index * 0.1} inView>
+                <div className="rounded-[20px] border border-border/40 bg-[var(--glass-bg)] p-4 backdrop-blur-sm transition-colors hover:bg-[var(--glass-bg-strong)]">
+                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-[var(--glass-bg)]">
+                    <Icon aria-hidden="true" className="h-4 w-4 text-primary" />
+                  </div>
+                  <p className="text-sm font-semibold text-foreground">{title}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-foreground/55">{desc}</p>
                 </div>
-                <p className="text-sm font-semibold text-foreground">{title}</p>
-                <p className="mt-1 text-xs leading-relaxed text-foreground/55">{desc}</p>
-              </div>
+              </BlurFade>
             ))}
           </div>
         </div>

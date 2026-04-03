@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { motion, useReducedMotion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { ContentCard } from "./content-card"
 import { BlurFade } from "@/components/magicui/blur-fade"
@@ -24,7 +23,6 @@ export function ContentCarousel({
   color,
   isSubscribed = false,
 }: ContentCarouselProps) {
-  const reduceMotion = useReducedMotion()
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)

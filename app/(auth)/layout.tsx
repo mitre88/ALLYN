@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 import { Heart, TrendingUp, Sparkles, Star, ArrowRight } from "lucide-react"
+import { Particles } from "@/components/magicui/particles"
 
 const pillars = [
   {
@@ -71,6 +72,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         {/* Top accent line */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+
+        {/* Particles overlay */}
+        <Particles className="z-[1]" quantity={60} size={0.4} color="#d4a853" staticity={40} ease={30} />
 
         {/* Content */}
         <div className="relative z-10 flex flex-col h-full px-12 xl:px-16 py-12">

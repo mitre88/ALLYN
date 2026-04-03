@@ -8,6 +8,8 @@ import { getContentAccessLabel, getPrimaryContentHref, getPrimaryContentLabel, i
 import Link from "next/link"
 import type { Content } from "@/types/database"
 import { formatDuration } from "@/lib/utils"
+import { BorderBeam } from "@/components/magicui/border-beam"
+import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text"
 
 const TYPE_LABELS: Record<string, string> = {
   book: "Libro",
@@ -63,9 +65,11 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
               transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.12, ease: "easeOut" }}
               className="mb-5 flex flex-wrap items-center gap-2.5"
             >
-              <span className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.28em] text-foreground/55 backdrop-blur-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Portada Curada
+              <span className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] px-3.5 py-1.5 backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                <AnimatedShinyText className="text-[11px] font-medium uppercase tracking-[0.28em]">
+                  Portada Curada
+                </AnimatedShinyText>
               </span>
               {content.category && (
                 <span
@@ -166,7 +170,8 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
             transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : 0.4, ease: "easeOut" }}
             className="hidden lg:flex lg:flex-col lg:gap-4"
           >
-            <div className="overflow-hidden rounded-[30px] border border-border/40 bg-card/80 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.10)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
+            <div className="relative overflow-hidden rounded-[30px] border border-border/40 bg-card/80 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.10)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
+              <BorderBeam size={180} duration={14} colorFrom="hsl(var(--primary))" colorTo="hsl(var(--primary) / 0.15)" />
               <p className="text-[11px] uppercase tracking-[0.28em] text-foreground/38">
                 Pieza de hoy
               </p>
