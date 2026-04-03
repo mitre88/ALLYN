@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { toast } from 'sonner'
+import { sileo as toast } from 'sileo'
 import { createClient } from '@/lib/supabase/client'
 import { useSubscription } from '@/lib/hooks/use-subscription'
 import { useRouter } from 'next/navigation'
@@ -74,10 +74,10 @@ export default function ProfilePage() {
     try {
       await navigator.clipboard.writeText(referralLink)
       setCopied(true)
-      toast.success('¡Enlace copiado al portapapeles!')
+      toast.success({ title: '¡Enlace copiado al portapapeles!' })
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      toast.error('No se pudo copiar el enlace')
+      toast.error({ title: 'No se pudo copiar el enlace' })
     }
   }
 

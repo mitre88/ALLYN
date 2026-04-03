@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Headphones, Loader2, Pause } from "lucide-react"
 import { useAudioStore } from "@/lib/stores/audio-store"
-import { toast } from "sonner"
+import { sileo as toast } from "sileo"
 import type { Content } from "@/types/database"
 
 interface ListenButtonProps {
@@ -39,7 +39,7 @@ export function ListenButton({ content, isSubscribed, className = "", variant = 
       const res = await fetch(`/api/content/${content.id}/tts`)
       if (!res.ok) {
         const data = await res.json().catch(() => ({ error: "Error" }))
-        toast.error(data.error || "No se pudo generar el audio")
+        toast.error({ title: data.error || "No se pudo generar el audio" })
         return
       }
 
@@ -55,7 +55,7 @@ export function ListenButton({ content, isSubscribed, className = "", variant = 
         })
       }
     } catch {
-      toast.error("Error de conexión al generar audio")
+      toast.error({ title: "Error de conexión al generar audio" })
     } finally {
       setGenerating(false)
     }

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Upload, X, Loader2, FileText, Video, Image, CheckCircle2, ArrowLeft } from 'lucide-react'
-import { toast } from 'sonner'
+import { sileo as toast } from 'sileo'
 import Link from 'next/link'
 
 interface Category { id: string; name: string; color: string }
@@ -170,15 +170,15 @@ export default function UploadContent() {
 
   async function uploadFile(file: File, bucket: string, path: string): Promise<string | null> {
     const { error } = await supabase.storage.from(bucket).upload(path, file, { upsert: true })
-    if (error) { toast.error(`Error subiendo archivo: ${error.message}`); return null }
+    if (error) { toast.error({ title: `Error subiendo archivo: ${error.message}` }); return null }
     const { data: { publicUrl } } = supabase.storage.from(bucket).getPublicUrl(path)
     return publicUrl
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!form.title || !form.category_id) { toast.error('Título y categoría son requeridos'); return }
-    if (!files.main) { toast.error('El archivo principal es requerido'); return }
+    if (!form.title || !form.category_id) { toast.error({ title: 'Título y categoría son requeridos' }); return }
+    if (!files.main) { toast.error({ title: 'El archivo principal es requerido' }); return }
 
     setLoading(true)
     const id = crypto.randomUUID()
@@ -222,10 +222,10 @@ export default function UploadContent() {
 
       if (error) throw error
 
-      toast.success('Contenido subido exitosamente')
+      toast.success({ title: 'Contenido subido exitosamente' })
       router.push('/admin/content')
     } catch (err: unknown) {
-      toast.error(`Error: ${err instanceof Error ? err.message : 'Error desconocido'}`)
+      toast.error({ title: `Error: ${err instanceof Error ? err.message : 'Error desconocido'}` })
     } finally {
       setLoading(false)
       setProgress({})

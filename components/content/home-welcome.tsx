@@ -2,6 +2,9 @@ import Link from "next/link"
 import { ArrowRight, Banknote, BookOpen, Crown, Heart, Sparkles } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { BlurFade } from "@/components/magicui/blur-fade"
+import { BorderBeam } from "@/components/magicui/border-beam"
+import { NumberTicker } from "@/components/magicui/number-ticker"
 
 interface HomeWelcomeProps {
   name: string
@@ -27,7 +30,9 @@ export function HomeWelcome({
 
   return (
     <section className="container mx-auto px-4 md:px-8">
+      <BlurFade delay={0.15} inView>
       <div className="relative overflow-hidden rounded-[36px] border border-border/50 bg-card/95 p-6 shadow-[0_30px_120px_rgba(0,0,0,0.10)] dark:shadow-[0_30px_120px_rgba(0,0,0,0.36)] sm:p-7 md:p-8 lg:p-10">
+        <BorderBeam size={300} duration={12} delay={0} colorFrom="hsl(var(--primary))" colorTo="hsl(var(--primary) / 0.3)" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,hsl(var(--primary)/0.15),transparent_34%),radial-gradient(circle_at_80%_18%,hsl(var(--foreground)/0.04),transparent_20%)]" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
         <div className="absolute -left-12 top-0 h-36 w-36 rounded-full bg-primary/20 blur-3xl" />
@@ -126,13 +131,13 @@ export function HomeWelcome({
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
               <InfoCard
                 eyebrow="Catálogo"
-                title={`${categoryCount.toString().padStart(2, "0")} Áreas`}
+                title={<><NumberTicker value={categoryCount} delay={0.4} className="text-lg font-semibold text-foreground" /> Áreas</>}
                 detail="Temas organizados para encontrar contenido con menos fricción."
                 icon={BookOpen}
               />
               <InfoCard
                 eyebrow="Biblioteca"
-                title={`${libraryCount.toString().padStart(2, "0")} Títulos`}
+                title={<><NumberTicker value={libraryCount} delay={0.6} className="text-lg font-semibold text-foreground" /> Títulos</>}
                 detail="Curso y colecciones ordenadas para que cada libro viva en su sección."
                 icon={ArrowRight}
               />
@@ -140,6 +145,7 @@ export function HomeWelcome({
           </div>
         </div>
       </div>
+      </BlurFade>
     </section>
   )
 }
@@ -151,7 +157,7 @@ function InfoCard({
   icon: Icon,
 }: {
   eyebrow: string
-  title: string
+  title: React.ReactNode
   detail: string
   icon: typeof Crown
 }) {

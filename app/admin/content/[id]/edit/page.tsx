@@ -7,7 +7,7 @@ import {
   Upload, X, Loader2, FileText, Video, Image,
   CheckCircle2, ArrowLeft, Save, Trash2, AlertCircle,
 } from 'lucide-react'
-import { toast } from 'sonner'
+import { sileo as toast } from 'sileo'
 import Link from 'next/link'
 
 interface Category { id: string; name: string; color: string }
@@ -157,13 +157,13 @@ export default function EditContent() {
 
   async function uploadFile(file: File, bucket: string, path: string): Promise<string | null> {
     const { error } = await supabase.storage.from(bucket).upload(path, file, { upsert: true })
-    if (error) { toast.error(`Error subiendo: ${error.message}`); return null }
+    if (error) { toast.error({ title: `Error subiendo: ${error.message}` }); return null }
     return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/authenticated/${bucket}/${path}`
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!form.title || !form.category_id) { toast.error('Título y categoría son requeridos'); return }
+    if (!form.title || !form.category_id) { toast.error({ title: 'Título y categoría son requeridos' }); return }
     setSaving(true)
 
     try {
@@ -200,10 +200,10 @@ export default function EditContent() {
       const { error } = await supabase.from('content').update(updates).eq('id', id)
       if (error) throw error
 
-      toast.success('Contenido actualizado')
+      toast.success({ title: 'Contenido actualizado' })
       router.push('/admin/content')
     } catch (err: unknown) {
-      toast.error(`Error: ${err instanceof Error ? err.message : 'Error desconocido'}`)
+      toast.error({ title: `Error: ${err instanceof Error ? err.message : 'Error desconocido'}` })
     } finally {
       setSaving(false)
     }
@@ -214,10 +214,10 @@ export default function EditContent() {
     setDeleting(true)
     try {
       await supabase.from('content').delete().eq('id', id)
-      toast.success('Contenido eliminado')
+      toast.success({ title: 'Contenido eliminado' })
       router.push('/admin/content')
     } catch (err: unknown) {
-      toast.error(`Error al eliminar: ${err instanceof Error ? err.message : 'Error'}`)
+      toast.error({ title: `Error al eliminar: ${err instanceof Error ? err.message : 'Error'}` })
       setDeleting(false)
     }
   }

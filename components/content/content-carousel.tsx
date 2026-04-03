@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { ContentCard } from "./content-card"
+import { BlurFade } from "@/components/magicui/blur-fade"
 import type { Content } from "@/types/database"
 
 interface ContentCarouselProps {
@@ -61,13 +62,7 @@ export function ContentCarousel({
   return (
     <section className="py-8 md:py-10 xl:py-12">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: reduceMotion ? 0 : 0.45, ease: "easeOut" }}
-          className="mb-6 flex items-end justify-between gap-5 md:mb-7"
-        >
+        <BlurFade delay={0.1} inView className="mb-6 flex items-end justify-between gap-5 md:mb-7">
           <div className="min-w-0 space-y-2.5">
             {/* Eyebrow with accent line */}
             <div className="flex items-center gap-2.5 text-[11px] uppercase tracking-[0.3em] text-foreground/38">
@@ -99,7 +94,7 @@ export function ContentCarousel({
           <div className="hidden shrink-0 rounded-full border border-border/60 bg-muted/50 px-3 py-1 text-xs tabular-nums text-foreground/35 md:block">
             {content.length.toString().padStart(2, "0")} títulos
           </div>
-        </motion.div>
+        </BlurFade>
       </div>
 
       {/* Carousel Container */}
@@ -135,15 +130,9 @@ export function ContentCarousel({
             className="flex gap-4 overflow-x-auto pb-1 scroll-smooth hide-scrollbar snap-x snap-proximity sm:gap-5 lg:gap-6"
           >
             {content.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: reduceMotion ? 0 : index * 0.05 }}
-              >
+              <BlurFade key={item.id} delay={index * 0.06} inView>
                 <ContentCard content={item} isSubscribed={isSubscribed} />
-              </motion.div>
+              </BlurFade>
             ))}
           </div>
         </div>

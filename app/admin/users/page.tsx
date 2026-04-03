@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Search, CheckCircle, XCircle, Shield } from 'lucide-react'
-import { toast } from 'sonner'
+import { sileo as toast } from 'sileo'
 
 interface User {
   id: string
@@ -41,7 +41,7 @@ export default function AdminUsers() {
       subscription_date: newVal ? new Date().toISOString() : null
     }).eq('id', id)
     setUsers(prev => prev.map(u => u.id === id ? { ...u, is_subscribed: newVal } : u))
-    toast.success(newVal ? 'Suscripción activada manualmente' : 'Suscripción desactivada')
+    toast.success({ title: newVal ? 'Suscripción activada manualmente' : 'Suscripción desactivada' })
   }
 
   async function toggleAdmin(id: string, current: string) {
@@ -50,7 +50,7 @@ export default function AdminUsers() {
     if (!confirm(`¿Cambiar rol a ${rolLabel}?`)) return
     await supabase.from('profiles').update({ role: newRole }).eq('id', id)
     setUsers(prev => prev.map(u => u.id === id ? { ...u, role: newRole as 'user' | 'admin' } : u))
-    toast.success(`Rol cambiado a ${rolLabel}`)
+    toast.success({ title: `Rol cambiado a ${rolLabel}` })
   }
 
   return (

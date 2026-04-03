@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Save, Loader2, Plus, Trash2 } from 'lucide-react'
-import { toast } from 'sonner'
+import { sileo as toast } from 'sileo'
 
 interface Category {
   id: string; name: string; slug: string
@@ -30,12 +30,12 @@ export default function AdminCategories() {
       name: cat.name, description: cat.description, color: cat.color, sort_order: cat.sort_order
     }).eq('id', cat.id)
     setSaving(null)
-    if (error) toast.error('Error guardando'); else toast.success(`${cat.name} guardado`)
+    if (error) toast.error({ title: 'Error guardando' }); else toast.success({ title: `${cat.name} guardado` })
   }
 
   async function createCategory() {
     if (!newCat.name.trim() || !newCat.slug.trim()) {
-      toast.error('Nombre y slug son requeridos')
+      toast.error({ title: 'Nombre y slug son requeridos' })
       return
     }
     setCreating(true)
@@ -45,11 +45,11 @@ export default function AdminCategories() {
       color: newCat.color, sort_order: maxOrder + 1
     }).select().single()
     setCreating(false)
-    if (error) { toast.error('Error creando categoría'); return }
+    if (error) { toast.error({ title: 'Error creando categoría' }); return }
     setCategories(prev => [...prev, data])
     setNewCat({ name: '', slug: '', description: '', color: '#8b5cf6' })
     setShowCreate(false)
-    toast.success(`${data.name} creada`)
+    toast.success({ title: `${data.name} creada` })
   }
 
   async function deleteCategory(cat: Category) {
@@ -57,9 +57,9 @@ export default function AdminCategories() {
     setDeleting(cat.id)
     const { error } = await supabase.from('categories').delete().eq('id', cat.id)
     setDeleting(null)
-    if (error) { toast.error('Error eliminando categoría'); return }
+    if (error) { toast.error({ title: 'Error eliminando categoría' }); return }
     setCategories(prev => prev.filter(c => c.id !== cat.id))
-    toast.success(`${cat.name} eliminada`)
+    toast.success({ title: `${cat.name} eliminada` })
   }
 
   function update(id: string, field: keyof Category, value: string | number) {

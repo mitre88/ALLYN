@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { CheckCircle, Loader2, Crown, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
+import { sileo as toast } from 'sileo'
 
 function SuccessContent() {
   const searchParams = useSearchParams()
@@ -27,14 +27,14 @@ function SuccessContent() {
 
         if (data.paid) {
           setStatus('success')
-          toast.success('¡Bienvenido a ALLYN! Tu suscripción está activa.')
+          toast.success({ title: '¡Bienvenido a ALLYN! Tu suscripción está activa.' })
         } else {
           setStatus('error')
-          toast.error('No se pudo verificar el pago. Contacta soporte.')
+          toast.error({ title: 'No se pudo verificar el pago. Contacta soporte.' })
         }
       } catch {
         setStatus('error')
-        toast.error('Error al verificar el pago.')
+        toast.error({ title: 'Error al verificar el pago.' })
       }
     }
 

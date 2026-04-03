@@ -4,6 +4,10 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowRight, BookOpen, GraduationCap, Heart, Banknote, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Particles } from "@/components/magicui/particles"
+import { ShineBorder } from "@/components/magicui/shine-border"
+import { BlurFade } from "@/components/magicui/blur-fade"
+import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text"
 
 const pillars = [
   { icon: Heart, label: "Salud", color: "#ef4444" },

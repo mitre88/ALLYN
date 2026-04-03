@@ -14,7 +14,7 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
+import { sileo as toast } from 'sileo'
 import { useSubscription } from '@/lib/hooks/use-subscription'
 import Link from 'next/link'
 
@@ -61,11 +61,11 @@ function SubscribeContent() {
 
       if (!res.ok) {
         if (res.status === 401) {
-          toast.error('Inicia sesión para continuar')
+          toast.error({ title: 'Inicia sesión para continuar' })
           window.location.href = '/login?redirect=/subscribe'
           return
         }
-        toast.error(data.error || 'Error al procesar el pago')
+        toast.error({ title: data.error || 'Error al procesar el pago' })
         return
       }
 
@@ -73,7 +73,7 @@ function SubscribeContent() {
         window.location.href = data.url
       }
     } catch {
-      toast.error('Error de conexión. Intenta de nuevo.')
+      toast.error({ title: 'Error de conexión. Intenta de nuevo.' })
     } finally {
       setLoading(false)
     }

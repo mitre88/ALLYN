@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Share2 } from "lucide-react"
-import { toast } from "sonner"
+import { sileo as toast } from "sileo"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -33,13 +33,13 @@ export function ShareContentButton({
       }
 
       await navigator.clipboard.writeText(window.location.href)
-      toast.success("Enlace copiado")
+      toast.success({ title: "Enlace copiado" })
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
         return
       }
 
-      toast.error("No se pudo compartir el contenido")
+      toast.error({ title: "No se pudo compartir el contenido" })
     } finally {
       setIsSharing(false)
     }

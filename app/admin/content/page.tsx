@@ -8,7 +8,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, Pencil, Trash2, Plus, Eye, EyeOff, BookOpen, Video, GraduationCap, Search, AlertTriangle } from 'lucide-react'
 import { ContentArtwork } from '@/components/content/content-artwork'
 import Link from 'next/link'
-import { toast } from 'sonner'
+import { sileo as toast } from 'sileo'
 
 interface ContentItem {
   id: string
@@ -156,21 +156,21 @@ export default function AdminContent() {
         supabase.from('content').update({ sort_order: index }).eq('id', item.id)
       )
     )
-    toast.success('Orden guardado')
+    toast.success({ title: 'Orden guardado' })
   }
 
   async function toggleStatus(id: string, status: string) {
     const newStatus = status === 'published' ? 'draft' : 'published'
     await supabase.from('content').update({ status: newStatus, published_at: newStatus === 'published' ? new Date().toISOString() : null }).eq('id', id)
     setItems(prev => prev.map(i => i.id === id ? { ...i, status: newStatus as 'draft' | 'published' } : i))
-    toast.success(newStatus === 'published' ? 'Contenido publicado' : 'Contenido despublicado')
+    toast.success({ title: newStatus === 'published' ? 'Contenido publicado' : 'Contenido despublicado' })
   }
 
   async function deleteContent(id: string) {
     if (!confirm('¿Eliminar este contenido permanentemente?')) return
     await supabase.from('content').delete().eq('id', id)
     setItems(prev => prev.filter(i => i.id !== id))
-    toast.success('Contenido eliminado')
+    toast.success({ title: 'Contenido eliminado' })
   }
 
   return (

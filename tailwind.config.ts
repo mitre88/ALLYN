@@ -100,6 +100,10 @@ const config: Config = {
         "border-beam": {
           "100%": { offsetDistance: "100%" },
         },
+        "shiny-text": {
+          "0%, 90%, 100%": { backgroundPosition: "calc(-100% - var(--shimmer-width)) 0" },
+          "30%, 60%": { backgroundPosition: "calc(100% + var(--shimmer-width)) 0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -108,6 +112,7 @@ const config: Config = {
         "slide-in": "slide-in 0.3s ease-out",
         shine: "shine 3s ease-out infinite",
         "border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
+        "shiny-text": "shiny-text 8s infinite",
       },
     },
   },

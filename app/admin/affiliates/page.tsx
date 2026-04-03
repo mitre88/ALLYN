@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { DollarSign, Clock, CheckCircle } from 'lucide-react'
-import { toast } from 'sonner'
+import { sileo as toast } from 'sileo'
 
 interface Affiliate {
   id: string
@@ -36,7 +36,7 @@ export default function AdminAffiliates() {
   async function markPaid(id: string) {
     await supabase.from('affiliates').update({ status: 'paid', paid_at: new Date().toISOString() }).eq('id', id)
     setItems(prev => prev.map(i => i.id === id ? { ...i, status: 'paid' as const, paid_at: new Date().toISOString() } : i))
-    toast.success('Comisión marcada como pagada')
+    toast.success({ title: 'Comisión marcada como pagada' })
   }
 
   return (

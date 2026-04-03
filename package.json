@@ -41,7 +41,7 @@
     "react-dom": "^18.3.1",
     "react-pdf": "^10.4.1",
     "remotion": "^4.0.441",
-    "sonner": "^2.0.7",
+    "sileo": "^0.1.5",
     "stripe": "^21.0.1",
     "tailwind-merge": "^2.6.1",
     "tailwindcss-animate": "^1.0.7",

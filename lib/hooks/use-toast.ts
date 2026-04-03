@@ -1,45 +1,32 @@
-import { toast } from "sonner"
+import { sileo } from "sileo"
 
 export function useToast() {
   const showSuccess = (message: string, description?: string) => {
-    toast.success(message, {
-      description,
-    })
+    sileo.success({ title: message, description })
   }
 
   const showError = (message: string, description?: string) => {
-    toast.error(message, {
-      description,
-    })
+    sileo.error({ title: message, description })
   }
 
   const showInfo = (message: string, description?: string) => {
-    toast.info(message, {
-      description,
-    })
+    sileo.info({ title: message, description })
   }
 
   const showWarning = (message: string, description?: string) => {
-    toast.warning(message, {
-      description,
-    })
+    sileo.warning({ title: message, description })
   }
 
   const showLoading = (message: string) => {
-    return toast.loading(message)
-  }
-
-  const dismiss = (toastId?: string | number) => {
-    toast.dismiss(toastId)
+    sileo.info({ title: message })
   }
 
   return {
-    toast,
+    toast: sileo,
     showSuccess,
     showError,
     showInfo,
     showWarning,
     showLoading,
-    dismiss,
   }
 }
