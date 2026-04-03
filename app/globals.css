@@ -26,10 +26,12 @@
     --ring: 38 70% 44%;
     --radius: 0.5rem;
 
-    /* Glassmorphism tokens */
-    --glass-bg: rgba(255, 255, 255, 0.07);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glass-bg-strong: rgba(255, 255, 255, 0.11);
+    /* Glassmorphism tokens — light mode uses dark glass */
+    --glass-bg: rgba(0, 0, 0, 0.04);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-bg-strong: rgba(0, 0, 0, 0.07);
+    --overlay-subtle: rgba(0, 0, 0, 0.06);
+    --overlay-medium: rgba(0, 0, 0, 0.10);
   }
 
   .dark {
@@ -58,6 +60,8 @@
     --glass-bg: rgba(255, 255, 255, 0.04);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-bg-strong: rgba(255, 255, 255, 0.07);
+    --overlay-subtle: rgba(255, 255, 255, 0.06);
+    --overlay-medium: rgba(255, 255, 255, 0.10);
   }
 }
 

@@ -66,13 +66,13 @@ export function Header() {
           className={cn(
             "pointer-events-auto mx-auto flex h-16 max-w-7xl items-center justify-between rounded-[26px] border px-3 shadow-[0_18px_70px_rgba(0,0,0,0.14)] backdrop-blur-2xl transition-all duration-500 md:px-5",
             isScrolled
-              ? "border-white/12 bg-background/82"
-              : "border-white/8 bg-background/58"
+              ? "border-border/50 bg-background/82"
+              : "border-border/30 bg-background/58"
           )}
         >
           <Link href="/" className="flex min-w-0 items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/12 bg-[linear-gradient(155deg,hsl(var(--primary)/0.95)_0%,rgba(23,18,14,0.92)_100%)] shadow-[0_12px_30px_rgba(0,0,0,0.2)]">
-              <span className="font-display text-lg font-bold text-white">A</span>
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-border/40 bg-[linear-gradient(155deg,hsl(var(--primary)/0.95)_0%,hsl(var(--background)/0.92)_100%)] shadow-[0_12px_30px_rgba(0,0,0,0.12)]">
+              <span className="font-display text-lg font-bold text-primary-foreground">A</span>
             </div>
             <div className="min-w-0">
               <p className="font-display text-lg font-semibold tracking-[0.01em] text-foreground md:text-xl">
@@ -84,7 +84,7 @@ export function Header() {
             </div>
           </Link>
 
-          <nav className="hidden lg:flex items-center rounded-full border border-white/10 bg-white/[0.045] p-1 backdrop-blur-xl">
+          <nav className="hidden lg:flex items-center rounded-full border border-border/40 bg-[var(--glass-bg)] p-1 backdrop-blur-xl">
             {categories.map((category) => (
               <Link
                 key={category.name}
@@ -92,8 +92,8 @@ export function Header() {
                 className={cn(
                   "rounded-full px-4 py-2 text-sm font-medium transition-all duration-200",
                   isActive(category.href)
-                    ? "bg-white text-black shadow-[0_8px_24px_rgba(255,255,255,0.18)]"
-                    : "text-foreground/62 hover:bg-white/[0.07] hover:text-foreground"
+                    ? "bg-foreground text-background shadow-[0_8px_24px_hsl(var(--foreground)/0.18)]"
+                    : "text-foreground/62 hover:bg-[var(--glass-bg)] hover:text-foreground"
                 )}
               >
                 {category.name}
@@ -101,7 +101,7 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.045] p-1.5 backdrop-blur-xl">
+          <div className="flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] p-1.5 backdrop-blur-xl">
             {user ? (
               <div className="flex items-center gap-2">
                 {!isSubscribed && (
@@ -120,7 +120,7 @@ export function Header() {
                   <button
                     onClick={() => setDropdownOpen((prev) => !prev)}
                     aria-label={dropdownOpen ? "Cerrar menú de cuenta" : "Abrir menú de cuenta"}
-                    className="flex items-center gap-2 rounded-full border border-white/10 bg-black/10 py-1 pl-1 pr-2 transition-colors hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] py-1 pl-1 pr-2 transition-colors hover:bg-[var(--glass-bg-strong)] focus:outline-none focus:ring-2 focus:ring-primary/30"
                   >
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={user.user_metadata?.avatar_url} />
@@ -151,14 +151,14 @@ export function Header() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 8, scale: 0.98 }}
                         transition={{ duration: 0.18, ease: "easeOut" }}
-                        className="absolute right-0 mt-3 w-60 overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(24,18,14,0.94)_0%,rgba(11,10,10,0.98)_100%)] shadow-[0_24px_80px_rgba(0,0,0,0.42)] backdrop-blur-2xl"
+                        className="absolute right-0 mt-3 w-60 overflow-hidden rounded-[24px] border border-border/50 bg-card/95 shadow-[0_24px_80px_rgba(0,0,0,0.18)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.42)] backdrop-blur-2xl"
                       >
-                        <div className="border-b border-white/8 px-4 py-4">
-                          <p className="truncate text-sm font-semibold text-white">
+                        <div className="border-b border-border/50 px-4 py-4">
+                          <p className="truncate text-sm font-semibold text-foreground">
                             {profile?.full_name || user.email}
                           </p>
-                          <p className="mt-1 truncate text-xs text-white/45">{user.email}</p>
-                          <span className="mt-3 inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[11px] font-medium text-white/72">
+                          <p className="mt-1 truncate text-xs text-muted-foreground">{user.email}</p>
+                          <span className="mt-3 inline-flex items-center gap-1 rounded-full border border-border/50 bg-[var(--glass-bg)] px-2.5 py-1 text-[11px] font-medium text-foreground/72">
                             <Crown className="h-3 w-3 text-primary" />
                             {isSubscribed ? "Miembro Activo" : "Modo Preview"}
                           </span>
@@ -167,7 +167,7 @@ export function Header() {
                           <Link
                             href="/profile"
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-3 px-4 py-3 text-sm text-white/72 transition-colors hover:bg-white/[0.05] hover:text-white"
+                            className="flex items-center gap-3 px-4 py-3 text-sm text-foreground/72 transition-colors hover:bg-[var(--glass-bg)] hover:text-foreground"
                           >
                             <UserCircle className="h-4 w-4" />
                             Mi Perfil
@@ -176,7 +176,7 @@ export function Header() {
                             <Link
                               href="/subscribe"
                               onClick={() => setDropdownOpen(false)}
-                              className="flex items-center gap-3 px-4 py-3 text-sm text-primary transition-colors hover:bg-white/[0.05] hover:text-primary/85"
+                              className="flex items-center gap-3 px-4 py-3 text-sm text-primary transition-colors hover:bg-[var(--glass-bg)] hover:text-primary/85"
                             >
                               <Crown className="h-4 w-4" />
                               Suscribirse
@@ -184,7 +184,7 @@ export function Header() {
                           )}
                           <button
                             onClick={handleSignOut}
-                            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-white/45 transition-colors hover:bg-white/[0.05] hover:text-white"
+                            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-foreground/45 transition-colors hover:bg-[var(--glass-bg)] hover:text-foreground"
                           >
                             <LogOut className="h-4 w-4" />
                             Cerrar sesión
@@ -212,7 +212,7 @@ export function Header() {
 
             <button
               aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.045] text-foreground/72 transition-colors hover:bg-white/[0.09] hover:text-foreground lg:hidden"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-[var(--glass-bg)] text-foreground/72 transition-colors hover:bg-[var(--glass-bg-strong)] hover:text-foreground lg:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -228,7 +228,7 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-x-3 top-[5.2rem] z-40 overflow-hidden rounded-[28px] border border-white/10 bg-background/92 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl md:hidden"
+            className="fixed inset-x-3 top-[5.2rem] z-40 overflow-hidden rounded-[28px] border border-border/50 bg-background/92 shadow-[0_24px_80px_rgba(0,0,0,0.14)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl md:hidden"
           >
             <div className="p-5">
               <div className="mb-5">
@@ -250,7 +250,7 @@ export function Header() {
                         "block rounded-2xl border px-4 py-3 text-lg font-medium transition-colors",
                         isActive(category.href)
                           ? "border-primary/30 bg-primary/10 text-foreground"
-                          : "border-white/8 bg-white/[0.045] text-foreground/72 hover:text-foreground"
+                          : "border-border/30 bg-[var(--glass-bg)] text-foreground/72 hover:text-foreground"
                       )}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -287,7 +287,7 @@ export function Header() {
               )}
 
               {user && (
-                <div className="mt-6 space-y-3 border-t border-white/8 pt-5">
+                <div className="mt-6 space-y-3 border-t border-border/30 pt-5">
                   <Link
                     href="/profile"
                     onClick={() => setMobileMenuOpen(false)}

@@ -4,6 +4,7 @@ import { getReaderContent } from "@/lib/reader"
 
 interface ReadPageProps {
   params: Promise<{ id: string }>
+  searchParams: Promise<{ autoplay?: string }>
 }
 
 export async function generateMetadata({ params }: ReadPageProps) {
@@ -23,8 +24,9 @@ export async function generateMetadata({ params }: ReadPageProps) {
   }
 }
 
-export default async function ReadPage({ params }: ReadPageProps) {
+export default async function ReadPage({ params, searchParams }: ReadPageProps) {
   const { id } = await params
+  const { autoplay } = await searchParams
   const readerContent = await getReaderContent(id)
 
   if (!readerContent) {
@@ -38,6 +40,7 @@ export default async function ReadPage({ params }: ReadPageProps) {
       content={readerContent.content}
       pdfUrl={readerContent.pdfUrl}
       isSubscribed={readerContent.isSubscribed}
+      autoplay={autoplay === "true"}
     />
   )
 }

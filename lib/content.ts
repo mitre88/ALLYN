@@ -63,11 +63,10 @@ export function canOpenContent(
 ): boolean {
   if (content.is_free) return Boolean(content.file_url || content.preview_url)
 
-  if (isReadingContent(content)) {
-    return Boolean(content.file_url || content.preview_url)
-  }
+  if (isSubscribed) return Boolean(content.file_url || content.preview_url)
 
-  return isSubscribed || hasContentPreview(content)
+  // Non-subscribers: can open if there's a preview available
+  return hasContentPreview(content)
 }
 
 export function getPrimaryContentHref(
@@ -85,15 +84,16 @@ export function getPrimaryContentLabel(
     return TYPE_CONFIG[content.type].cta
   }
 
-  if (isReadingContent(content)) {
-    return content.type === "audiobook" ? "Escuchar completo" : "Leer completo"
-  }
-
   if (isSubscribed) {
     return TYPE_CONFIG[content.type].cta
   }
 
-  return hasContentPreview(content) ? "Vista previa" : "Suscribirse"
+  // Non-subscribers: books show prologue, others show preview
+  if (!hasContentPreview(content)) return "Suscribirse"
+
+  if (isReadingContent(content)) return "Leer prólogo"
+
+  return "Vista previa"
 }
 
 export function isContentLocked(
@@ -101,8 +101,6 @@ export function isContentLocked(
   isSubscribed = false
 ): boolean {
   if (content.is_free) return false
-
-  if (isReadingContent(content)) return false
 
   return !isSubscribed
 }
@@ -113,11 +111,9 @@ export function getContentAccessLabel(
 ): string {
   if (content.is_free) return "Gratis"
 
-  if (isReadingContent(content)) {
-    return content.type === "audiobook" ? "Escucha completa" : "Lectura completa"
-  }
-
   if (isSubscribed) return "Acceso completo"
 
-  return hasContentPreview(content) ? "Fragmento disponible" : "Solo miembros"
+  if (!hasContentPreview(content)) return "Solo miembros"
+
+  return isReadingContent(content) ? "Prólogo disponible" : "Fragmento disponible"
 }

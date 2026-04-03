@@ -1,14 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { createClient } from "@/lib/supabase/client"
 import { Eye, EyeOff, Loader2, ArrowRight, Mail } from "lucide-react"
+import { Suspense } from "react"
 
-export function LoginForm() {
+function LoginFormInner() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -16,6 +17,8 @@ export function LoginForm() {
   const [formError, setFormError] = useState<string | null>(null)
   const [needsConfirmation, setNeedsConfirmation] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get("redirect") || "/"
   const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,7 +32,7 @@ export function LoginForm() {
       if (error) throw error
 
       router.refresh()
-      router.push("/")
+      router.push(redirectTo)
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Error desconocido"
       if (message.toLowerCase().includes("email not confirmed") || message.toLowerCase().includes("confirm")) {
@@ -148,10 +151,18 @@ export function LoginForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         ¿No tienes cuenta?{" "}
-        <Link href="/register" className="text-primary hover:text-primary/80 font-medium underline-offset-2 hover:underline">
+        <Link href={`/register${redirectTo !== "/" ? `?redirect=${encodeURIComponent(redirectTo)}` : ""}`} className="text-primary hover:text-primary/80 font-medium underline-offset-2 hover:underline">
           Regístrate gratis
         </Link>
       </p>
     </div>
+  )
+}
+
+export function LoginForm() {
+  return (
+    <Suspense fallback={null}>
+      <LoginFormInner />
+    </Suspense>
   )
 }

@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core'
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { GripVertical, Pencil, Trash2, Plus, Eye, EyeOff, BookOpen, Video, GraduationCap, Search } from 'lucide-react'
+import { GripVertical, Pencil, Trash2, Plus, Eye, EyeOff, BookOpen, Video, GraduationCap, Search, AlertTriangle } from 'lucide-react'
 import { ContentArtwork } from '@/components/content/content-artwork'
 import Link from 'next/link'
 import { toast } from 'sonner'
@@ -16,9 +16,18 @@ interface ContentItem {
   type: 'book' | 'video' | 'course' | 'audiobook'
   status: 'draft' | 'published' | 'archived'
   thumbnail_url: string | null
+  preview_url: string | null
+  file_url: string | null
   sort_order: number
   category: { name: string; color: string } | null
   author: string | null
+}
+
+function getMissingAssets(item: ContentItem): string[] {
+  const missing: string[] = []
+  if (!item.thumbnail_url) missing.push("miniatura")
+  if ((item.type === "course" || item.type === "video") && !item.preview_url) missing.push("trailer/preview")
+  return missing
 }
 
 const typeIcons = { book: BookOpen, video: Video, course: GraduationCap, audiobook: BookOpen }
@@ -50,6 +59,14 @@ function SortableRow({ item, onToggle, onDelete }: {
           <div>
             <p className="text-sm text-white font-medium">{item.title}</p>
             {item.author && <p className="text-xs text-slate-400">{item.author}</p>}
+            {getMissingAssets(item).length > 0 && (
+              <div className="flex items-center gap-1 mt-1">
+                <AlertTriangle className="w-3 h-3 text-amber-400 shrink-0" />
+                <span className="text-[10px] text-amber-400">
+                  Falta: {getMissingAssets(item).join(", ")}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </td>
@@ -111,7 +128,7 @@ export default function AdminContent() {
     async function load() {
       const { data } = await supabase
         .from('content')
-        .select('id, title, type, status, thumbnail_url, sort_order, author, category:categories(name, color)')
+        .select('id, title, type, status, thumbnail_url, preview_url, file_url, sort_order, author, category:categories(name, color)')
         .order('sort_order', { ascending: true })
       setItems((data as unknown as ContentItem[]) || [])
       setLoading(false)

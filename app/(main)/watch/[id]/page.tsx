@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft, Crown, Lock, Play } from 'lucide-react'
 import { ContentArtwork } from '@/components/content/content-artwork'
+import { VideoPlayer } from '@/components/content/video-player'
 import { createClient } from '@/lib/supabase/client'
 import type { Content } from '@/types/database'
 
@@ -15,11 +16,8 @@ export default function WatchPage() {
   const id = params.id
 
   const [content, setContent] = useState<Content | null>(null)
-  const [videoUrl, setVideoUrl] = useState<string | null>(null)
-  const [previewSource, setPreviewSource] = useState<'preview' | 'file' | null>(null)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [previewEnded, setPreviewEnded] = useState(false)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const supabase = createClient()
@@ -53,28 +51,6 @@ export default function WatchPage() {
       }
 
       setContent(contentData)
-
-      const isFree = contentData.is_free
-
-      if (subscribed || isFree) {
-        // Full access: use stream API (auth required) or preview for free content
-        const endpoint = isFree && !subscribed
-          ? `/api/content/${id}/preview`
-          : `/api/content/${id}/stream`
-        const res = await fetch(endpoint)
-        if (res.ok) {
-          const { url } = await res.json()
-          setVideoUrl(url)
-        }
-      } else {
-        // Non-subscribers: try preview URL (90s fragment)
-        const res = await fetch(`/api/content/${id}/preview`)
-        if (res.ok) {
-          const { url, source } = await res.json()
-          setVideoUrl(url)
-          setPreviewSource(source ?? 'preview')
-        }
-      }
     } catch (err) {
       console.error('[WatchPage] Error:', err)
     } finally {
@@ -101,23 +77,7 @@ export default function WatchPage() {
 
   const isFree = content.is_free
   const hasFullAccess = isSubscribed || isFree
-
-  // Preview time limit only for non-subscribers on non-free content using file fallback
-  const previewLimitSeconds =
-    !hasFullAccess && previewSource === 'file'
-      ? Math.min(content.duration || FALLBACK_PREVIEW_SECONDS, FALLBACK_PREVIEW_SECONDS)
-      : null
-
-  const showLockOverlay = !hasFullAccess && (previewEnded || !videoUrl)
-
-  const handlePreviewBoundary = (video: HTMLVideoElement) => {
-    if (!previewLimitSeconds || previewEnded) return
-    if (video.currentTime >= previewLimitSeconds) {
-      video.currentTime = previewLimitSeconds
-      video.pause()
-      setPreviewEnded(true)
-    }
-  }
+  const showLockOverlay = !hasFullAccess && !content.preview_url && !content.file_url
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
@@ -145,81 +105,56 @@ export default function WatchPage() {
         )}
       </div>
 
-      {/* Video container — proper aspect ratio, centered */}
+      {/* Video container */}
       <div className="relative flex-1 flex items-center justify-center px-0 pt-14">
-        {videoUrl && !showLockOverlay ? (
-          <div className="relative w-full max-w-6xl mx-auto" style={{ aspectRatio: '16/9', maxHeight: '80vh' }}>
-            <video
-              key={videoUrl}
-              className="absolute inset-0 w-full h-full rounded-none sm:rounded-lg"
-              controls
+        {!showLockOverlay ? (
+          <div className="relative w-full max-w-6xl mx-auto">
+            <VideoPlayer
+              contentId={content.id}
+              isSubscribed={isSubscribed}
+              isFree={isFree}
               autoPlay
-              controlsList="nodownload noremoteplayback"
-              disablePictureInPicture
-              onContextMenu={e => e.preventDefault()}
-              onTimeUpdate={e => !hasFullAccess && handlePreviewBoundary(e.currentTarget)}
-              onSeeking={e => !hasFullAccess && handlePreviewBoundary(e.currentTarget)}
-              onEnded={() => { if (!hasFullAccess) setPreviewEnded(true) }}
-            >
-              <source src={videoUrl} />
-              Tu navegador no soporta la reproducción de video.
-            </video>
+            />
+            {/* Preview badge */}
+            {!hasFullAccess && (
+              <div className="absolute top-3 right-3 z-30 bg-black/70 border border-primary/30 rounded-full px-3 py-1.5 flex items-center gap-1.5">
+                <Lock className="w-3 h-3 text-primary" />
+                <span className="text-xs text-primary font-medium">Vista previa</span>
+              </div>
+            )}
           </div>
         ) : (
-          <div className="absolute inset-0 bg-cover bg-center">
-            <ContentArtwork content={content} variant="background" />
-            <div className="absolute inset-0 bg-black/60" />
-          </div>
-        )}
-
-        {/* Lock overlay for non-subscribers */}
-        {showLockOverlay && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 z-20">
-            <div className="text-center max-w-sm">
-              <div className="w-20 h-20 rounded-full bg-black/70 border border-primary/30 flex items-center justify-center mx-auto mb-5">
-                <Lock className="w-9 h-9 text-primary" />
-              </div>
-              <h2 className="text-white font-bold text-2xl mb-2">
-                {previewEnded ? 'Fragmento finalizado' : 'Contenido Premium'}
-              </h2>
-              <p className="text-zinc-400 text-sm mb-6">
-                {previewEnded
-                  ? 'Ya viste un fragmento. Suscríbete para ver el video completo.'
-                  : 'Este video está disponible solo para suscriptores.'}
-              </p>
-              <Link href="/subscribe">
-                <button className="flex items-center gap-2 mx-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10 py-3 rounded-full transition-colors shadow-lg shadow-primary/25 text-base">
-                  <Crown className="w-4 h-4" />
-                  Suscribirse — $499 primer año
-                </button>
-              </Link>
-              {!isLoggedIn && (
-                <p className="mt-4 text-xs text-zinc-500">
-                  ¿Ya tienes cuenta?{' '}
-                  <Link href="/login" className="text-primary hover:underline">
-                    Inicia sesión
-                  </Link>
-                </p>
-              )}
+          <>
+            <div className="absolute inset-0 bg-cover bg-center">
+              <ContentArtwork content={content} variant="background" />
+              <div className="absolute inset-0 bg-black/60" />
             </div>
-          </div>
-        )}
-
-        {/* Bottom gradient while preview plays */}
-        {!hasFullAccess && !previewEnded && videoUrl && (
-          <div className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none"
-            style={{ height: '25%', background: 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.7))' }}
-          />
-        )}
-
-        {/* Preview badge */}
-        {!hasFullAccess && videoUrl && !previewEnded && (
-          <div className="absolute top-16 right-4 z-20 bg-black/70 border border-primary/30 rounded-full px-3 py-1.5 flex items-center gap-1.5">
-            <Lock className="w-3 h-3 text-primary" />
-            <span className="text-xs text-primary font-medium">
-              {previewLimitSeconds ? `Fragmento ${previewLimitSeconds}s` : 'Vista previa'}
-            </span>
-          </div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center px-4 z-20">
+              <div className="text-center max-w-sm">
+                <div className="w-20 h-20 rounded-full bg-black/70 border border-primary/30 flex items-center justify-center mx-auto mb-5">
+                  <Lock className="w-9 h-9 text-primary" />
+                </div>
+                <h2 className="text-white font-bold text-2xl mb-2">Contenido Premium</h2>
+                <p className="text-zinc-400 text-sm mb-6">
+                  Este video está disponible solo para suscriptores.
+                </p>
+                <Link href="/subscribe">
+                  <button className="flex items-center gap-2 mx-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10 py-3 rounded-full transition-colors shadow-lg shadow-primary/25 text-base">
+                    <Crown className="w-4 h-4" />
+                    Suscribirse — $499 primer año
+                  </button>
+                </Link>
+                {!isLoggedIn && (
+                  <p className="mt-4 text-xs text-zinc-500">
+                    ¿Ya tienes cuenta?{' '}
+                    <Link href="/login?redirect=/subscribe" className="text-primary hover:underline">
+                      Inicia sesión
+                    </Link>
+                  </p>
+                )}
+              </div>
+            </div>
+          </>
         )}
       </div>
 

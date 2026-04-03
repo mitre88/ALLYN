@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { Hero } from "@/components/content/hero"
 import { ContentCarousel } from "@/components/content/content-carousel"
 import { HomeWelcome } from "@/components/content/home-welcome"
+import { AnonymousCta } from "@/components/content/anonymous-cta"
 import type { Content, Category } from "@/types/database"
 
 async function getProfile(userId: string) {
@@ -98,7 +99,7 @@ export default async function HomePage() {
   const libraryCount =
     courses.length +
     categoryContent.reduce((total, collection) => total + collection.content.length, 0) +
-    (isSubscribed ? videos.length : 0)
+    videos.length
 
   return (
     <div className="bg-background">
@@ -107,7 +108,7 @@ export default async function HomePage() {
 
       {/* Content Sections */}
       <div className="relative z-10 -mt-4 space-y-10 pb-20 md:-mt-6 md:space-y-12 md:pb-24 xl:space-y-14">
-        {user && (
+        {user ? (
           <div className="pt-12 md:pt-16 xl:pt-20">
             <HomeWelcome
               name={displayName}
@@ -116,6 +117,8 @@ export default async function HomePage() {
               categoryCount={categories.length}
             />
           </div>
+        ) : (
+          <AnonymousCta />
         )}
 
         {courses.length > 0 && (
@@ -152,11 +155,13 @@ export default async function HomePage() {
           />
         )}
 
-        {isSubscribed && videos.filter(v => !v.is_free).length > 0 && (
+        {videos.filter(v => !v.is_free).length > 0 && (
           <ContentCarousel
             eyebrow="Video"
-            title="Videos"
-            description="Piezas de video exclusivas para miembros."
+            title="Videos Exclusivos"
+            description={isSubscribed
+              ? "Piezas de video exclusivas para miembros."
+              : "Desbloquea la colección completa de videos con tu membresía."}
             content={videos.filter(v => !v.is_free)}
             isSubscribed={isSubscribed}
           />

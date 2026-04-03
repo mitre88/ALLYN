@@ -23,6 +23,8 @@ function RegisterFormInner() {
   const supabase = createClient()
   const { showError } = useToast()
 
+  const redirectTo = searchParams.get("redirect") || "/"
+
   useEffect(() => {
     const ref = searchParams.get("ref")
     if (ref) setRefCode(ref)
@@ -57,7 +59,7 @@ function RegisterFormInner() {
       // Fire-and-forget: create profile in background, don't block navigation
       fetch("/api/auth/ensure-profile", { method: "POST" }).catch(() => {})
 
-      router.push("/")
+      router.push(redirectTo)
       router.refresh()
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Error desconocido"
@@ -231,7 +233,7 @@ function RegisterFormInner() {
 
       <p className="text-center text-sm text-muted-foreground">
         ¿Ya tienes cuenta?{" "}
-        <Link href="/login" className="text-primary hover:text-primary/80 font-medium underline-offset-2 hover:underline">
+        <Link href={`/login${redirectTo !== "/" ? `?redirect=${encodeURIComponent(redirectTo)}` : ""}`} className="text-primary hover:text-primary/80 font-medium underline-offset-2 hover:underline">
           Inicia sesión
         </Link>
       </p>
