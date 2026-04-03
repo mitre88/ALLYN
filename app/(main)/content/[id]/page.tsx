@@ -95,17 +95,17 @@ export default async function ContentPage({ params }: ContentPageProps) {
           <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background))_0%,hsl(var(--background)/0.90)_32%,hsl(var(--background)/0.58)_56%,hsl(var(--background)/0.22)_100%)]" />
           <div className="absolute inset-0 hero-gradient" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,hsl(var(--foreground)/0.06),transparent_22%),linear-gradient(180deg,hsl(var(--background)/0.04)_0%,hsl(var(--background)/0.28)_52%,hsl(var(--background))_100%)]" />
-          <div className="absolute left-8 top-20 h-44 w-44 rounded-full bg-primary/20 blur-3xl" />
-          <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute left-8 top-20 h-44 w-44 rounded-full bg-primary/20 blur-3xl animate-float" />
+          <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-primary/10 blur-3xl animate-glow-pulse" />
         </div>
 
         <div className="relative container mx-auto px-4 pb-8 pt-28 md:px-8 md:pb-12 md:pt-32 lg:pt-36">
           {/* Back button */}
           <Link
             href={content.category?.slug ? `/category/${content.category.slug}` : "/"}
-            className="mb-6 inline-flex items-center gap-1.5 text-sm text-foreground/50 transition-colors hover:text-foreground"
+            className="mb-6 inline-flex items-center gap-1.5 text-sm text-foreground/50 transition-colors hover:text-foreground group/back animate-fade-in"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4 transition-transform group-hover/back:-translate-x-0.5" />
             {content.category?.name ? `Volver a ${content.category.name}` : "Volver al inicio"}
           </Link>
 
@@ -175,7 +175,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
                 <Link href={primaryHref}>
                   <Button
                     size="lg"
-                    className="h-12 rounded-full bg-foreground px-7 text-sm font-semibold text-background shadow-[0_16px_36px_hsl(var(--foreground)/0.18)] hover:bg-foreground/92"
+                    className="h-12 rounded-full bg-foreground px-7 text-sm font-semibold text-background shadow-[0_16px_36px_hsl(var(--foreground)/0.18)] hover:bg-foreground/92 press-scale"
                   >
                     <PrimaryIcon className={`mr-2 h-4 w-4 ${content.type === "video" && primaryHref !== "/subscribe" ? "fill-background" : ""}`} />
                     {primaryLabel}
@@ -196,8 +196,8 @@ export default async function ContentPage({ params }: ContentPageProps) {
               </div>
             </div>
 
-            <aside className="hidden lg:flex lg:flex-col lg:gap-4">
-              <div className="overflow-hidden rounded-[30px] border border-border/40 bg-card/80 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.10)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
+            <aside className="hidden lg:flex lg:flex-col lg:gap-4 animate-fade-in-up stagger-3">
+              <div className="overflow-hidden rounded-[30px] border border-border/40 bg-card/80 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.10)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl glass-lift">
                 <p className="text-[11px] uppercase tracking-[0.28em] text-foreground/38">
                   {isVideo ? "Miniatura" : "Portada"}
                 </p>
@@ -292,8 +292,8 @@ export default async function ContentPage({ params }: ContentPageProps) {
 
       {locked && (
         <section className="container mx-auto px-4 py-8 md:px-8">
-          <div className="flex items-start gap-4 overflow-hidden rounded-[28px] border border-border/50 bg-card/95 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.10)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-xl md:p-8">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/20">
+          <div className="flex items-start gap-4 overflow-hidden rounded-[28px] border border-border/50 bg-card/95 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.10)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-xl md:p-8 animate-fade-in-up glass-lift">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/20 animate-glow-pulse">
               <Lock className="h-5 w-5 text-primary" />
             </div>
             <div className="flex-1 min-w-0">

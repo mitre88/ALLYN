@@ -97,7 +97,7 @@ export function ContentCarousel({
 
       {/* Carousel Container */}
       <div className="container mx-auto px-4 md:px-8">
-        <div className="group relative overflow-hidden rounded-[30px] border border-border/30 bg-[linear-gradient(180deg,var(--glass-bg)_0%,transparent_100%)] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.06)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.12)] backdrop-blur-sm sm:p-5 md:p-6">
+        <div className="group relative overflow-hidden rounded-[30px] border border-border/30 bg-[linear-gradient(180deg,var(--glass-bg)_0%,transparent_100%)] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.06)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.12)] backdrop-blur-sm sm:p-5 md:p-6 glass-lift">
           {canScrollLeft && (
             <button
               onClick={() => scroll("left")}

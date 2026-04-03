@@ -49,7 +49,7 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
       <Link
         href={primaryHref}
         aria-label={primaryHref === "/subscribe" ? `Desbloquear ${content.title}` : `Abrir ${content.title}`}
-        className="block rounded-[20px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="block rounded-[20px] press-scale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         <div
           className={cn(

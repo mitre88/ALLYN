@@ -52,8 +52,8 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background))_0%,hsl(var(--background)/0.90)_34%,hsl(var(--background)/0.58)_58%,hsl(var(--background)/0.22)_100%)]" />
         <div className="absolute inset-0 hero-gradient" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,hsl(var(--foreground)/0.06),transparent_24%),linear-gradient(180deg,hsl(var(--background)/0.06)_0%,hsl(var(--background)/0.3)_55%,hsl(var(--background))_100%)]" />
-        <div className="absolute left-8 top-20 h-44 w-44 rounded-full bg-primary/20 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute left-8 top-20 h-44 w-44 rounded-full bg-primary/20 blur-3xl animate-float" />
+        <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-primary/10 blur-3xl animate-glow-pulse" />
       </div>
 
       <div className="relative container mx-auto px-4 pb-16 pt-12 md:px-8 md:pb-24 md:pt-16 lg:pt-20">

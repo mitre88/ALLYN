@@ -64,7 +64,7 @@ export function HomeWelcome({
                 <Link
                   key={href}
                   href={href}
-                  className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] px-3.5 py-2 text-sm font-medium text-foreground/78 transition-colors hover:bg-[var(--glass-bg-strong)] hover:text-foreground"
+                  className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] px-3.5 py-2 text-sm font-medium text-foreground/78 transition-all hover:bg-[var(--glass-bg-strong)] hover:text-foreground hover-glow press-scale"
                 >
                   <Icon aria-hidden="true" className="h-4 w-4 text-primary" />
                   {label}
