@@ -102,7 +102,8 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-background to-pink-500/5 dark:from-purple-900/20 dark:to-pink-900/10 pointer-events-none" />
+      {/* Subtle ambient glow — matches editorial palette */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,hsl(var(--primary)/0.08),transparent_60%)] pointer-events-none" />
 
       <div className="relative z-10 container mx-auto px-4 py-24 max-w-4xl">
         {/* Profile Header */}

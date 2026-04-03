@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ChevronLeft } from "lucide-react"
+import { BookOpen, ChevronLeft } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 import { ContentCarousel } from "@/components/content/content-carousel"
 import { notFound } from "next/navigation"
@@ -252,10 +252,17 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {totalContent === 0 && (
-        <div className="container mx-auto px-4 py-20 text-center">
-          <p className="text-lg text-muted-foreground">
-            No hay contenido disponible en esta categoría aún.
+        <div className="container mx-auto px-4 py-20 text-center max-w-md mx-auto">
+          <BookOpen className="mx-auto h-10 w-10 text-muted-foreground/40 mb-4" />
+          <p className="text-lg font-semibold text-foreground mb-2">
+            Sin contenido todavía
           </p>
+          <p className="text-sm text-muted-foreground mb-6">
+            Estamos preparando material para esta categoría. Vuelve pronto.
+          </p>
+          <Link href="/" className="text-sm font-medium text-primary hover:text-primary/80">
+            Explorar otras categorías
+          </Link>
         </div>
       )}
     </div>

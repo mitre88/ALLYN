@@ -48,7 +48,7 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
         <div className="absolute inset-0 bg-[linear-gradient(to_top,hsl(var(--background))_0%,hsl(var(--background)/0.6)_35%,transparent_70%)]" />
       </div>
 
-      <div className="relative w-full container mx-auto px-4 pb-16 pt-32 md:px-8 md:pb-20 lg:pb-24">
+      <div className="relative w-full container mx-auto px-4 pb-16 pt-24 md:px-8 md:pb-20 md:pt-32 lg:pb-24">
         <div className="grid items-end gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-16">
           {/* Main content — dramatic typography */}
           <div className="max-w-3xl">

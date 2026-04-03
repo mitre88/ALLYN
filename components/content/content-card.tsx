@@ -65,7 +65,7 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
 
           <div className="absolute left-2.5 top-2.5 flex items-center gap-1.5 rounded-full bg-black/50 px-2 py-1 backdrop-blur-md">
             <TypeIcon className="h-3 w-3 text-primary" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/82">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/82">
               {typeConfig.label}
             </span>
           </div>
@@ -137,7 +137,7 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
             <Link
               href={audioHref}
               aria-label={canOpenReader ? `Escuchar ${content.title}` : `Desbloquear audio de ${content.title}`}
-              className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-purple-500/20 bg-purple-500/8 text-purple-400 transition-colors hover:bg-purple-500/15 hover:text-purple-300"
+              className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-full border border-purple-500/20 bg-purple-500/8 text-purple-400 transition-colors hover:bg-purple-500/15 hover:text-purple-300"
               title="Escuchar"
             >
               {!canOpenReader ? (
@@ -150,7 +150,7 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
           <Link
             href={`/content/${content.id}`}
             aria-label={`Ver detalles de ${content.title}`}
-            className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full bg-foreground/[0.04] text-muted-foreground transition-colors hover:bg-foreground/[0.08] hover:text-foreground"
+            className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-full bg-foreground/[0.04] text-muted-foreground transition-colors hover:bg-foreground/[0.08] hover:text-foreground"
           >
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
