@@ -1,8 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { BookOpen, GraduationCap, Headphones, Video } from "lucide-react"
+import { getCuratedThumbnailSrc } from "@/lib/curated-thumbnails"
 import { cn } from "@/lib/utils"
 import { getContentAccentColor, getContentTypeLabel, isReadingContentType } from "@/lib/content"
 import type { Content } from "@/types/database"
@@ -484,11 +485,29 @@ export function ContentArtwork({
   imageClassName,
   showTypeLabel = true,
 }: ContentArtworkProps) {
-  const [imgError, setImgError] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
+  const [thumbnailIndex, setThumbnailIndex] = useState(0)
   const accent = getContentAccentColor(content)
+  const curatedThumbnailSrc = getCuratedThumbnailSrc(content)
+  const thumbnailCandidates = [curatedThumbnailSrc, content.thumbnail_url].filter(
+    (src): src is string => Boolean(src)
+  )
+  const activeThumbnailSrc = thumbnailCandidates[thumbnailIndex] ?? null
+  const useUnoptimizedImage = activeThumbnailSrc?.endsWith(".svg") ?? false
 
-  if (content.thumbnail_url && !imgError) {
+  useEffect(() => {
+    setImgLoaded(false)
+    setThumbnailIndex(0)
+  }, [content.id, content.thumbnail_url, curatedThumbnailSrc])
+
+  const handleImageError = () => {
+    setImgLoaded(false)
+    setThumbnailIndex((current) =>
+      current < thumbnailCandidates.length - 1 ? current + 1 : thumbnailCandidates.length
+    )
+  }
+
+  if (activeThumbnailSrc) {
     if (variant === "mini") {
       return (
         <div className={cn("relative h-full w-full overflow-hidden", className)}>
@@ -500,10 +519,11 @@ export function ContentArtwork({
             draggable={false}
             fill
             loading="lazy"
-            onError={() => setImgError(true)}
+            onError={handleImageError}
             onLoad={() => setImgLoaded(true)}
             sizes="96px"
-            src={content.thumbnail_url}
+            src={activeThumbnailSrc}
+            unoptimized={useUnoptimizedImage}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/15" />
           <div className="absolute inset-y-0 left-0 w-1.5" style={{ backgroundColor: lightenHex(accent, 0.16) }} />
@@ -522,9 +542,10 @@ export function ContentArtwork({
             draggable={false}
             fill
             loading="lazy"
-            onError={() => setImgError(true)}
+            onError={handleImageError}
             sizes="100vw"
-            src={content.thumbnail_url}
+            src={activeThumbnailSrc}
+            unoptimized={useUnoptimizedImage}
           />
           <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.06),transparent_32%,transparent_68%,rgba(0,0,0,0.12)_100%)]" />
         </div>
@@ -541,10 +562,11 @@ export function ContentArtwork({
           draggable={false}
           fill
           loading="lazy"
-          onError={() => setImgError(true)}
+          onError={handleImageError}
           onLoad={() => setImgLoaded(true)}
           sizes={getPanelSizes(content.type)}
-          src={content.thumbnail_url}
+          src={activeThumbnailSrc}
+          unoptimized={useUnoptimizedImage}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/28 via-transparent to-transparent" />
       </div>

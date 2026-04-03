@@ -8,6 +8,7 @@ import { ContentCarousel } from "@/components/content/content-carousel"
 import { ShareContentButton } from "@/components/content/share-content-button"
 import { VideoPlayer } from "@/components/content/video-player"
 import { canOpenContent, getPrimaryContentHref, getPrimaryContentLabel, getContentTypeLabel, getContentAccessLabel, getContentAccentColor, isContentLocked, isReadingContent } from "@/lib/content"
+import { ListenButton } from "@/components/content/listen-button"
 import type { Content } from "@/types/database"
 import { formatDuration } from "@/lib/utils"
 
@@ -172,19 +173,11 @@ export default async function ContentPage({ params }: ContentPageProps) {
                   </Button>
                 </Link>
                 {isBook && (
-                  <Link href={canOpenReader ? `/read/${content.id}?autoplay=true` : "/subscribe"}>
-                    <Button
-                      size="lg"
-                      className="h-12 rounded-full bg-purple-600 px-7 text-sm font-semibold text-white shadow-[0_16px_36px_rgba(147,51,234,0.3)] hover:bg-purple-500"
-                    >
-                      {!canOpenReader ? (
-                        <Lock className="mr-2 h-4 w-4" />
-                      ) : (
-                        <Headphones className="mr-2 h-4 w-4" />
-                      )}
-                      Escuchar
-                    </Button>
-                  </Link>
+                  <ListenButton
+                    content={content}
+                    isSubscribed={isSubscribed}
+                    className="h-12"
+                  />
                 )}
                 <ShareContentButton
                   className="h-12 rounded-full px-7 text-foreground/60 hover:bg-[var(--glass-bg)] hover:text-foreground"

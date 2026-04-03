@@ -1,0 +1,41 @@
+<svg width="1200" height="1500" viewBox="0 0 1200 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="118" y1="90" x2="1090" y2="1430" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3C1433"/>
+      <stop offset="0.48" stop-color="#761D56"/>
+      <stop offset="1" stop-color="#221120"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(270 332) rotate(45.7) scale(640 504)">
+      <stop stop-color="#FF8CC1" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#FF8CC1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="1500" rx="48" fill="url(#bg)"/>
+  <rect width="1200" height="1500" rx="48" fill="url(#glow)"/>
+  <rect x="76" y="70" width="1048" height="8" rx="4" fill="#FFB2DA" fill-opacity="0.86"/>
+  <rect x="80" y="80" width="1040" height="1340" rx="34" stroke="white" stroke-opacity="0.08"/>
+
+  <path d="M186 328C360 233 517 204 658 242C796 279 921 372 1034 521" stroke="#FFD2E8" stroke-opacity="0.52" stroke-width="6" stroke-linecap="round"/>
+  <path d="M200 404C415 325 595 319 739 388C857 444 943 531 998 648" stroke="#FFE5F1" stroke-opacity="0.26" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 18"/>
+  <circle cx="930" cy="292" r="11" fill="#FFF2F8"/>
+  <circle cx="976" cy="242" r="6" fill="#FFB8DC"/>
+  <circle cx="1010" cy="312" r="7" fill="#FFDCEA"/>
+  <circle cx="236" cy="264" r="9" fill="#FFE6F2" fill-opacity="0.7"/>
+
+  <g fill="#FFF4F9" fill-opacity="0.9">
+    <path d="M890 458L905 490L940 495L913 519L919 553L890 536L861 553L867 519L840 495L875 490L890 458Z"/>
+    <path d="M994 578L1003 597L1024 600L1008 614L1012 635L994 624L976 635L980 614L964 600L985 597L994 578Z"/>
+  </g>
+
+  <rect x="116" y="118" width="166" height="40" rx="20" fill="white" fill-opacity="0.08"/>
+  <text x="148" y="144" fill="#FFE1EE" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="19" font-weight="700" letter-spacing="0.2em">AMOR</text>
+
+  <text x="114" y="942" fill="#FFF6FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="102" font-weight="780" letter-spacing="-0.05em">Annie&apos;s</text>
+  <text x="114" y="1044" fill="#FFF6FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="122" font-weight="820" letter-spacing="-0.05em">Stories</text>
+  <text x="114" y="1154" fill="#FFF6FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="76" font-weight="760" letter-spacing="-0.04em">Volumen I</text>
+
+  <text x="116" y="1238" fill="#E7BFD2" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif" font-size="28" font-weight="500" letter-spacing="0.05em">Relatos tiernos, brillantes y fáciles de compartir en familia</text>
+  <rect x="116" y="1292" width="212" height="2" fill="#FFB2DA" fill-opacity="0.72"/>
+  <text x="116" y="1378" fill="#FFF7FA" fill-opacity="0.62" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif" font-size="24" font-weight="600" letter-spacing="0.12em">COLECCIÓN INFANTIL ALLYN</text>
+</svg>

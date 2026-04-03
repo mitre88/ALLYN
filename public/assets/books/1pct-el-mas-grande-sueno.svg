@@ -1,0 +1,46 @@
+<svg width="1200" height="1500" viewBox="0 0 1200 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="118" y1="86" x2="1112" y2="1430" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A1B18"/>
+      <stop offset="0.5" stop-color="#12322C"/>
+      <stop offset="1" stop-color="#08110F"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(276 280) rotate(41.5) scale(640 520)">
+      <stop stop-color="#41D3A2" stop-opacity="0.82"/>
+      <stop offset="1" stop-color="#41D3A2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(910 1160) rotate(134.8) scale(520 420)">
+      <stop stop-color="#7ED9FF" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#7ED9FF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="349" y1="278" x2="815" y2="724" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C4FFE9" stop-opacity="0.84"/>
+      <stop offset="1" stop-color="#56FFC2" stop-opacity="0.22"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="1500" rx="48" fill="url(#bg)"/>
+  <rect width="1200" height="1500" rx="48" fill="url(#glowA)"/>
+  <rect width="1200" height="1500" rx="48" fill="url(#glowB)"/>
+  <rect x="76" y="70" width="1048" height="8" rx="4" fill="#7BF0C2" fill-opacity="0.84"/>
+  <rect x="78" y="78" width="1044" height="1344" rx="34" stroke="white" stroke-opacity="0.08"/>
+
+  <circle cx="760" cy="458" r="262" stroke="url(#ring)" stroke-width="2"/>
+  <circle cx="760" cy="458" r="188" stroke="white" stroke-opacity="0.16" stroke-width="2"/>
+  <path d="M555 396C603 330 671 296 760 296C866 296 942 351 981 456" stroke="#B6FFE4" stroke-opacity="0.62" stroke-width="3" stroke-linecap="round"/>
+  <path d="M540 481C590 564 664 614 762 614C857 614 932 568 983 484" stroke="#76F0C4" stroke-opacity="0.52" stroke-width="3" stroke-linecap="round"/>
+  <path d="M723 270C776 302 816 354 839 431" stroke="#EBFFF8" stroke-opacity="0.46" stroke-width="3" stroke-linecap="round"/>
+  <path d="M705 654C616 630 541 576 480 488" stroke="#7DE2FF" stroke-opacity="0.36" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M344 1112C486 1049 631 1018 780 1018C915 1018 1000 1038 1057 1077" stroke="#95FFE0" stroke-opacity="0.16" stroke-width="2" stroke-dasharray="6 10"/>
+
+  <rect x="116" y="118" width="168" height="40" rx="20" fill="white" fill-opacity="0.08"/>
+  <text x="148" y="144" fill="#D5FFF1" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="19" font-weight="700" letter-spacing="0.2em">SALUD</text>
+
+  <text x="114" y="940" fill="#EAF8F3" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="120" font-weight="800" letter-spacing="-0.05em">1%</text>
+  <text x="114" y="1048" fill="#EAF8F3" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="116" font-weight="800" letter-spacing="-0.05em">El Más Grande</text>
+  <text x="114" y="1158" fill="#EAF8F3" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="116" font-weight="800" letter-spacing="-0.05em">Sueño</text>
+
+  <text x="116" y="1260" fill="#A7C9BE" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif" font-size="28" font-weight="500" letter-spacing="0.05em">Bienestar, conciencia y futuro ecológico</text>
+  <rect x="116" y="1320" width="220" height="2" fill="#7BF0C2" fill-opacity="0.7"/>
+  <text x="116" y="1384" fill="#D7E5DF" fill-opacity="0.6" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif" font-size="24" font-weight="600" letter-spacing="0.12em">ALLYN LIBROS</text>
+</svg>

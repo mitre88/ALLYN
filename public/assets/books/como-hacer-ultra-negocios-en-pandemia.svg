@@ -1,0 +1,47 @@
+<svg width="1200" height="1500" viewBox="0 0 1200 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="88" y1="92" x2="1096" y2="1422" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F1116"/>
+      <stop offset="0.54" stop-color="#1B1611"/>
+      <stop offset="1" stop-color="#090A0D"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(928 356) rotate(132.3) scale(608 488)">
+      <stop stop-color="#FFBE55" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#FFBE55" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="slash" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#FFF2D7"/>
+      <stop offset="1" stop-color="#FF9D2A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="1500" rx="48" fill="url(#bg)"/>
+  <rect width="1200" height="1500" rx="48" fill="url(#glow)"/>
+  <rect x="76" y="70" width="1048" height="8" rx="4" fill="#FFB44B" fill-opacity="0.88"/>
+  <rect x="80" y="80" width="1040" height="1340" rx="34" stroke="white" stroke-opacity="0.08"/>
+
+  <path d="M803 184L1044 184L632 820L390 820L803 184Z" fill="url(#slash)" fill-opacity="0.94"/>
+  <path d="M314 890H1035" stroke="white" stroke-opacity="0.12" stroke-width="2"/>
+  <path d="M314 948H1010" stroke="white" stroke-opacity="0.1" stroke-width="2"/>
+  <path d="M314 1006H981" stroke="white" stroke-opacity="0.08" stroke-width="2"/>
+  <path d="M314 1064H948" stroke="white" stroke-opacity="0.06" stroke-width="2"/>
+
+  <g opacity="0.88">
+    <rect x="840" y="926" width="24" height="118" rx="12" fill="#FFB95F"/>
+    <rect x="884" y="874" width="24" height="170" rx="12" fill="#FFD18B"/>
+    <rect x="928" y="804" width="24" height="240" rx="12" fill="#FFE1B1"/>
+    <rect x="972" y="760" width="24" height="284" rx="12" fill="#FFF0D8"/>
+  </g>
+
+  <rect x="116" y="118" width="188" height="40" rx="20" fill="white" fill-opacity="0.08"/>
+  <text x="145" y="144" fill="#FFE7BE" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="19" font-weight="700" letter-spacing="0.18em">DINERO</text>
+
+  <text x="114" y="926" fill="#F5EFE4" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="84" font-weight="800" letter-spacing="-0.05em">Cómo Hacer</text>
+  <text x="114" y="1020" fill="#F5EFE4" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="114" font-weight="800" letter-spacing="-0.05em">Ultra</text>
+  <text x="114" y="1126" fill="#F5EFE4" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="114" font-weight="800" letter-spacing="-0.05em">Negocios</text>
+  <text x="114" y="1224" fill="#F5EFE4" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="84" font-weight="760" letter-spacing="-0.04em">en Pandemia</text>
+
+  <text x="116" y="1308" fill="#BAAB92" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif" font-size="28" font-weight="500" letter-spacing="0.05em">Guía práctica para detectar oportunidades en momentos de cambio</text>
+  <rect x="116" y="1362" width="240" height="2" fill="#FFB44B" fill-opacity="0.7"/>
+  <text x="116" y="1410" fill="#F5EFE4" fill-opacity="0.62" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif" font-size="22" font-weight="700" letter-spacing="0.12em">RICARDO PACHECO</text>
+</svg>

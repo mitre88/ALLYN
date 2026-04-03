@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
+import { GlobalAudioPlayer } from "@/components/content/global-audio-player"
 
 export default function MainLayout({
   children,
@@ -22,6 +23,7 @@ export default function MainLayout({
         {children}
       </main>
       <Footer />
+      <GlobalAudioPlayer />
       {modal}
     </div>
   )

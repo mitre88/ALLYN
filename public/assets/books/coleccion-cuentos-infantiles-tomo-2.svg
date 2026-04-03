@@ -1,0 +1,40 @@
+<svg width="1200" height="1500" viewBox="0 0 1200 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="88" y1="90" x2="1108" y2="1426" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#12384A"/>
+      <stop offset="0.5" stop-color="#1C5B6E"/>
+      <stop offset="1" stop-color="#0C151C"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(268 290) rotate(40.9) scale(630 500)">
+      <stop stop-color="#8CFFF3" stop-opacity="0.62"/>
+      <stop offset="1" stop-color="#8CFFF3" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="1500" rx="48" fill="url(#bg)"/>
+  <rect width="1200" height="1500" rx="48" fill="url(#glow)"/>
+  <rect x="76" y="70" width="1048" height="8" rx="4" fill="#A4FFF5" fill-opacity="0.88"/>
+  <rect x="80" y="80" width="1040" height="1340" rx="34" stroke="white" stroke-opacity="0.08"/>
+
+  <path d="M188 658C286 587 388 552 492 552C652 552 790 635 906 802" stroke="#D7FFF8" stroke-opacity="0.22" stroke-width="4" stroke-linecap="round"/>
+  <path d="M174 828C276 784 371 762 460 762C615 762 769 828 922 960" stroke="#B8FFF8" stroke-opacity="0.14" stroke-width="3" stroke-dasharray="8 14"/>
+  <circle cx="904" cy="316" r="116" fill="#E8FFFC" fill-opacity="0.92"/>
+  <circle cx="904" cy="316" r="68" fill="#12384A"/>
+  <rect x="252" y="738" width="104" height="158" rx="26" fill="#5DC5C1" fill-opacity="0.28"/>
+  <rect x="398" y="690" width="118" height="206" rx="30" fill="#7DE7D8" fill-opacity="0.26"/>
+  <rect x="566" y="722" width="148" height="174" rx="34" fill="#D5FFB2" fill-opacity="0.18"/>
+  <path d="M772 840C816 776 868 736 928 722" stroke="#EEFFFA" stroke-opacity="0.4" stroke-width="4" stroke-linecap="round"/>
+  <path d="M802 796C846 840 878 900 900 976" stroke="#EEFFFA" stroke-opacity="0.22" stroke-width="3" stroke-linecap="round"/>
+
+  <rect x="116" y="118" width="166" height="40" rx="20" fill="white" fill-opacity="0.08"/>
+  <text x="148" y="144" fill="#E7FFFC" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="19" font-weight="700" letter-spacing="0.2em">AMOR</text>
+
+  <text x="114" y="974" fill="#F4FFFD" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="86" font-weight="760" letter-spacing="-0.05em">Colección de</text>
+  <text x="114" y="1072" fill="#F4FFFD" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="110" font-weight="820" letter-spacing="-0.05em">Cuentos</text>
+  <text x="114" y="1178" fill="#F4FFFD" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="96" font-weight="800" letter-spacing="-0.05em">Infantiles</text>
+  <text x="114" y="1262" fill="#F4FFFD" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="68" font-weight="720" letter-spacing="-0.04em">Tomo 2</text>
+
+  <text x="116" y="1332" fill="#B7D9D5" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif" font-size="26" font-weight="500" letter-spacing="0.04em">Segunda entrega con atmósfera luminosa y fantasía más amplia</text>
+  <rect x="116" y="1380" width="224" height="2" fill="#A4FFF5" fill-opacity="0.74"/>
+  <text x="116" y="1424" fill="#F4FFFD" fill-opacity="0.62" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif" font-size="22" font-weight="600" letter-spacing="0.12em">BIBLIOTECA FAMILIAR ALLYN</text>
+</svg>
