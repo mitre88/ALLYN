@@ -26,6 +26,9 @@
     --ring: 38 70% 44%;
     --radius: 0.5rem;
 
+    /* Category hero fade-to color (matches page background) */
+    --category-fade-to: hsl(38 28% 95%);
+
     /* Glassmorphism tokens — light mode uses dark glass */
     --glass-bg: rgba(0, 0, 0, 0.04);
     --glass-border: rgba(0, 0, 0, 0.08);
@@ -55,6 +58,9 @@
     --border: 28 10% 13%;
     --input: 28 10% 13%;
     --ring: 38 76% 58%;
+
+    /* Category hero fade-to color (matches dark page background) */
+    --category-fade-to: hsl(28 18% 4%);
 
     /* Glassmorphism tokens — dark mode */
     --glass-bg: rgba(255, 255, 255, 0.04);
