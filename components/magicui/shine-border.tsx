@@ -33,7 +33,7 @@ export function ShineBorder({
         } as React.CSSProperties
       }
       className={cn(
-        "relative rounded-[var(--border-radius)] bg-white p-[var(--border-width)]",
+        "relative rounded-[var(--border-radius)] bg-background p-[var(--border-width)]",
         className
       )}
     >
