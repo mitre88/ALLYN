@@ -171,7 +171,7 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
                 Pieza de hoy
               </p>
               <div className="mt-4 overflow-hidden rounded-[24px] border border-white/10 bg-black/20">
-                <div className="aspect-[4/5]">
+                <div className={readingContent ? "aspect-[4/5]" : "aspect-[16/10]"}>
                   <ContentArtwork content={content} showTypeLabel={false} />
                 </div>
               </div>

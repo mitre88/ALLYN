@@ -2,10 +2,10 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { ArrowUpRight, Play, Lock, BookOpen, GraduationCap, Video, Headphones } from "lucide-react"
+import { ArrowUpRight, Play, Pause, Lock, BookOpen, GraduationCap, Video, Headphones, Volume2 } from "lucide-react"
 import Link from "next/link"
 import { ContentArtwork } from "@/components/content/content-artwork"
-import { getContentAccessLabel, getPrimaryContentHref, isContentLocked, isReadingContent } from "@/lib/content"
+import { canOpenContent, getContentAccessLabel, getPrimaryContentHref, isContentLocked, isReadingContent } from "@/lib/content"
 import type { Content } from "@/types/database"
 import { cn, formatDuration } from "@/lib/utils"
 
@@ -35,6 +35,8 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
   const mediaAspectClass = readingContent ? "aspect-[4/5]" : "aspect-[16/10]"
   const availabilityLabel = getContentAccessLabel(content, isSubscribed)
   const subtitle = content.author || typeConfig.label
+  const canOpenReader = canOpenContent(content, isSubscribed)
+  const audioHref = canOpenReader ? `/read/${content.id}?autoplay=true` : "/subscribe"
 
   return (
     <motion.div
@@ -51,7 +53,7 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
       >
         <div
           className={cn(
-            "relative overflow-hidden rounded-[24px] border border-white/8 bg-muted/80 ring-1 ring-white/6 shadow-[0_12px_36px_rgba(0,0,0,0.18)] transition-all duration-300 group-hover:border-white/16 group-hover:shadow-[0_22px_56px_rgba(0,0,0,0.26)]",
+            "relative overflow-hidden rounded-[24px] border border-border/40 bg-muted/80 ring-1 ring-border/20 shadow-[0_12px_36px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.18)] transition-all duration-300 group-hover:border-border/60 group-hover:shadow-[0_22px_56px_rgba(0,0,0,0.14)] dark:group-hover:shadow-[0_22px_56px_rgba(0,0,0,0.26)]",
             mediaAspectClass
           )}
         >
@@ -129,13 +131,29 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
           </p>
         </div>
 
-        <Link
-          href={`/content/${content.id}`}
-          aria-label={`Ver detalles de ${content.title}`}
-          className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-foreground/70 transition-colors hover:border-white/20 hover:bg-white/[0.08] hover:text-foreground"
-        >
-          <ArrowUpRight className="h-4 w-4" />
-        </Link>
+        <div className="flex shrink-0 items-center gap-1.5">
+          {readingContent && (
+            <Link
+              href={audioHref}
+              aria-label={canOpenReader ? `Escuchar ${content.title}` : `Desbloquear audio de ${content.title}`}
+              className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full border border-purple-500/25 bg-purple-500/10 text-purple-400 transition-colors hover:border-purple-500/40 hover:bg-purple-500/20 hover:text-purple-300"
+              title="Escuchar"
+            >
+              {!canOpenReader ? (
+                <Lock className="h-3.5 w-3.5" />
+              ) : (
+                <Headphones className="h-4 w-4" />
+              )}
+            </Link>
+          )}
+          <Link
+            href={`/content/${content.id}`}
+            aria-label={`Ver detalles de ${content.title}`}
+            className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-[var(--glass-bg)] text-foreground/70 transition-colors hover:border-border/60 hover:bg-[var(--glass-bg-strong)] hover:text-foreground"
+          >
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
     </motion.div>
   )

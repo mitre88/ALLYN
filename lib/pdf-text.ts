@@ -1,7 +1,14 @@
 // Pure-JS PDF text extraction via pdfjs-dist — no canvas / @napi-rs needed.
 // Canvas is only required for rendering; text extraction uses the font/glyph layer only.
 
-export async function extractPdfText(resolvedUrl: string) {
+interface ExtractPdfTextOptions {
+  maxPages?: number
+}
+
+export async function extractPdfText(
+  resolvedUrl: string,
+  options: ExtractPdfTextOptions = {}
+) {
   // Lazy import so the worker path is resolved at runtime (not bundled eagerly)
   const PDFJS = await import("pdfjs-dist/legacy/build/pdf.mjs")
 
@@ -23,9 +30,10 @@ export async function extractPdfText(resolvedUrl: string) {
 
   const pdf = await loadingTask.promise
   const pageCount = pdf.numPages
+  const processedPages = Math.min(options.maxPages ?? pageCount, pageCount)
   const pageTexts: string[] = []
 
-  for (let i = 1; i <= pageCount; i++) {
+  for (let i = 1; i <= processedPages; i++) {
     const page = await pdf.getPage(i)
     const content = await page.getTextContent()
     const pageText = content.items
@@ -38,6 +46,7 @@ export async function extractPdfText(resolvedUrl: string) {
 
   return {
     pageCount,
+    processedPages,
     text: pageTexts.join("\n"),
   }
 }

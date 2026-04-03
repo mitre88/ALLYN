@@ -7,7 +7,7 @@ import { ContentArtwork } from "@/components/content/content-artwork"
 import { ContentCarousel } from "@/components/content/content-carousel"
 import { ShareContentButton } from "@/components/content/share-content-button"
 import { VideoPlayer } from "@/components/content/video-player"
-import { getPrimaryContentHref, getPrimaryContentLabel, getContentTypeLabel, getContentAccessLabel, getContentAccentColor, isContentLocked, isReadingContent } from "@/lib/content"
+import { canOpenContent, getPrimaryContentHref, getPrimaryContentLabel, getContentTypeLabel, getContentAccessLabel, getContentAccentColor, isContentLocked, isReadingContent } from "@/lib/content"
 import type { Content } from "@/types/database"
 import { formatDuration } from "@/lib/utils"
 
@@ -73,6 +73,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
   const isBook = isReadingContent(content)
   const isVideo = content.type === 'video' || content.type === 'course'
   const locked = isContentLocked(content, isSubscribed)
+  const canOpenReader = canOpenContent(content, isSubscribed)
   const primaryHref = getPrimaryContentHref(content, isSubscribed)
   const primaryLabel = getPrimaryContentLabel(content, isSubscribed)
   const accent = getContentAccentColor(content)
@@ -171,12 +172,12 @@ export default async function ContentPage({ params }: ContentPageProps) {
                   </Button>
                 </Link>
                 {isBook && (
-                  <Link href={locked ? "/subscribe" : `/read/${content.id}?autoplay=true`}>
+                  <Link href={canOpenReader ? `/read/${content.id}?autoplay=true` : "/subscribe"}>
                     <Button
                       size="lg"
                       className="h-12 rounded-full bg-purple-600 px-7 text-sm font-semibold text-white shadow-[0_16px_36px_rgba(147,51,234,0.3)] hover:bg-purple-500"
                     >
-                      {locked ? (
+                      {!canOpenReader ? (
                         <Lock className="mr-2 h-4 w-4" />
                       ) : (
                         <Headphones className="mr-2 h-4 w-4" />
@@ -194,11 +195,11 @@ export default async function ContentPage({ params }: ContentPageProps) {
             </div>
 
             <aside className="hidden lg:flex lg:flex-col lg:gap-4">
-              <div className="overflow-hidden rounded-[30px] border border-white/10 bg-black/24 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
+              <div className="overflow-hidden rounded-[30px] border border-border/40 bg-card/80 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.10)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
                 <p className="text-[11px] uppercase tracking-[0.28em] text-foreground/38">
                   {isVideo ? "Miniatura" : "Portada"}
                 </p>
-                <div className="mt-4 overflow-hidden rounded-[24px] border border-white/10 bg-black/20">
+                <div className="mt-4 overflow-hidden rounded-[24px] border border-border/30 bg-muted/50">
                   <div className={isVideo ? "aspect-video" : "aspect-[4/5]"}>
                     <ContentArtwork content={content} showTypeLabel={false} />
                   </div>
@@ -289,7 +290,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
 
       {locked && (
         <section className="container mx-auto px-4 py-8 md:px-8">
-          <div className="flex items-start gap-4 overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(148deg,rgba(24,17,10,0.96)_0%,rgba(11,11,11,0.96)_44%,rgba(7,8,10,0.98)_100%)] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-xl md:p-8">
+          <div className="flex items-start gap-4 overflow-hidden rounded-[28px] border border-border/50 bg-card/95 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.10)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-xl md:p-8">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/20">
               <Lock className="h-5 w-5 text-primary" />
             </div>
@@ -325,7 +326,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start justify-between gap-4 rounded-2xl border border-white/8 bg-white/[0.04] px-3 py-2.5">
+    <div className="flex items-start justify-between gap-4 rounded-2xl border border-border/30 bg-[var(--glass-bg)] px-3 py-2.5">
       <span className="text-[11px] uppercase tracking-[0.24em] text-foreground/34">
         {label}
       </span>
