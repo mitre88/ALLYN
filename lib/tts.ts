@@ -1,13 +1,12 @@
-import OpenAI from "openai"
-
 const CHUNK_CHAR_LIMIT = 4000
 const TTS_MODEL = "tts-1"
 const TTS_VOICE = "nova" // warm, female voice — good for Spanish
 
 // Lazy-init to avoid crashing at build time when OPENAI_API_KEY is not set
-let _openai: OpenAI | null = null
-function getOpenAI(): OpenAI {
+let _openai: any = null
+async function getOpenAI() {
   if (!_openai) {
+    const { default: OpenAI } = await import("openai")
     _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   }
   return _openai
@@ -58,7 +57,8 @@ export function splitTextIntoChunks(text: string): string[] {
 
 /** Generate MP3 audio from text using OpenAI TTS. Returns raw MP3 buffer. */
 export async function generateTtsAudio(text: string): Promise<Buffer> {
-  const response = await getOpenAI().audio.speech.create({
+  const openai = await getOpenAI()
+  const response = await openai.audio.speech.create({
     model: TTS_MODEL,
     voice: TTS_VOICE,
     input: text,
