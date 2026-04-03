@@ -64,7 +64,7 @@ export default function WatchPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="dark min-h-screen bg-zinc-950 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <Play className="w-10 h-10 text-primary animate-pulse" />
           <p className="text-zinc-400 text-sm">Cargando video...</p>
@@ -80,7 +80,7 @@ export default function WatchPage() {
   const showLockOverlay = !hasFullAccess && !content.preview_url && !content.file_url
 
   return (
-    <div className="min-h-screen bg-black flex flex-col">
+    <div className="dark min-h-screen bg-zinc-950 flex flex-col">
       {/* Top nav */}
       <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent px-4 py-4 flex items-center gap-3">
         <Link href={`/content/${content.id}`}>

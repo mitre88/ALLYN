@@ -142,14 +142,11 @@ function EditorialBookCover({
   className?: string
 }) {
   const uid = `book-${sanitizeId(content.id)}`
-  const lines = splitTitle(content.title, 16, 3)
+  const lines = splitTitle(content.title, 14, 3)
   const monogram = getMonogram(content.title)
-  const typeLabel = getContentTypeLabel(content.type)
   const categoryLabel = content.category?.name || "Colección"
   const authorLabel = content.author || "Edición curada"
-  const accentSoft = lightenHex(accent, 0.18)
-  const accentGlow = hexAlpha(accent, 0.3)
-  const ink = "#f5f7fb"
+  const accentSoft = lightenHex(accent, 0.22)
 
   return (
     <div className={cn("relative h-full w-full overflow-hidden", className)}>
@@ -159,137 +156,98 @@ function EditorialBookCover({
         style={{ width: "100%", height: "100%", display: "block" }}
       >
         <defs>
-          <linearGradient id={`${uid}-bg`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={darkenHex(accent, 0.52)} />
-            <stop offset="45%" stopColor="#0b0f18" />
-            <stop offset="100%" stopColor="#040507" />
+          <linearGradient id={`${uid}-bg`} x1="0" y1="0" x2="0.4" y2="1">
+            <stop offset="0%" stopColor={darkenHex(accent, 0.42)} />
+            <stop offset="100%" stopColor="#060709" />
           </linearGradient>
-          <radialGradient id={`${uid}-glow`} cx="0.1" cy="0.12" r="1">
-            <stop offset="0%" stopColor={accentGlow} />
-            <stop offset="60%" stopColor="transparent" />
+          <radialGradient id={`${uid}-glow`} cx="0.85" cy="0.15" r="0.7">
+            <stop offset="0%" stopColor={hexAlpha(accent, 0.18)} />
+            <stop offset="100%" stopColor="transparent" />
           </radialGradient>
-          <pattern id={`${uid}-lines`} width="12" height="12" patternUnits="userSpaceOnUse">
-            <path d="M0 12L12 0" stroke="rgba(255,255,255,0.045)" strokeWidth="1" />
-          </pattern>
         </defs>
 
         <rect width="240" height="300" fill={`url(#${uid}-bg)`} />
         <rect width="240" height="300" fill={`url(#${uid}-glow)`} />
-        <rect width="240" height="300" fill={`url(#${uid}-lines)`} />
 
-        <rect x="0" y="0" width="240" height="6" fill={accentSoft} />
-        <rect x="18" y="18" width="204" height="264" rx="26" fill="rgba(8,11,18,0.38)" stroke="rgba(255,255,255,0.08)" />
+        {/* Top accent bar */}
+        <rect x="0" y="0" width="240" height="3" fill={accentSoft} />
 
+        {/* Large background monogram */}
         <text
-          x="28"
-          y="44"
-          fontFamily={COVER_FONT}
-          fontSize="10"
-          fontWeight="600"
-          fill="rgba(255,255,255,0.54)"
-          style={{ letterSpacing: "0.22em", textTransform: "uppercase" }}
-        >
-          ALLYN EDITION
-        </text>
-        <text
-          x="28"
-          y="64"
-          fontFamily={COVER_FONT}
-          fontSize="9"
-          fontWeight="700"
-          fill={accentSoft}
-          style={{ letterSpacing: "0.28em", textTransform: "uppercase" }}
-        >
-          {truncate(categoryLabel, 16)}
-        </text>
-
-        <text
-          x="176"
-          y="116"
+          x="200"
+          y="140"
           textAnchor="middle"
           fontFamily={COVER_FONT}
-          fontSize="88"
-          fontWeight="800"
-          fill={hexAlpha(accent, 0.16)}
-          style={{ letterSpacing: "-0.05em" }}
+          fontSize="120"
+          fontWeight="900"
+          fill={hexAlpha(accent, 0.07)}
+          style={{ letterSpacing: "-0.06em" }}
         >
           {monogram}
         </text>
 
-        <rect x="28" y="100" width="58" height="2" rx="1" fill={accentSoft} />
-        {content.type === "audiobook" ? (
-          <g transform="translate(28 114)">
-            {[0, 1, 2, 3, 4, 5].map((index) => (
-              <rect
-                key={index}
-                x={index * 10}
-                y={index % 2 === 0 ? 8 : 0}
-                width="4"
-                height={index % 2 === 0 ? 18 : 34}
-                rx="2"
-                fill={hexAlpha(accentSoft, 0.8)}
-              />
-            ))}
-          </g>
-        ) : (
-          <g transform="translate(28 114)">
-            {[0, 1, 2, 3].map((index) => (
-              <rect
-                key={index}
-                x={index * 12}
-                y={index * 4}
-                width="42"
-                height="2"
-                rx="1"
-                fill="rgba(255,255,255,0.16)"
-              />
-            ))}
-          </g>
-        )}
+        {/* Category label */}
+        <text
+          x="24"
+          y="36"
+          fontFamily={COVER_FONT}
+          fontSize="9"
+          fontWeight="700"
+          fill={accentSoft}
+          style={{ letterSpacing: "0.2em", textTransform: "uppercase" }}
+        >
+          {truncate(categoryLabel, 18)}
+        </text>
 
-        <g transform="translate(28 182)">
+        {/* Accent divider */}
+        <rect x="24" y="48" width="36" height="2" rx="1" fill={accentSoft} />
+
+        {/* Title — pushed lower for vertical rhythm */}
+        <g transform="translate(24 180)">
           {lines.map((line, index) => (
             <text
               key={`${line}-${index}`}
               x="0"
-              y={index * 28}
+              y={index * 30}
               fontFamily={COVER_FONT}
-              fontSize="24"
-              fontWeight="780"
-              fill={ink}
-              style={{ letterSpacing: "-0.04em" }}
+              fontSize="26"
+              fontWeight="800"
+              fill="#f2f4f8"
+              style={{ letterSpacing: "-0.03em" }}
             >
               {line}
             </text>
           ))}
         </g>
 
-        <rect x="28" y="246" width="184" height="1" fill="rgba(255,255,255,0.14)" />
+        {/* Bottom area — author + audiobook indicator */}
+        <rect x="24" y="264" width="192" height="1" fill="rgba(255,255,255,0.1)" />
         <text
-          x="28"
-          y="266"
+          x="24"
+          y="282"
           fontFamily={COVER_FONT}
           fontSize="11"
           fontWeight="500"
-          fill="rgba(255,255,255,0.62)"
-          style={{ letterSpacing: "0.04em" }}
+          fill="rgba(255,255,255,0.55)"
+          style={{ letterSpacing: "0.02em" }}
         >
-          {truncate(authorLabel, 30)}
+          {truncate(authorLabel, 28)}
         </text>
-
-        <rect x="28" y="276" width="74" height="18" rx="9" fill={hexAlpha(accent, 0.18)} stroke={hexAlpha(accentSoft, 0.32)} />
-        <text
-          x="65"
-          y="288.5"
-          textAnchor="middle"
-          fontFamily={COVER_FONT}
-          fontSize="9"
-          fontWeight="700"
-          fill={accentSoft}
-          style={{ letterSpacing: "0.18em", textTransform: "uppercase" }}
-        >
-          {typeLabel}
-        </text>
+        {content.type === "audiobook" && (
+          <g transform="translate(24 290)">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <rect
+                key={i}
+                x={i * 7}
+                y={i % 2 === 0 ? 2 : 0}
+                width="3"
+                height={i % 2 === 0 ? 6 : 10}
+                rx="1.5"
+                fill={hexAlpha(accentSoft, 0.7)}
+              />
+            ))}
+          </g>
+        )}
       </svg>
     </div>
   )
@@ -305,9 +263,8 @@ function CinematicLandscapeCover({
   className?: string
 }) {
   const uid = `screen-${sanitizeId(content.id)}`
-  const lines = splitTitle(content.title, 18, 2)
+  const lines = splitTitle(content.title, 20, 2)
   const monogram = getMonogram(content.title)
-  const typeLabel = getContentTypeLabel(content.type)
   const categoryLabel = content.category?.name || "Colección"
   const accentSoft = lightenHex(accent, 0.22)
   const accentLight = lightenHex(accent, 0.4)
@@ -321,184 +278,104 @@ function CinematicLandscapeCover({
       >
         <defs>
           <linearGradient id={`${uid}-bg`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#091018" />
-            <stop offset="55%" stopColor="#05070d" />
-            <stop offset="100%" stopColor={darkenHex(accent, 0.58)} />
+            <stop offset="0%" stopColor="#080c14" />
+            <stop offset="100%" stopColor={darkenHex(accent, 0.55)} />
           </linearGradient>
-          <radialGradient id={`${uid}-glow`} cx="0.82" cy="0.38" r="0.72">
-            <stop offset="0%" stopColor={hexAlpha(accent, 0.52)} />
-            <stop offset="48%" stopColor={hexAlpha(accent, 0.12)} />
+          <radialGradient id={`${uid}-glow`} cx="0.75" cy="0.35" r="0.6">
+            <stop offset="0%" stopColor={hexAlpha(accent, 0.28)} />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
-          <pattern id={`${uid}-grid`} width="18" height="18" patternUnits="userSpaceOnUse">
-            <path d="M18 0H0V18" fill="none" stroke="rgba(255,255,255,0.045)" strokeWidth="1" />
-          </pattern>
         </defs>
 
         <rect width="480" height="300" fill={`url(#${uid}-bg)`} />
         <rect width="480" height="300" fill={`url(#${uid}-glow)`} />
-        <rect width="480" height="300" fill={`url(#${uid}-grid)`} />
-        <rect x="0" y="0" width="480" height="4" fill={accentSoft} />
 
-        <circle cx="412" cy="84" r="86" fill={hexAlpha(accent, 0.16)} />
-        <circle cx="412" cy="84" r="46" fill={hexAlpha(accentLight, 0.18)} />
-        <circle cx="60" cy="260" r="72" fill={hexAlpha(accent, 0.08)} />
+        {/* Top accent bar */}
+        <rect x="0" y="0" width="480" height="3" fill={accentSoft} />
 
+        {/* Background monogram */}
         <text
-          x="34"
-          y="38"
+          x="400"
+          y="200"
+          textAnchor="middle"
+          fontFamily={COVER_FONT}
+          fontSize="180"
+          fontWeight="900"
+          fill={hexAlpha(accent, 0.05)}
+          style={{ letterSpacing: "-0.06em" }}
+        >
+          {monogram}
+        </text>
+
+        {/* Category */}
+        <text
+          x="32"
+          y="36"
           fontFamily={COVER_FONT}
           fontSize="10"
           fontWeight="700"
           fill={accentSoft}
-          style={{ letterSpacing: "0.26em", textTransform: "uppercase" }}
+          style={{ letterSpacing: "0.2em", textTransform: "uppercase" }}
         >
-          {truncate(categoryLabel, 18)}
-        </text>
-        <text
-          x="34"
-          y="58"
-          fontFamily={COVER_FONT}
-          fontSize="10"
-          fontWeight="600"
-          fill="rgba(255,255,255,0.52)"
-          style={{ letterSpacing: "0.18em", textTransform: "uppercase" }}
-        >
-          ALLYN PREMIERE
+          {truncate(categoryLabel, 20)}
         </text>
 
-        <g transform="translate(34 94)">
+        {/* Accent divider */}
+        <rect x="32" y="48" width="40" height="2" rx="1" fill={accentSoft} />
+
+        {/* Title */}
+        <g transform="translate(32 100)">
           {lines.map((line, index) => (
             <text
               key={`${line}-${index}`}
               x="0"
-              y={index * 44}
+              y={index * 46}
               fontFamily={COVER_FONT}
-              fontSize="38"
+              fontSize="40"
               fontWeight="820"
-              fill="#f6f7fb"
-              style={{ letterSpacing: "-0.045em" }}
+              fill="#f2f4f8"
+              style={{ letterSpacing: "-0.04em" }}
             >
               {line}
             </text>
           ))}
         </g>
 
-        <rect x="34" y="200" width="110" height="24" rx="12" fill={hexAlpha(accent, 0.18)} stroke={hexAlpha(accentSoft, 0.35)} />
+        {/* Author */}
         <text
-          x="89"
-          y="216"
-          textAnchor="middle"
-          fontFamily={COVER_FONT}
-          fontSize="10"
-          fontWeight="700"
-          fill={accentSoft}
-          style={{ letterSpacing: "0.18em", textTransform: "uppercase" }}
-        >
-          {typeLabel}
-        </text>
-
-        <rect x="154" y="200" width="118" height="24" rx="12" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" />
-        <text
-          x="213"
-          y="216"
-          textAnchor="middle"
-          fontFamily={COVER_FONT}
-          fontSize="10"
-          fontWeight="600"
-          fill="rgba(255,255,255,0.64)"
-          style={{ letterSpacing: "0.14em", textTransform: "uppercase" }}
-        >
-          ACCESO DIGITAL
-        </text>
-
-        <text
-          x="34"
-          y="254"
+          x="32"
+          y="260"
           fontFamily={COVER_FONT}
           fontSize="12"
           fontWeight="500"
-          fill="rgba(255,255,255,0.68)"
-          style={{ letterSpacing: "0.03em" }}
+          fill="rgba(255,255,255,0.55)"
+          style={{ letterSpacing: "0.02em" }}
         >
-          {truncate(content.author || "Curado para sesiones enfocadas", 34)}
+          {truncate(content.author || "Curado para ti", 36)}
         </text>
 
-        <g transform="translate(314 34)">
-          <rect
-            x="0"
-            y="0"
-            width="132"
-            height="230"
-            rx="26"
-            fill="rgba(255,255,255,0.055)"
-            stroke="rgba(255,255,255,0.12)"
-          />
-          <rect
-            x="16"
-            y="16"
-            width="100"
-            height="122"
-            rx="20"
-            fill="rgba(5,7,13,0.38)"
-            stroke={hexAlpha(accentSoft, 0.24)}
-          />
-          <text
-            x="66"
-            y="92"
-            textAnchor="middle"
-            fontFamily={COVER_FONT}
-            fontSize="78"
-            fontWeight="820"
-            fill={hexAlpha(accentLight, 0.18)}
-            style={{ letterSpacing: "-0.06em" }}
-          >
-            {monogram}
-          </text>
-          {content.type === "course" ? (
-            <g transform="translate(24 156)">
-              {[0, 1, 2].map((index) => (
-                <rect
-                  key={index}
-                  x={index * 22}
-                  y={index * 10}
-                  width="58"
-                  height="8"
-                  rx="4"
-                  fill={index === 0 ? accentSoft : "rgba(255,255,255,0.18)"}
-                />
-              ))}
-            </g>
-          ) : (
-            <g transform="translate(34 154)">
-              <circle cx="32" cy="32" r="30" fill="none" stroke={hexAlpha(accentSoft, 0.6)} strokeWidth="1.5" />
-              <circle cx="32" cy="32" r="18" fill={hexAlpha(accent, 0.22)} />
-              <path d="M26 21L45 32L26 43V21Z" fill={accentLight} />
-            </g>
-          )}
-          <rect x="16" y="190" width="100" height="1" fill="rgba(255,255,255,0.1)" />
-          <text
-            x="16"
-            y="210"
-            fontFamily={COVER_FONT}
-            fontSize="9"
-            fontWeight="700"
-            fill="rgba(255,255,255,0.52)"
-            style={{ letterSpacing: "0.22em", textTransform: "uppercase" }}
-          >
-            EXPERIENCIA
-          </text>
-          <text
-            x="16"
-            y="228"
-            fontFamily={COVER_FONT}
-            fontSize="14"
-            fontWeight="620"
-            fill="#f4f6fa"
-          >
-            {content.type === "course" ? "Video guiado" : "Playback curado"}
-          </text>
-        </g>
+        {/* Play indicator for videos */}
+        {content.type !== "course" && (
+          <g transform="translate(32 272)">
+            <circle cx="8" cy="8" r="8" fill={hexAlpha(accent, 0.2)} />
+            <path d="M6.5 4.5L12 8L6.5 11.5V4.5Z" fill={accentLight} />
+          </g>
+        )}
+        {content.type === "course" && (
+          <g transform="translate(32 272)">
+            {[0, 1, 2].map((i) => (
+              <rect
+                key={i}
+                x={i * 18}
+                y={2}
+                width="12"
+                height="12"
+                rx="3"
+                fill={i === 0 ? hexAlpha(accentSoft, 0.6) : "rgba(255,255,255,0.1)"}
+              />
+            ))}
+          </g>
+        )}
       </svg>
     </div>
   )
@@ -608,20 +485,23 @@ export function ContentArtwork({
   showTypeLabel = true,
 }: ContentArtworkProps) {
   const [imgError, setImgError] = useState(false)
+  const [imgLoaded, setImgLoaded] = useState(false)
   const accent = getContentAccentColor(content)
 
   if (content.thumbnail_url && !imgError) {
     if (variant === "mini") {
       return (
         <div className={cn("relative h-full w-full overflow-hidden", className)}>
+          {!imgLoaded && <div className="absolute inset-0 shimmer" />}
           <Image
             alt={content.title}
-            className={cn("object-cover", imageClassName)}
+            className={cn("object-cover transition-opacity duration-500", imgLoaded ? "opacity-100" : "opacity-0", imageClassName)}
             decoding="async"
             draggable={false}
             fill
             loading="lazy"
             onError={() => setImgError(true)}
+            onLoad={() => setImgLoaded(true)}
             sizes="96px"
             src={content.thumbnail_url}
           />
@@ -653,26 +533,20 @@ export function ContentArtwork({
 
     return (
       <div className={cn("relative h-full w-full overflow-hidden", className)}>
+        {!imgLoaded && <div className="absolute inset-0 shimmer rounded-[inherit]" />}
         <Image
           alt={content.title}
-          className={cn("object-cover", imageClassName)}
+          className={cn("object-cover transition-opacity duration-500", imgLoaded ? "opacity-100" : "opacity-0", imageClassName)}
           decoding="async"
           draggable={false}
           fill
           loading="lazy"
           onError={() => setImgError(true)}
+          onLoad={() => setImgLoaded(true)}
           sizes={getPanelSizes(content.type)}
           src={content.thumbnail_url}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,12,0.04)_0%,rgba(5,7,12,0.08)_38%,rgba(5,7,12,0.32)_100%)]" />
-        <div className="absolute inset-0 ring-1 ring-inset ring-white/8" />
-        {showTypeLabel && (
-          <div className="absolute inset-x-0 top-0 flex items-start p-2">
-            <span className="inline-flex w-fit items-center rounded-full border border-white/12 bg-black/35 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/85 backdrop-blur-sm">
-              {getContentTypeLabel(content.type)}
-            </span>
-          </div>
-        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/28 via-transparent to-transparent" />
       </div>
     )
   }
@@ -688,13 +562,6 @@ export function ContentArtwork({
   return (
     <div className={cn("relative h-full w-full overflow-hidden", className)}>
       <ProgrammaticCover content={content} accent={accent} />
-      {showTypeLabel && (
-        <div className="absolute inset-x-0 top-0 flex items-start p-2">
-          <span className="inline-flex w-fit items-center rounded-full border border-white/10 bg-black/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/82 backdrop-blur-sm">
-            {getContentTypeLabel(content.type)}
-          </span>
-        </div>
-      )}
     </div>
   )
 }

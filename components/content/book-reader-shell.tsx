@@ -110,7 +110,7 @@ export function BookReaderShell({
     : "Escucha el libro completo con voz del navegador y controla el ritmo de reproducción."
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-zinc-950 text-white">
+    <div className="dark relative min-h-screen overflow-hidden bg-zinc-950 text-white">
       <div className="absolute inset-0">
         <ContentArtwork content={content} variant="background" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.16),transparent_24%),linear-gradient(180deg,rgba(9,9,11,0.2)_0%,rgba(9,9,11,0.82)_42%,rgba(9,9,11,0.96)_100%)]" />

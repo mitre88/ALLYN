@@ -47,9 +47,9 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
     <section className="relative overflow-hidden">
       <div className="absolute inset-0">
         <ContentArtwork content={content} variant="background" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background))_0%,hsl(var(--background)/0.86)_34%,hsl(var(--background)/0.48)_58%,rgba(0,0,0,0.22)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background))_0%,hsl(var(--background)/0.90)_34%,hsl(var(--background)/0.58)_58%,hsl(var(--background)/0.22)_100%)]" />
         <div className="absolute inset-0 hero-gradient" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.12),transparent_24%),linear-gradient(180deg,rgba(0,0,0,0.06)_0%,rgba(0,0,0,0.3)_55%,hsl(var(--background))_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,hsl(var(--foreground)/0.06),transparent_24%),linear-gradient(180deg,hsl(var(--background)/0.06)_0%,hsl(var(--background)/0.3)_55%,hsl(var(--background))_100%)]" />
         <div className="absolute left-8 top-20 h-44 w-44 rounded-full bg-primary/20 blur-3xl" />
         <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
       </div>
@@ -63,13 +63,13 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
               transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.12, ease: "easeOut" }}
               className="mb-5 flex flex-wrap items-center gap-2.5"
             >
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.28em] text-white/55 backdrop-blur-sm">
+              <span className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.28em] text-foreground/55 backdrop-blur-sm">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                 Portada Curada
               </span>
               {content.category && (
                 <span
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs font-semibold text-white/88 backdrop-blur-sm"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border/40 px-3 py-1.5 text-xs font-semibold text-foreground/88 backdrop-blur-sm"
                   style={{ backgroundColor: `${content.category.color}26` }}
                 >
                   <span
@@ -79,10 +79,10 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
                   {content.category.name}
                 </span>
               )}
-              <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-xs font-medium text-white/62">
+              <span className="rounded-full border border-border/40 bg-[var(--glass-bg)] px-3 py-1.5 text-xs font-medium text-foreground/62">
                 {TYPE_LABELS[content.type] ?? content.type}
               </span>
-              <span className="rounded-full border border-white/10 bg-black/15 px-3 py-1.5 text-xs font-medium text-white/52">
+              <span className="rounded-full border border-border/40 bg-[var(--glass-bg)] px-3 py-1.5 text-xs font-medium text-foreground/52">
                 {accessLabel}
               </span>
             </motion.div>
@@ -93,11 +93,11 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
               transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : 0.22, ease: "easeOut" }}
               className="mb-5 space-y-4"
             >
-              <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-white/38">
+              <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-foreground/38">
                 <span className="h-px w-10 rounded-full bg-primary/70" />
                 <span>Selección editorial</span>
               </div>
-              <h1 className="font-display text-5xl font-semibold leading-[0.96] text-white text-balance md:text-7xl">
+              <h1 className="font-display text-5xl font-semibold leading-[0.96] text-foreground text-balance md:text-7xl">
                 {content.title}
               </h1>
             </motion.div>
@@ -106,18 +106,18 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
               initial={reduceMotion ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.32, ease: "easeOut" }}
-              className="mb-6 flex flex-wrap items-center gap-3 text-sm text-white/54"
+              className="mb-6 flex flex-wrap items-center gap-3 text-sm text-foreground/54"
             >
               {content.author && <span>{content.author}</span>}
               {content.published_at && (
                 <>
-                  <span className="h-1 w-1 rounded-full bg-white/24" />
+                  <span className="h-1 w-1 rounded-full bg-foreground/24" />
                   <span>{new Date(content.published_at).getFullYear()}</span>
                 </>
               )}
               {content.duration > 0 && (
                 <>
-                  <span className="h-1 w-1 rounded-full bg-white/24" />
+                  <span className="h-1 w-1 rounded-full bg-foreground/24" />
                   <span>{formatDuration(content.duration)}</span>
                 </>
               )}
@@ -127,7 +127,7 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
               initial={reduceMotion ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.42, ease: "easeOut" }}
-              className="mb-8 max-w-2xl text-base leading-relaxed text-white/72 md:text-lg"
+              className="mb-8 max-w-2xl text-base leading-relaxed text-foreground/72 md:text-lg"
             >
               {content.description}
             </motion.p>
@@ -141,9 +141,9 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
               <Link href={primaryHref}>
                 <Button
                   size="lg"
-                  className="h-12 rounded-full bg-white px-7 text-sm font-semibold text-black shadow-[0_16px_36px_rgba(255,255,255,0.18)] hover:bg-white/92"
+                  className="h-12 rounded-full bg-foreground px-7 text-sm font-semibold text-background shadow-[0_16px_36px_hsl(var(--foreground)/0.18)] hover:bg-foreground/92"
                 >
-                  <PrimaryIcon className={`mr-2 h-4 w-4 ${content.type === "video" && primaryHref !== "/subscribe" ? "fill-black" : ""}`} />
+                  <PrimaryIcon className={`mr-2 h-4 w-4 ${content.type === "video" && primaryHref !== "/subscribe" ? "fill-background" : ""}`} />
                   {primaryLabel}
                 </Button>
               </Link>
@@ -151,7 +151,7 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="h-12 rounded-full border-white/18 bg-white/[0.06] px-7 text-sm font-medium text-white hover:border-white/36 hover:bg-white/[0.12]"
+                  className="h-12 rounded-full border-border/40 bg-[var(--glass-bg)] px-7 text-sm font-medium text-foreground hover:border-border/60 hover:bg-[var(--glass-bg-strong)]"
                 >
                   <Info className="mr-2 h-4 w-4" />
                   Más info
@@ -166,27 +166,27 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
             transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : 0.4, ease: "easeOut" }}
             className="hidden lg:flex lg:flex-col lg:gap-4"
           >
-            <div className="overflow-hidden rounded-[30px] border border-white/10 bg-black/24 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
-              <p className="text-[11px] uppercase tracking-[0.28em] text-white/38">
+            <div className="overflow-hidden rounded-[30px] border border-border/40 bg-card/80 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.10)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
+              <p className="text-[11px] uppercase tracking-[0.28em] text-foreground/38">
                 Pieza de hoy
               </p>
-              <div className="mt-4 overflow-hidden rounded-[24px] border border-white/10 bg-black/20">
+              <div className="mt-4 overflow-hidden rounded-[24px] border border-border/30 bg-muted/50">
                 <div className={readingContent ? "aspect-[4/5]" : "aspect-[16/10]"}>
                   <ContentArtwork content={content} showTypeLabel={false} />
                 </div>
               </div>
-              <div className="mt-4 grid gap-3 text-sm text-white/62">
+              <div className="mt-4 grid gap-3 text-sm text-foreground/62">
                 <InfoRow label="Formato" value={TYPE_LABELS[content.type] ?? content.type} />
                 <InfoRow label="Acceso" value={accessLabel} />
                 <InfoRow label="Enfoque" value={content.category?.name || "Colección"} />
               </div>
             </div>
 
-            <div className="rounded-[24px] border border-white/10 bg-white/[0.05] p-4 backdrop-blur-xl">
-              <p className="text-[11px] uppercase tracking-[0.28em] text-white/38">
+            <div className="rounded-[24px] border border-border/40 bg-[var(--glass-bg)] p-4 backdrop-blur-xl">
+              <p className="text-[11px] uppercase tracking-[0.28em] text-foreground/38">
                 Por qué empezar aquí
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-white/68">
+              <p className="mt-3 text-sm leading-relaxed text-foreground/68">
                 {heroNote}
               </p>
             </div>
@@ -199,11 +199,11 @@ export function Hero({ content, isSubscribed = false }: HeroProps) {
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start justify-between gap-4 rounded-2xl border border-white/8 bg-white/[0.04] px-3 py-2.5">
-      <span className="text-[11px] uppercase tracking-[0.24em] text-white/34">
+    <div className="flex items-start justify-between gap-4 rounded-2xl border border-border/30 bg-[var(--glass-bg)] px-3 py-2.5">
+      <span className="text-[11px] uppercase tracking-[0.24em] text-foreground/34">
         {label}
       </span>
-      <span className="text-right text-sm font-medium text-white/82">{value}</span>
+      <span className="text-right text-sm font-medium text-foreground/82">{value}</span>
     </div>
   )
 }

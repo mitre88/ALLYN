@@ -251,10 +251,10 @@ export function VideoPlayer({ contentId, isSubscribed, isFree, autoPlay = false 
 
   if (loading) {
     return (
-      <div className="aspect-video w-full rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center">
+      <div className="aspect-video w-full rounded-2xl bg-muted/50 border border-border/40 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 text-primary animate-spin" />
-          <p className="text-sm text-foreground/40">Cargando video...</p>
+          <p className="text-sm text-muted-foreground">Cargando video...</p>
         </div>
       </div>
     )
@@ -262,10 +262,10 @@ export function VideoPlayer({ contentId, isSubscribed, isFree, autoPlay = false 
 
   if (error || !videoUrl) {
     return (
-      <div className="aspect-video w-full rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center">
+      <div className="aspect-video w-full rounded-2xl bg-muted/50 border border-border/40 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <AlertCircle className="h-8 w-8 text-foreground/30" />
-          <p className="text-sm text-foreground/40">{error || 'Video no disponible'}</p>
+          <AlertCircle className="h-8 w-8 text-muted-foreground/60" />
+          <p className="text-sm text-muted-foreground">{error || 'Video no disponible'}</p>
         </div>
       </div>
     )

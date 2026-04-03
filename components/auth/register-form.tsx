@@ -203,7 +203,7 @@ function RegisterFormInner() {
 
         <Button
           type="submit"
-          className="w-full h-11 bg-gradient-to-r bg-primary  text-white font-medium gap-2 shadow-lg shadow-primary/20"
+          className="w-full h-11 bg-primary text-primary-foreground font-medium gap-2 shadow-lg shadow-primary/20"
           disabled={loading}
         >
           {loading ? (

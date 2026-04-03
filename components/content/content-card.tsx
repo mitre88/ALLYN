@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { ArrowUpRight, Play, Pause, Lock, BookOpen, GraduationCap, Video, Headphones, Volume2 } from "lucide-react"
+import { ArrowUpRight, Play, Lock, BookOpen, GraduationCap, Video, Headphones } from "lucide-react"
 import Link from "next/link"
 import { ContentArtwork } from "@/components/content/content-artwork"
 import { canOpenContent, getContentAccessLabel, getPrimaryContentHref, isContentLocked, isReadingContent } from "@/lib/content"
@@ -43,17 +43,17 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
       className={cn("relative flex-shrink-0 cursor-pointer snap-start group", cardWidthClass)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ y: -6, scale: 1.02, zIndex: 10 }}
-      transition={{ duration: 0.28, ease: "easeOut" }}
+      whileHover={{ y: -4, zIndex: 10 }}
+      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       <Link
         href={primaryHref}
         aria-label={primaryHref === "/subscribe" ? `Desbloquear ${content.title}` : `Abrir ${content.title}`}
-        className="block rounded-[24px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="block rounded-[20px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         <div
           className={cn(
-            "relative overflow-hidden rounded-[24px] border border-border/40 bg-muted/80 ring-1 ring-border/20 shadow-[0_12px_36px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.18)] transition-all duration-300 group-hover:border-border/60 group-hover:shadow-[0_22px_56px_rgba(0,0,0,0.14)] dark:group-hover:shadow-[0_22px_56px_rgba(0,0,0,0.26)]",
+            "relative overflow-hidden rounded-[20px] bg-muted/60 shadow-sm transition-shadow duration-300 group-hover:shadow-xl group-hover:shadow-black/12 dark:group-hover:shadow-black/30",
             mediaAspectClass
           )}
         >
@@ -61,97 +61,98 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
             <ContentArtwork content={content} showTypeLabel={false} />
           </div>
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/60 to-transparent transition-opacity duration-300 group-hover:opacity-0" />
 
-          <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full border border-white/10 bg-black/55 px-2.5 py-1.5 backdrop-blur-md">
+          <div className="absolute left-2.5 top-2.5 flex items-center gap-1.5 rounded-full bg-black/50 px-2 py-1 backdrop-blur-md">
             <TypeIcon className="h-3 w-3 text-primary" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/78">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/82">
               {typeConfig.label}
             </span>
           </div>
 
           {content.is_free ? (
-            <div className="absolute right-3 top-3 rounded-full border border-primary/25 bg-primary/20 px-2.5 py-1 backdrop-blur-md">
+            <div className="absolute right-2.5 top-2.5 rounded-full bg-primary/20 px-2 py-0.5 backdrop-blur-md">
               <span className="text-[10px] font-bold uppercase tracking-wider text-primary">Gratis</span>
             </div>
           ) : isPremiumLocked ? (
-            <div className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/55 backdrop-blur-md">
-              <Lock className="h-3.5 w-3.5 text-primary" />
+            <div className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 backdrop-blur-md">
+              <Lock className="h-3 w-3 text-white/70" />
             </div>
           ) : null}
 
           <AnimateOverlay visible={isHovered}>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/40 to-black/10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/5" />
 
             <div className="absolute inset-0 flex items-center justify-center">
               <motion.span
-                initial={{ scale: 0.75, opacity: 0 }}
-                animate={isHovered ? { scale: 1, opacity: 1 } : { scale: 0.75, opacity: 0 }}
-                transition={{ duration: 0.22, ease: [0.34, 1.56, 0.64, 1] }}
-                className="pointer-events-none flex h-[54px] w-[54px] items-center justify-center rounded-full bg-white shadow-[0_12px_36px_rgba(0,0,0,0.35)]"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={isHovered ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.2, ease: [0.34, 1.56, 0.64, 1] }}
+                className="pointer-events-none flex h-12 w-12 items-center justify-center rounded-full bg-white/95 shadow-lg"
               >
                 {primaryHref === "/subscribe" ? (
-                  <Lock className="h-5 w-5 text-black" />
+                  <Lock className="h-[18px] w-[18px] text-black" />
                 ) : readingContent ? (
-                  <BookOpen className="h-5 w-5 text-black" />
+                  <BookOpen className="h-[18px] w-[18px] text-black" />
                 ) : (
-                  <Play className="ml-0.5 h-5 w-5 fill-black text-black" />
+                  <Play className="ml-0.5 h-[18px] w-[18px] fill-black text-black" />
                 )}
               </motion.span>
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 p-4">
-              <div className="rounded-[18px] border border-white/10 bg-black/20 px-3 py-3 backdrop-blur-md">
-                <p className="text-[10px] font-medium uppercase tracking-[0.26em] text-white/42">
-                  {availabilityLabel}
-                </p>
-                <p className="mt-1 line-clamp-1 text-sm font-medium text-white/86">{subtitle}</p>
-                {content.duration > 0 && (
-                  <p className="mt-2 text-[11px] text-white/54">{formatDuration(content.duration)}</p>
-                )}
-              </div>
+            <div className="absolute inset-x-0 bottom-0 p-3">
+              <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/50">
+                {availabilityLabel}
+              </p>
+              <p className="mt-1 line-clamp-1 text-[13px] font-medium text-white/90">{subtitle}</p>
+              {content.duration > 0 && (
+                <p className="mt-1 text-[11px] text-white/50">{formatDuration(content.duration)}</p>
+              )}
             </div>
           </AnimateOverlay>
 
-          {content.duration > 0 && !isHovered && (
-            <div className="absolute bottom-3 right-3 rounded-full border border-white/10 bg-black/70 px-2 py-1 text-[10px] font-semibold text-white/78 backdrop-blur-sm">
+          {content.duration > 0 && (
+            <div className={cn(
+              "absolute bottom-2.5 right-2.5 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-medium tabular-nums text-white/80 backdrop-blur-sm transition-opacity duration-300",
+              isHovered ? "opacity-0" : "opacity-100"
+            )}>
               {formatDuration(content.duration)}
             </div>
           )}
         </div>
       </Link>
 
-      <div className="mt-3 flex items-start justify-between gap-3 px-1">
-        <div className="min-w-0 space-y-1">
-          <p className="line-clamp-2 text-sm font-semibold leading-snug text-foreground/84 transition-colors duration-200 group-hover:text-foreground md:text-[15px]">
+      <div className="mt-2.5 flex items-start justify-between gap-2 px-0.5">
+        <div className="min-w-0">
+          <p className="line-clamp-2 text-[13px] font-semibold leading-snug text-foreground/90 transition-colors duration-200 group-hover:text-foreground md:text-sm">
             {content.title}
           </p>
-          <p className="line-clamp-1 text-[11px] text-foreground/44 md:text-[13px]">
+          <p className="mt-0.5 line-clamp-1 text-xs text-foreground/50 md:text-[13px]">
             {subtitle}
           </p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1">
           {readingContent && (
             <Link
               href={audioHref}
               aria-label={canOpenReader ? `Escuchar ${content.title}` : `Desbloquear audio de ${content.title}`}
-              className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full border border-purple-500/25 bg-purple-500/10 text-purple-400 transition-colors hover:border-purple-500/40 hover:bg-purple-500/20 hover:text-purple-300"
+              className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-purple-500/20 bg-purple-500/8 text-purple-400 transition-colors hover:bg-purple-500/15 hover:text-purple-300"
               title="Escuchar"
             >
               {!canOpenReader ? (
-                <Lock className="h-3.5 w-3.5" />
+                <Lock className="h-3 w-3" />
               ) : (
-                <Headphones className="h-4 w-4" />
+                <Headphones className="h-3.5 w-3.5" />
               )}
             </Link>
           )}
           <Link
             href={`/content/${content.id}`}
             aria-label={`Ver detalles de ${content.title}`}
-            className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-[var(--glass-bg)] text-foreground/70 transition-colors hover:border-border/60 hover:bg-[var(--glass-bg-strong)] hover:text-foreground"
+            className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full bg-foreground/[0.04] text-foreground/50 transition-colors hover:bg-foreground/[0.08] hover:text-foreground/80"
           >
-            <ArrowUpRight className="h-4 w-4" />
+            <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </div>

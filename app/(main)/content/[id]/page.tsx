@@ -91,9 +91,9 @@ export default async function ContentPage({ params }: ContentPageProps) {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <ContentArtwork content={content} variant="background" />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background))_0%,hsl(var(--background)/0.88)_32%,hsl(var(--background)/0.52)_56%,rgba(0,0,0,0.24)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background))_0%,hsl(var(--background)/0.90)_32%,hsl(var(--background)/0.58)_56%,hsl(var(--background)/0.22)_100%)]" />
           <div className="absolute inset-0 hero-gradient" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.10),transparent_22%),linear-gradient(180deg,rgba(0,0,0,0.04)_0%,rgba(0,0,0,0.28)_52%,hsl(var(--background))_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,hsl(var(--foreground)/0.06),transparent_22%),linear-gradient(180deg,hsl(var(--background)/0.04)_0%,hsl(var(--background)/0.28)_52%,hsl(var(--background))_100%)]" />
           <div className="absolute left-8 top-20 h-44 w-44 rounded-full bg-primary/20 blur-3xl" />
           <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
         </div>
@@ -104,7 +104,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
               <div className="mb-5 flex flex-wrap items-center gap-2.5">
                 {content.category && (
                   <span
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs font-semibold text-white/88 backdrop-blur-sm"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border/40 px-3 py-1.5 text-xs font-semibold text-foreground/88 backdrop-blur-sm"
                     style={{ backgroundColor: `${content.category.color}26` }}
                   >
                     <span
@@ -114,10 +114,10 @@ export default async function ContentPage({ params }: ContentPageProps) {
                     {content.category.name}
                   </span>
                 )}
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.24em] text-white/55 backdrop-blur-sm">
+                <span className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.24em] text-foreground/55 backdrop-blur-sm">
                   {getContentTypeLabel(content.type)}
                 </span>
-                <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-xs font-medium text-white/62 backdrop-blur-sm">
+                <span className="rounded-full border border-border/40 bg-[var(--glass-bg)] px-3 py-1.5 text-xs font-medium text-foreground/62 backdrop-blur-sm">
                   {getContentAccessLabel(content, isSubscribed)}
                 </span>
                 {content.is_free && (
@@ -165,9 +165,9 @@ export default async function ContentPage({ params }: ContentPageProps) {
                 <Link href={primaryHref}>
                   <Button
                     size="lg"
-                    className="h-12 rounded-full bg-white px-7 text-sm font-semibold text-black shadow-[0_16px_36px_rgba(255,255,255,0.18)] hover:bg-white/92"
+                    className="h-12 rounded-full bg-foreground px-7 text-sm font-semibold text-background shadow-[0_16px_36px_hsl(var(--foreground)/0.18)] hover:bg-foreground/92"
                   >
-                    <PrimaryIcon className={`mr-2 h-4 w-4 ${content.type === "video" && primaryHref !== "/subscribe" ? "fill-black" : ""}`} />
+                    <PrimaryIcon className={`mr-2 h-4 w-4 ${content.type === "video" && primaryHref !== "/subscribe" ? "fill-background" : ""}`} />
                     {primaryLabel}
                   </Button>
                 </Link>
@@ -187,7 +187,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
                   </Link>
                 )}
                 <ShareContentButton
-                  className="h-12 rounded-full px-7 text-foreground/60 hover:bg-white/[0.08] hover:text-foreground"
+                  className="h-12 rounded-full px-7 text-foreground/60 hover:bg-[var(--glass-bg)] hover:text-foreground"
                   description={content.description || undefined}
                   title={content.title}
                 />
@@ -258,20 +258,20 @@ export default async function ContentPage({ params }: ContentPageProps) {
       {/* Placeholder when no preview available for non-subscribers */}
       {isVideo && !isSubscribed && !content.is_free && !content.preview_url && (
         <section className="container mx-auto px-4 pb-4 pt-2 md:px-8">
-          <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/10 bg-black">
+          <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-border/40 bg-muted">
             <div className="absolute inset-0">
               <ContentArtwork content={content} variant="background" />
-              <div className="absolute inset-0 bg-black/60" />
+              <div className="absolute inset-0 bg-background/60" />
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
               <div className="text-center max-w-md">
-                <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-white/15 bg-black/50 backdrop-blur-sm">
+                <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-border/40 bg-background/50 backdrop-blur-sm">
                   <GraduationCap className="h-9 w-9 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">
+                <h3 className="text-xl font-bold text-foreground mb-2">
                   {content.type === "course" ? "Curso completo" : "Video completo"}
                 </h3>
-                <p className="text-sm text-white/55 mb-6 leading-relaxed">
+                <p className="text-sm text-foreground/55 mb-6 leading-relaxed">
                   {content.type === "course"
                     ? "Accede al curso completo con todos los módulos y material de apoyo."
                     : "Mira el video completo sin interrupciones."}

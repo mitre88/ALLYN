@@ -95,14 +95,14 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-400" />
+        <Loader2 className="w-8 h-8 animate-spin text-purple-500 dark:text-purple-400" />
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-background to-pink-900/10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-background to-pink-500/5 dark:from-purple-900/20 dark:to-pink-900/10 pointer-events-none" />
 
       <div className="relative z-10 container mx-auto px-4 py-24 max-w-4xl">
         {/* Profile Header */}
@@ -120,23 +120,23 @@ export default function ProfilePage() {
 
           <div className="flex-1">
             <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-2xl font-bold text-white">
+              <h1 className="text-2xl font-bold text-foreground">
                 {profile?.full_name || profile?.username || 'Usuario'}
               </h1>
               {isSubscribed && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-300 text-xs font-medium">
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-700 dark:text-purple-300 text-xs font-medium">
                   <Crown className="w-3 h-3" />
                   Suscriptor Activo
                 </span>
               )}
             </div>
-            <p className="text-white/50 mt-1">{profile?.email}</p>
+            <p className="text-muted-foreground mt-1">{profile?.email}</p>
           </div>
 
           <Button
             variant="ghost"
             onClick={handleSignOut}
-            className="text-white/60 hover:text-white hover:bg-white/10 gap-2"
+            className="text-foreground/60 hover:text-foreground hover:bg-[var(--glass-bg-strong)] gap-2"
           >
             <LogOut className="w-4 h-4" />
             Cerrar sesión
@@ -149,10 +149,10 @@ export default function ProfilePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="rounded-2xl bg-white/5 border border-white/10 p-6"
+            className="rounded-2xl bg-[var(--glass-bg)] border border-border/50 p-6"
           >
-            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <BadgeCheck className="w-5 h-5 text-purple-400" />
+            <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <BadgeCheck className="w-5 h-5 text-purple-500 dark:text-purple-400" />
               Estado de Suscripción
             </h2>
 
@@ -162,15 +162,15 @@ export default function ProfilePage() {
                   <Crown className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">Membresía Anual Activa</p>
-                  <p className="text-white/50 text-sm">Disfruta de todo el contenido de ALLYN mientras tu suscripción esté activa.</p>
+                  <p className="font-semibold text-foreground">Membresía Anual Activa</p>
+                  <p className="text-muted-foreground text-sm">Disfruta de todo el contenido de ALLYN mientras tu suscripción esté activa.</p>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
+              <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-[var(--glass-bg)] border border-border/50">
                 <div>
-                  <p className="font-semibold text-white">Sin suscripción activa</p>
-                  <p className="text-white/50 text-sm">$499 MXN el primer año, luego $99/año.</p>
+                  <p className="font-semibold text-foreground">Sin suscripción activa</p>
+                  <p className="text-muted-foreground text-sm">$499 MXN el primer año, luego $99/año.</p>
                 </div>
                 <Button
                   onClick={() => router.push('/subscribe')}
@@ -187,31 +187,31 @@ export default function ProfilePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="rounded-2xl bg-white/5 border border-white/10 p-6"
+            className="rounded-2xl bg-[var(--glass-bg)] border border-border/50 p-6"
           >
-            <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-              <Users className="w-5 h-5 text-purple-400" />
+            <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
+              <Users className="w-5 h-5 text-purple-500 dark:text-purple-400" />
               Programa de Afiliados
             </h2>
 
             {/* Stats */}
             <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
-                <div className="text-3xl font-bold text-white mb-1">{totalReferrals}</div>
-                <div className="text-white/50 text-xs">Personas referidas</div>
+              <div className="p-4 rounded-xl bg-[var(--glass-bg)] border border-border/50 text-center">
+                <div className="text-3xl font-bold text-foreground mb-1">{totalReferrals}</div>
+                <div className="text-muted-foreground text-xs">Personas referidas</div>
               </div>
-              <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
-                <div className="text-3xl font-bold text-green-400 mb-1">
+              <div className="p-4 rounded-xl bg-[var(--glass-bg)] border border-border/50 text-center">
+                <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">
                   ${(totalEarned / 100).toFixed(0)}
                 </div>
-                <div className="text-white/50 text-xs">MXN ganados</div>
+                <div className="text-muted-foreground text-xs">MXN ganados</div>
               </div>
             </div>
 
             {/* Commission info */}
             <div className="flex items-center gap-3 p-3 rounded-lg bg-green-500/10 border border-green-500/20 mb-6">
-              <DollarSign className="w-5 h-5 text-green-400 flex-shrink-0" />
-              <p className="text-green-300 text-sm">
+              <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" />
+              <p className="text-green-700 dark:text-green-300 text-sm">
                 Gana <span className="font-bold">$299 MXN</span> por cada persona que se suscriba con tu enlace.
               </p>
             </div>
@@ -219,12 +219,12 @@ export default function ProfilePage() {
             {/* Referral Link */}
             {referralLink ? (
               <div>
-                <p className="text-white/60 text-sm mb-2 flex items-center gap-2">
+                <p className="text-foreground/60 text-sm mb-2 flex items-center gap-2">
                   <LinkIcon className="w-4 h-4" />
                   Tu enlace de afiliado
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="flex-1 p-3 rounded-xl bg-black/30 border border-white/10 text-white/70 text-sm font-mono truncate">
+                  <div className="flex-1 p-3 rounded-xl bg-muted/50 border border-border/50 text-foreground/70 text-sm font-mono truncate">
                     {referralLink}
                   </div>
                   <Button
@@ -251,7 +251,7 @@ export default function ProfilePage() {
                 </div>
               </div>
             ) : (
-              <p className="text-white/40 text-sm">
+              <p className="text-muted-foreground text-sm">
                 Tu código de referido se generará al completar tu perfil.
               </p>
             )}
@@ -263,43 +263,43 @@ export default function ProfilePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="rounded-2xl bg-white/5 border border-white/10 p-6"
+              className="rounded-2xl bg-[var(--glass-bg)] border border-border/50 p-6"
             >
-              <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-purple-400" />
+              <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-purple-500 dark:text-purple-400" />
                 Historial de Referidos
               </h2>
 
               {affiliatesLoading ? (
                 <div className="flex justify-center py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-purple-400" />
+                  <Loader2 className="w-6 h-6 animate-spin text-purple-500 dark:text-purple-400" />
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-white/10">
-                        <th className="text-left text-white/40 font-medium py-3 pr-4">Email</th>
-                        <th className="text-left text-white/40 font-medium py-3 pr-4">Comisión</th>
-                        <th className="text-left text-white/40 font-medium py-3 pr-4">Estado</th>
-                        <th className="text-left text-white/40 font-medium py-3">Fecha</th>
+                      <tr className="border-b border-border/50">
+                        <th className="text-left text-muted-foreground font-medium py-3 pr-4">Email</th>
+                        <th className="text-left text-muted-foreground font-medium py-3 pr-4">Comisión</th>
+                        <th className="text-left text-muted-foreground font-medium py-3 pr-4">Estado</th>
+                        <th className="text-left text-muted-foreground font-medium py-3">Fecha</th>
                       </tr>
                     </thead>
                     <tbody>
                       {affiliates.map((affiliate) => (
-                        <tr key={affiliate.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                          <td className="py-3 pr-4 text-white/70 font-mono text-xs">
+                        <tr key={affiliate.id} className="border-b border-border/30 hover:bg-[var(--glass-bg)] transition-colors">
+                          <td className="py-3 pr-4 text-foreground/70 font-mono text-xs">
                             {affiliate.referred_email}
                           </td>
-                          <td className="py-3 pr-4 text-green-400 font-semibold">
+                          <td className="py-3 pr-4 text-green-600 dark:text-green-400 font-semibold">
                             ${(affiliate.commission_amount / 100).toFixed(0)} MXN
                           </td>
                           <td className="py-3 pr-4">
                             <span
                               className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                 affiliate.status === 'earned' || affiliate.status === 'paid'
-                                  ? 'bg-green-500/20 text-green-300 border border-green-500/30'
-                                  : 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'
+                                  ? 'bg-green-500/15 text-green-700 dark:text-green-300 border border-green-500/30'
+                                  : 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-300 border border-yellow-500/30'
                               }`}
                             >
                               {affiliate.status === 'earned'
@@ -309,7 +309,7 @@ export default function ProfilePage() {
                                 : 'Pendiente'}
                             </span>
                           </td>
-                          <td className="py-3 text-white/40 text-xs">
+                          <td className="py-3 text-muted-foreground text-xs">
                             {new Date(affiliate.created_at).toLocaleDateString('es-MX', {
                               year: 'numeric',
                               month: 'short',
@@ -330,10 +330,10 @@ export default function ProfilePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="rounded-2xl bg-white/5 border border-white/10 p-6"
+            className="rounded-2xl bg-[var(--glass-bg)] border border-border/50 p-6"
           >
-            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <User className="w-5 h-5 text-purple-400" />
+            <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <User className="w-5 h-5 text-purple-500 dark:text-purple-400" />
               Información de Cuenta
             </h2>
             <div className="grid sm:grid-cols-2 gap-4">
@@ -343,9 +343,9 @@ export default function ProfilePage() {
                 { label: 'Usuario', value: profile?.username || '—' },
                 { label: 'Rol', value: profile?.role || 'user' },
               ].map((item) => (
-                <div key={item.label} className="p-3 rounded-lg bg-black/20 border border-white/10">
-                  <p className="text-white/40 text-xs mb-1">{item.label}</p>
-                  <p className="text-white text-sm font-medium truncate">{item.value}</p>
+                <div key={item.label} className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                  <p className="text-muted-foreground text-xs mb-1">{item.label}</p>
+                  <p className="text-foreground text-sm font-medium truncate">{item.value}</p>
                 </div>
               ))}
             </div>

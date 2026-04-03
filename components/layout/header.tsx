@@ -4,7 +4,8 @@ import Link from "next/link"
 import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, Crown, LogOut, UserCircle, ChevronDown } from "lucide-react"
+import { Menu, X, Crown, LogOut, UserCircle, ChevronDown, Sun, Moon } from "lucide-react"
+import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { createClient } from "@/lib/supabase/client"
@@ -27,6 +28,12 @@ export function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
   const { isSubscribed, profile } = useSubscription()
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 40)
@@ -208,6 +215,16 @@ export function Header() {
                   </Button>
                 </Link>
               </div>
+            )}
+
+            {mounted && (
+              <button
+                aria-label={theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-[var(--glass-bg)] text-foreground/72 transition-colors hover:bg-[var(--glass-bg-strong)] hover:text-foreground"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              >
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
             )}
 
             <button
