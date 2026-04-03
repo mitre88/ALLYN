@@ -65,12 +65,12 @@ export function GlobalAudioPlayer() {
                 </p>
               </Link>
               {track.author && (
-                <p className="truncate text-xs text-foreground/45">{track.author}</p>
+                <p className="truncate text-xs text-muted-foreground">{track.author}</p>
               )}
             </div>
 
             {/* Time */}
-            <div className="hidden text-xs tabular-nums text-foreground/40 sm:block">
+            <div className="hidden text-xs tabular-nums text-muted-foreground sm:block">
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
 
@@ -98,7 +98,7 @@ export function GlobalAudioPlayer() {
 
               <button
                 onClick={stop}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-foreground/35 transition-colors hover:bg-foreground/8 hover:text-foreground/70"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/8 hover:text-foreground/70"
                 aria-label="Cerrar reproductor"
               >
                 <X className="h-4 w-4" />

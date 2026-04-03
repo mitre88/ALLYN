@@ -199,10 +199,10 @@ function SubscribeContent() {
                     <span className="text-5xl font-bold text-foreground">$499</span>
                     <div className="mb-2 leading-tight">
                       <p className="text-foreground/70 text-sm font-medium">MXN</p>
-                      <p className="text-foreground/45 text-xs">primer año</p>
+                      <p className="text-muted-foreground text-xs">primer año</p>
                     </div>
                   </div>
-                  <p className="text-foreground/45 text-sm mt-2">
+                  <p className="text-muted-foreground text-sm mt-2">
                     Luego $99/año · Renovación automática anual
                   </p>
                 </div>
@@ -233,7 +233,7 @@ function SubscribeContent() {
                 <Button
                   onClick={handleSubscribe}
                   disabled={loading}
-                  className="w-full h-14 text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-[0_14px_36px_hsl(var(--primary)/0.35)] transition-all duration-200 hover:shadow-[0_18px_40px_hsl(var(--primary)/0.45)] hover:scale-[1.015] disabled:opacity-70 disabled:scale-100 gap-2"
+                  className="w-full h-14 text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl transition-all duration-200 disabled:opacity-70 gap-2"
                 >
                   {loading ? (
                     <>
@@ -248,7 +248,7 @@ function SubscribeContent() {
                   )}
                 </Button>
 
-                <p className="text-center text-foreground/30 text-xs mt-4">
+                <p className="text-center text-muted-foreground text-xs mt-4">
                   Pago seguro con Stripe · Sin guardar datos de tarjeta
                 </p>
               </div>

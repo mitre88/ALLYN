@@ -2,9 +2,6 @@ import Link from "next/link"
 import { ArrowRight, Banknote, BookOpen, Crown, Heart, Sparkles } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { BlurFade } from "@/components/magicui/blur-fade"
-import { BorderBeam } from "@/components/magicui/border-beam"
-import { NumberTicker } from "@/components/magicui/number-ticker"
 
 interface HomeWelcomeProps {
   name: string
@@ -30,41 +27,31 @@ export function HomeWelcome({
 
   return (
     <section className="container mx-auto px-4 md:px-8">
-      <BlurFade delay={0.15} inView>
-      <div className="relative overflow-hidden rounded-[36px] border border-border/50 bg-card/95 p-6 shadow-[0_30px_120px_rgba(0,0,0,0.10)] dark:shadow-[0_30px_120px_rgba(0,0,0,0.36)] sm:p-7 md:p-8 lg:p-10">
-        <BorderBeam size={300} duration={12} delay={0} colorFrom="hsl(var(--primary))" colorTo="hsl(var(--primary) / 0.3)" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,hsl(var(--primary)/0.15),transparent_34%),radial-gradient(circle_at_80%_18%,hsl(var(--foreground)/0.04),transparent_20%)]" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-        <div className="absolute -left-12 top-0 h-36 w-36 rounded-full bg-primary/20 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-rose-500/10 blur-3xl" />
-
-        <div className="relative grid gap-8 xl:grid-cols-[minmax(0,1.18fr)_minmax(350px,0.82fr)] xl:gap-10">
-          <div className="space-y-7">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground backdrop-blur-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              Espacio Curado
+      <div className="rounded-2xl border border-border/50 bg-card p-6 shadow-lg dark:shadow-2xl sm:p-8 lg:p-10">
+        <div className="grid gap-8 xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] xl:gap-10">
+          {/* Left — greeting + links */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+              <span className="h-px w-8 bg-primary/60" />
+              <span>Tu espacio</span>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-foreground/36">
-                <span className="h-px w-10 rounded-full bg-primary/70" />
-                <span>Tu cabina privada</span>
-              </div>
-              <h2 className="font-display text-3xl font-semibold leading-tight text-foreground text-balance md:text-[2.8rem]">
-                Hola, {firstName}. Tu espacio está listo para seguir avanzando.
+            <div className="space-y-3">
+              <h2 className="font-display text-3xl font-semibold leading-tight text-foreground text-balance md:text-[2.6rem]">
+                Hola, {firstName}.
               </h2>
-              <p className="max-w-2xl text-sm leading-relaxed text-foreground/68 text-pretty md:text-base">
-                Retoma tus lecturas, videos y audios desde una portada más clara,
-                con accesos rápidos a los temas que más te importan.
+              <p className="max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
+                Retoma tus lecturas, videos y audios con accesos rápidos a los temas que más te importan.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            {/* Quick links */}
+            <div className="flex flex-wrap gap-2.5">
               {quickLinks.map(({ href, label, icon: Icon }) => (
                 <Link
                   key={href}
                   href={href}
-                  className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-[var(--glass-bg)] px-3.5 py-2 text-sm font-medium text-foreground/78 transition-all hover:bg-[var(--glass-bg-strong)] hover:text-foreground hover-glow press-scale"
+                  className="inline-flex items-center gap-2 rounded-full bg-foreground/[0.05] px-3.5 py-2 text-sm font-medium text-foreground/75 transition-colors hover:bg-foreground/[0.1] hover:text-foreground"
                 >
                   <Icon aria-hidden="true" className="h-4 w-4 text-primary" />
                   {label}
@@ -72,12 +59,13 @@ export function HomeWelcome({
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-3.5 pt-1">
+            {/* Actions */}
+            <div className="flex flex-wrap gap-3">
               <Link
                 href="/profile"
                 className={cn(
                   buttonVariants({ size: "lg" }),
-                  "gap-2 rounded-full px-6 text-sm font-semibold shadow-[0_18px_34px_hsl(var(--primary)/0.24)]"
+                  "gap-2 rounded-full px-6 text-sm font-semibold"
                 )}
               >
                 Mi Perfil
@@ -87,90 +75,66 @@ export function HomeWelcome({
                 <Link
                   href="/subscribe"
                   className={cn(
-                    buttonVariants({ variant: "outline", size: "lg" }),
-                    "rounded-full border-border/50 bg-[var(--glass-bg)] px-6 text-sm text-foreground backdrop-blur-sm hover:bg-[var(--glass-bg-strong)] hover:text-foreground"
+                    buttonVariants({ variant: "ghost", size: "lg" }),
+                    "rounded-full px-6 text-sm text-foreground/70 hover:text-foreground"
                   )}
                 >
                   Activar Acceso Completo
                 </Link>
               )}
             </div>
-
-            <div className="rounded-[26px] border border-border/40 bg-[var(--glass-bg)] p-4 backdrop-blur-sm md:p-5">
-              <p className="text-[11px] uppercase tracking-[0.28em] text-foreground/38">
-                Enfoque del día
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-foreground/68">
-                Vuelve al catálogo desde un punto de entrada limpio, con jerarquía clara y menos ruido entre decisiones.
-              </p>
-            </div>
           </div>
 
-          <div className="grid gap-4">
-            <div className="rounded-[30px] border border-border/40 bg-[var(--glass-bg-strong)] p-5 backdrop-blur-xl md:p-6">
-              <p className="text-[11px] uppercase tracking-[0.28em] text-foreground/38">
-                Estado
-              </p>
-              <div className="mt-4 flex items-start justify-between gap-4">
+          {/* Right — status + stats */}
+          <div className="space-y-4">
+            {/* Status card */}
+            <div className="rounded-xl bg-muted/50 p-5">
+              <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-2xl font-semibold text-foreground">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Estado</p>
+                  <p className="text-xl font-semibold text-foreground">
                     {isSubscribed ? "Miembro Activo" : "Modo Preview"}
                   </p>
-                  <p className="mt-2 max-w-xs text-sm leading-relaxed text-foreground/60">
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                     {isSubscribed
-                      ? "Tu contenido premium está disponible sin interrupciones."
+                      ? "Tu contenido premium está disponible."
                       : "Explora el catálogo y activa acceso completo cuando quieras."}
                   </p>
                 </div>
-                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-border/30 bg-[var(--glass-bg)]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/12">
                   <StatusIcon aria-hidden="true" className="h-5 w-5 text-primary" />
                 </div>
               </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-              <InfoCard
-                eyebrow="Catálogo"
-                title={<><NumberTicker value={categoryCount} delay={0.4} className="text-lg font-semibold text-foreground" /> Áreas</>}
-                detail="Temas organizados para encontrar contenido con menos fricción."
-                icon={BookOpen}
-              />
-              <InfoCard
-                eyebrow="Biblioteca"
-                title={<><NumberTicker value={libraryCount} delay={0.6} className="text-lg font-semibold text-foreground" /> Títulos</>}
-                detail="Curso y colecciones ordenadas para que cada libro viva en su sección."
-                icon={ArrowRight}
-              />
+            {/* Stats — simple row */}
+            <div className="grid grid-cols-2 gap-4">
+              <StatCard label="Areas" value={categoryCount} icon={BookOpen} />
+              <StatCard label="Titulos" value={libraryCount} icon={ArrowRight} />
             </div>
           </div>
         </div>
       </div>
-      </BlurFade>
     </section>
   )
 }
 
-function InfoCard({
-  eyebrow,
-  title,
-  detail,
+function StatCard({
+  label,
+  value,
   icon: Icon,
 }: {
-  eyebrow: string
-  title: React.ReactNode
-  detail: string
+  label: string
+  value: number
   icon: typeof Crown
 }) {
   return (
-    <div className="rounded-[24px] border border-border/40 bg-[var(--glass-bg)] p-4 backdrop-blur-sm md:p-5">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <p className="text-[11px] uppercase tracking-[0.24em] text-foreground/42">{eyebrow}</p>
-        <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border/30 bg-[var(--glass-bg)]">
-          <Icon aria-hidden="true" className="h-4 w-4 text-primary" />
-        </div>
+    <div className="rounded-xl bg-muted/50 p-4">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-xs text-muted-foreground uppercase tracking-wider">{label}</p>
+        <Icon aria-hidden="true" className="h-4 w-4 text-primary" />
       </div>
-      <p className="text-lg font-semibold text-foreground tabular-nums">{title}</p>
-      <p className="mt-1 text-sm leading-relaxed text-foreground/58 text-pretty">{detail}</p>
+      <p className="text-2xl font-semibold text-foreground tabular-nums">{String(value).padStart(2, "0")}</p>
     </div>
   )
 }

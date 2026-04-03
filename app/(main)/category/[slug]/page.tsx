@@ -128,7 +128,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               </Link>
 
               <div className="max-w-3xl">
-                <div className="mb-4 flex items-center gap-2.5 text-[11px] uppercase tracking-[0.3em] text-foreground/42">
+                <div className="mb-4 flex items-center gap-2.5 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
                   <span
                     className="h-px w-8 rounded-full"
                     style={{ backgroundColor: category.color || "hsl(var(--primary) / 0.65)" }}
@@ -184,7 +184,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             </Link>
 
             <div className="max-w-3xl">
-              <div className="mb-6 flex items-center gap-2.5 text-[11px] uppercase tracking-[0.3em] text-foreground/38">
+              <div className="mb-6 flex items-center gap-2.5 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
                 <span
                   className="h-px w-8 rounded-full"
                   style={{ backgroundColor: category.color || "hsl(var(--primary) / 0.65)" }}
@@ -253,7 +253,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
       {totalContent === 0 && (
         <div className="container mx-auto px-4 py-20 text-center">
-          <p className="text-lg text-foreground/40">
+          <p className="text-lg text-muted-foreground">
             No hay contenido disponible en esta categoría aún.
           </p>
         </div>

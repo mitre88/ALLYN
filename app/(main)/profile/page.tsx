@@ -136,7 +136,7 @@ export default function ProfilePage() {
           <Button
             variant="ghost"
             onClick={handleSignOut}
-            className="text-foreground/60 hover:text-foreground hover:bg-[var(--glass-bg-strong)] gap-2"
+            className="text-foreground/60 hover:text-foreground hover:bg-muted gap-2"
           >
             <LogOut className="w-4 h-4" />
             Cerrar sesión
@@ -149,7 +149,7 @@ export default function ProfilePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="rounded-2xl bg-[var(--glass-bg)] border border-border/50 p-6"
+            className="rounded-2xl bg-muted/50 border border-border/50 p-6"
           >
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <BadgeCheck className="w-5 h-5 text-purple-500 dark:text-purple-400" />
@@ -167,7 +167,7 @@ export default function ProfilePage() {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-[var(--glass-bg)] border border-border/50">
+              <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-muted/50 border border-border/50">
                 <div>
                   <p className="font-semibold text-foreground">Sin suscripción activa</p>
                   <p className="text-muted-foreground text-sm">$499 MXN el primer año, luego $99/año.</p>
@@ -187,7 +187,7 @@ export default function ProfilePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="rounded-2xl bg-[var(--glass-bg)] border border-border/50 p-6"
+            className="rounded-2xl bg-muted/50 border border-border/50 p-6"
           >
             <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
               <Users className="w-5 h-5 text-purple-500 dark:text-purple-400" />
@@ -196,11 +196,11 @@ export default function ProfilePage() {
 
             {/* Stats */}
             <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="p-4 rounded-xl bg-[var(--glass-bg)] border border-border/50 text-center">
+              <div className="p-4 rounded-xl bg-muted/50 border border-border/50 text-center">
                 <div className="text-3xl font-bold text-foreground mb-1">{totalReferrals}</div>
                 <div className="text-muted-foreground text-xs">Personas referidas</div>
               </div>
-              <div className="p-4 rounded-xl bg-[var(--glass-bg)] border border-border/50 text-center">
+              <div className="p-4 rounded-xl bg-muted/50 border border-border/50 text-center">
                 <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">
                   ${(totalEarned / 100).toFixed(0)}
                 </div>
@@ -263,7 +263,7 @@ export default function ProfilePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="rounded-2xl bg-[var(--glass-bg)] border border-border/50 p-6"
+              className="rounded-2xl bg-muted/50 border border-border/50 p-6"
             >
               <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-purple-500 dark:text-purple-400" />
@@ -287,7 +287,7 @@ export default function ProfilePage() {
                     </thead>
                     <tbody>
                       {affiliates.map((affiliate) => (
-                        <tr key={affiliate.id} className="border-b border-border/30 hover:bg-[var(--glass-bg)] transition-colors">
+                        <tr key={affiliate.id} className="border-b border-border/30 hover:bg-muted/50 transition-colors">
                           <td className="py-3 pr-4 text-foreground/70 font-mono text-xs">
                             {affiliate.referred_email}
                           </td>
@@ -330,7 +330,7 @@ export default function ProfilePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="rounded-2xl bg-[var(--glass-bg)] border border-border/50 p-6"
+            className="rounded-2xl bg-muted/50 border border-border/50 p-6"
           >
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <User className="w-5 h-5 text-purple-500 dark:text-purple-400" />

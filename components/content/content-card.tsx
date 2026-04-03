@@ -127,7 +127,7 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
           <p className="line-clamp-2 text-[13px] font-semibold leading-snug text-foreground/90 transition-colors duration-200 group-hover:text-foreground md:text-sm">
             {content.title}
           </p>
-          <p className="mt-0.5 line-clamp-1 text-xs text-foreground/50 md:text-[13px]">
+          <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground md:text-[13px]">
             {subtitle}
           </p>
         </div>
@@ -150,7 +150,7 @@ export function ContentCard({ content, isSubscribed = false }: ContentCardProps)
           <Link
             href={`/content/${content.id}`}
             aria-label={`Ver detalles de ${content.title}`}
-            className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full bg-foreground/[0.04] text-foreground/50 transition-colors hover:bg-foreground/[0.08] hover:text-foreground/80"
+            className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full bg-foreground/[0.04] text-muted-foreground transition-colors hover:bg-foreground/[0.08] hover:text-foreground"
           >
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>

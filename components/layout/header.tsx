@@ -71,21 +71,21 @@ export function Header() {
       >
         <div
           className={cn(
-            "pointer-events-auto mx-auto flex h-16 max-w-7xl items-center justify-between rounded-[26px] border px-3 shadow-[0_18px_70px_rgba(0,0,0,0.14)] backdrop-blur-2xl transition-all duration-500 md:px-5",
+            "pointer-events-auto mx-auto flex h-14 max-w-7xl items-center justify-between rounded-2xl border px-3 shadow-lg backdrop-blur-2xl transition-all duration-500 md:px-5",
             isScrolled
               ? "border-border/50 bg-background/82"
               : "border-border/30 bg-background/58"
           )}
         >
           <Link href="/" className="flex min-w-0 items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-border/40 bg-[linear-gradient(155deg,hsl(var(--primary)/0.95)_0%,hsl(var(--background)/0.92)_100%)] shadow-[0_12px_30px_rgba(0,0,0,0.12)]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-border/40 bg-[linear-gradient(155deg,hsl(var(--primary)/0.95)_0%,hsl(var(--background)/0.92)_100%)] shadow-md">
               <span className="font-display text-lg font-bold text-primary-foreground">A</span>
             </div>
             <div className="min-w-0">
               <p className="font-display text-lg font-semibold tracking-[0.01em] text-foreground md:text-xl">
                 ALLYN
               </p>
-              <p className="hidden text-[10px] uppercase tracking-[0.28em] text-foreground/40 sm:block">
+              <p className="hidden text-[10px] uppercase tracking-[0.28em] text-muted-foreground sm:block">
                 Salud • Dinero • Amor
               </p>
             </div>
@@ -99,7 +99,7 @@ export function Header() {
                 className={cn(
                   "rounded-full px-4 py-2 text-sm font-medium transition-all duration-200",
                   isActive(category.href)
-                    ? "bg-foreground text-background shadow-[0_8px_24px_hsl(var(--foreground)/0.18)]"
+                    ? "bg-foreground text-background shadow-sm"
                     : "text-foreground/62 hover:bg-[var(--glass-bg)] hover:text-foreground"
                 )}
               >
@@ -115,7 +115,7 @@ export function Header() {
                   <Link href="/subscribe" className="hidden sm:block">
                     <Button
                       size="sm"
-                      className="h-9 rounded-full bg-primary px-4 text-xs font-semibold text-primary-foreground shadow-[0_10px_28px_hsl(var(--primary)/0.34)] hover:bg-primary/90"
+                      className="h-9 rounded-full bg-primary px-4 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
                     >
                       <Crown className="mr-1.5 h-3.5 w-3.5" />
                       $499 primer año
@@ -139,13 +139,13 @@ export function Header() {
                       <p className="max-w-[9rem] truncate text-xs font-semibold text-foreground">
                         {profile?.full_name || user.email}
                       </p>
-                      <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35">
+                      <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                         {isSubscribed ? "Miembro" : "Cuenta"}
                       </p>
                     </div>
                     <ChevronDown
                       className={cn(
-                        "hidden h-3 w-3 text-foreground/40 transition-transform sm:block",
+                        "hidden h-3 w-3 text-muted-foreground transition-transform sm:block",
                         dropdownOpen && "rotate-180"
                       )}
                     />
@@ -158,7 +158,7 @@ export function Header() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 8, scale: 0.98 }}
                         transition={{ duration: 0.18, ease: "easeOut" }}
-                        className="absolute right-0 mt-3 w-60 overflow-hidden rounded-[24px] border border-border/50 bg-card/95 shadow-[0_24px_80px_rgba(0,0,0,0.18)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.42)] backdrop-blur-2xl"
+                        className="absolute right-0 mt-3 w-60 overflow-hidden rounded-2xl border border-border/50 bg-card shadow-xl dark:shadow-2xl backdrop-blur-2xl"
                       >
                         <div className="border-b border-border/50 px-4 py-4">
                           <p className="truncate text-sm font-semibold text-foreground">
@@ -191,7 +191,7 @@ export function Header() {
                           )}
                           <button
                             onClick={handleSignOut}
-                            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-foreground/45 transition-colors hover:bg-[var(--glass-bg)] hover:text-foreground"
+                            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-muted-foreground transition-colors hover:bg-[var(--glass-bg)] hover:text-foreground"
                           >
                             <LogOut className="h-4 w-4" />
                             Cerrar sesión
@@ -210,7 +210,7 @@ export function Header() {
                   </Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm" className="h-9 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-[0_10px_28px_hsl(var(--primary)/0.34)] hover:bg-primary/90">
+                  <Button size="sm" className="h-9 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
                     Registrarse
                   </Button>
                 </Link>
@@ -245,11 +245,11 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-x-3 top-[5.2rem] z-40 overflow-hidden rounded-[28px] border border-border/50 bg-background/92 shadow-[0_24px_80px_rgba(0,0,0,0.14)] dark:shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl md:hidden"
+            className="fixed inset-x-3 top-[4.8rem] z-40 overflow-hidden rounded-2xl border border-border/50 bg-background/95 shadow-xl dark:shadow-2xl backdrop-blur-2xl md:hidden"
           >
             <div className="p-5">
               <div className="mb-5">
-                <p className="text-[11px] uppercase tracking-[0.28em] text-foreground/36">
+                <p className="text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
                   Navegación
                 </p>
               </div>
@@ -280,7 +280,7 @@ export function Header() {
               {user && !isSubscribed && (
                 <div className="mt-5">
                   <Link href="/subscribe" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="h-11 w-full rounded-full bg-primary font-semibold text-primary-foreground shadow-[0_12px_28px_hsl(var(--primary)/0.34)] hover:bg-primary/90">
+                    <Button className="h-11 w-full rounded-full bg-primary font-semibold text-primary-foreground hover:bg-primary/90">
                       <Crown className="mr-2 h-4 w-4" />
                       Suscribirme — $499 primer año
                     </Button>
@@ -315,7 +315,7 @@ export function Header() {
                   </Link>
                   <button
                     onClick={handleSignOut}
-                    className="flex items-center gap-3 text-base font-medium text-foreground/46 transition-colors hover:text-foreground"
+                    className="flex items-center gap-3 text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
                   >
                     <LogOut className="h-5 w-5" />
                     Cerrar sesión
